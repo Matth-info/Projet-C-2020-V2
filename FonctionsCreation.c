@@ -220,7 +220,6 @@ void ChateauProduction(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int* t
         case 4: Jeu->tete->typeProd = Rien; break;
       }
 
-  
 
     }
   }
