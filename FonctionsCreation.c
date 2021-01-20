@@ -187,12 +187,12 @@ Monde *CreerMonde(Case ** Land){
 
 void ChateauProduction(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int* tresor) {
   if(Jeu->tete->tempsProd != 0) {
-    printf("le chateau est déjà en production");
+    printf("le chateau est deja en production\n");
   }
   else {
-    int * T = TrouverCaseLibre(monde, Jeu->tete, Jeu, couleur, tresor);
+    int* T = TrouverCaseLibre(monde, Jeu->tete, Jeu, couleur, tresor);
     if (T == NULL) {
-      printf("Aucune case libre trouvee");
+      printf("Aucune case libre trouvee\n");
     }
     else {
       int i;
