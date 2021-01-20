@@ -220,6 +220,7 @@ void ChateauProduction(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int* t
           Jeu->tete->tempsProd = 2;
           break;
         case 4: Jeu->tete->typeProd = Rien; break;
+        default: printf("Valeur rentree incorrect\n"); ChateauProduction(Jeu, monde, couleur, tresor);
       }
 
 
