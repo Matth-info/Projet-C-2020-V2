@@ -16,38 +16,48 @@ int main(int argc, char const *argv[])
   ListePerso * JeuBleu=initJeu();
   Case** plateau = CreerPlateau(8,8);
   Monde *monde= CreerMonde(plateau);
-  // initialisation  entiers comptant le trésor disponible de chaque trésors
-  // la création d'agent par le chateau coûte
-  // seigneur = 20 + 6 tours de jeu
-  // guerrier = 5 + 4 tours de jeu
-  // manant = 1 + 2 tours de jeu
-  int tresorB = 50;
   int tresorR = 50;
-
+  int tresorB = 50;
   lancementdePartie(JeuRouge,JeuBleu,monde,&tresorR,&tresorB);
-  
-  ChateauProduction(JeuRouge, monde, Rouge, &tresorR);
+  int cmpt_tour=0;
 
-  AffichageTresor(&tresorR, &tresorB);
   AffichageJeu(JeuRouge);
-  printf("\n");
   AffichageJeu(JeuBleu);
   AffichagePlateau(monde);
-  printf("\n");
 
-  *int newdx, newdy;
-  printf("entrer les coordonnees de la nouvelle destination de l'agent Seigneur Rouge\n");
-  printf("nouvelle ligne dx : ");
-  scanf("%d",&newdx);
-  printf("nouvelle colonne dy : ");
-  scanf("%d",&newdy);
+  while ((cmpt_tour!=10) || (monde->CampBleu!=NULL) || (monde->CampRouge!=NULL)){
+    for(Personnage* persotemp=JeuRouge->tete; persotemp!=NULL; persotemp=persotemp->PersoSuivant){
+      printf("le numero de personnage est %d\n", persotemp->typePerso);
+      switch(persotemp->typePerso){
+        case 0: TourChateau(JeuRouge, monde,&tresorR);
+                break;
+        case 1: TourSeigneur(persotemp, JeuRouge, monde);
+                break;
+        case 2: TourGuerrier(persotemp, JeuRouge, monde);
+                break;
+        case 3: TourManant(persotemp, JeuRouge, monde,&tresorR);
+                break;
+      }
+      AffichageJeu(JeuRouge);
+      AffichagePlateau(monde);
 
-
-  nouvelleDestination(JeuRouge->tete->PersoSuivant, monde, newdx, newdy);
-  do {
-    deplacementPerso(JeuRouge->tete->PersoSuivant, monde);
-    AffichagePlateau(monde);
+    }
+    for(Personnage* persotemp=JeuBleu->tete; persotemp!=NULL; persotemp=persotemp->PersoSuivant){
+      printf("le numero de personnage est %d\n", persotemp->typePerso);
+      switch (persotemp->typePerso){
+        case 0: TourChateau(JeuBleu, monde,&tresorR);
+                break;
+        case 1: TourSeigneur(persotemp, JeuBleu, monde);
+                break;
+        case 2: TourGuerrier(persotemp, JeuRouge, monde);
+                break;
+        case 3: TourManant(persotemp, JeuBleu, monde,&tresorR);
+                break;
+      }
+      AffichageJeu(JeuBleu);
+      AffichagePlateau(monde);
+    }
+    printf("%d tours restants",10 - ++cmpt_tour);
   }
-  while ((JeuRouge->tete->PersoSuivant->px != JeuRouge->tete->PersoSuivant->dx) || (JeuRouge->tete->PersoSuivant->py != JeuRouge->tete->PersoSuivant->dy));
   return 0;
 }
