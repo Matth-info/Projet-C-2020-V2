@@ -367,14 +367,13 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, int* t
 void TourManant( Personnage* manant, ListePerso* Jeu, Monde * monde, int * tresor){
 
     if((manant->dx!=-1) && (manant->dy!=-1)){
-      printf("souhaitez-vous immobilise le manant sur la case (%d,%d) \n oui ou non ?\n", manant->px, manant->py);
       char str[4];
       char str1[4]="oui";
+      printf("souhaitez-vous immobilise le manant sur la case (%d,%d) \n oui ou non ?\n", manant->px, manant->py);
       fgets(str,4,stdin);
-      if(strcmp(str1,str)==0){
+      if(strcmp(str,str1)==0){
         immobilisation(manant);
-      }
-      else{
+      }else{
         if ((manant->px!=manant->dx) && (manant->py!=manant->dy)){
             printf("votre personnage est en déplacement\n");
             deplacementPerso(manant,monde);
@@ -389,10 +388,10 @@ void TourManant( Personnage* manant, ListePerso* Jeu, Monde * monde, int * treso
           deplacementPerso(manant,monde);
           }
         }
-      }
-      else {
+    }else {
         printf("le manat (%d,%d) produit 1 piece d'or\n",manant->px,manant->py);
-        productionManant(manant, tresor);}
+        productionManant(manant, tresor);
+    }
 }
 
 void TourGuerrier(Personnage * guerrier, ListePerso * Jeu, Monde *monde){
@@ -424,14 +423,14 @@ void TourGuerrier(Personnage * guerrier, ListePerso * Jeu, Monde *monde){
       }
    }
 }
-void TourSeigneur(Personnage * seigneur, ListePerso * Jeu, Monde *monde){
+void TourSeigneur(Personnage *seigneur, ListePerso * Jeu, Monde *monde){
   if ((seigneur->px!=seigneur->dx) && (seigneur->py!=seigneur->dy)){
       printf("votre personnage est en cours en déplacement\n");
       deplacementPerso(seigneur,monde);
   } else {
-      printf("souhaitez-vous déplacer le seigneur de la case (%d,%d) \n oui ou non : \n",seigneur->px,seigneur->py);
       char str[4];
       char str1[4]="oui";
+      printf("souhaitez-vous deplacer le seigneur de la case (%d,%d) \n oui ou non : \n",seigneur->px,seigneur->py);
       fgets(str,4,stdin);
       if (strcmp(str1,str)==0) {
         int newdx, newdy;
