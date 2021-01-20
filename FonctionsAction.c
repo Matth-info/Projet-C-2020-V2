@@ -337,10 +337,10 @@ void deplacementPerso(Personnage* perso, Monde * monde){
 int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleur_t couleur, int* tresor){
     // objectif trouver une case libre autour du chateau
     int * T = malloc(2*sizeof(int));
-    if (chateau->typePerso!=Chateau){
-      printf("l'agent selectionne ne peut rien créer ");
-    }
-    else {
+    if(T==NULL){
+      return NULL;
+    } else{
+
       int cx=chateau->px;
       int cy=chateau->py;
 
@@ -353,17 +353,19 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
             }
           }
       }
-      printf("il n'y a pas de case libre dans le premier cercle du chateau");
+
       for(int i=-2; i<=2; i++){
           for (int j=-2; j<=2;j++){
             if((i==2) || (j==2)){
               if (monde->plateau[cx+i][cy+j].perso==NULL){
                 *T= cx+i;
                 *(T+1)=cy+j;
-                return T;
+                 return T;
               }
             }
           }
-        }
       }
+      return NULL; 
+
+    }
 }
