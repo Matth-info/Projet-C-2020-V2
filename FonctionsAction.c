@@ -344,8 +344,8 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
       int cx=chateau->px;
       int cy=chateau->py;
 
-      for(int i=-1; i=<1; i++){
-          for (int j=-1; j=<1;j++){
+      for(int i=-1; i<=1; i++){
+          for (int j=-1; j<=1;j++){
             if (monde->plateau[cx+i][cy+j].perso==NULL){
               *T= cx+i;
               *(T+1)=cy+j;
@@ -354,9 +354,9 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
           }
       }
       printf("il n'y a pas de case libre dans le premier cercle du chateau");
-      for(int i=-2; i=<2; i++){
-          for (int j=-2; j=<2;j++){
-            if(i==2) || (j==2){
+      for(int i=-2; i<=2; i++){
+          for (int j=-2; j<=2;j++){
+            if((i==2) || (j==2)){
               if (monde->plateau[cx+i][cy+j].perso==NULL){
                 *T= cx+i;
                 *(T+1)=cy+j;
