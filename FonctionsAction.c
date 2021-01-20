@@ -126,7 +126,7 @@ void destructionChateau(ListePerso* Attaquant, ListePerso* Perdant, Monde* monde
 
 void productionManant(Personnage* manant, int* tresor){
   if (manant->typePerso!=Manant){
-    printf("le personnage n'est pas un manant");
+    printf("le personnage n'est pas un manant\n");
   }else{
     if ((manant->dx!=manant->px || manant->dy !=manant->py ) && (manant->dx!=-1 || manant->dy!=-1)){
       printf(" le manant est en déplacement, il ne peut rien produire");
@@ -138,19 +138,19 @@ void productionManant(Personnage* manant, int* tresor){
 }
 
 void immobilisation(Personnage* perso){
-  if((perso->typePerso==Seigneur) || (perso->typePerso==Manant)){
+  if (perso->typePerso==Manant){
     perso->dx=-1;
     perso->dy=-1;
     // le personnage est immobilisé; Manant ou seigneur
   } else{
-    printf ("ce type de personnage ne peut pas etre immobilise");
+    printf ("ce type de personnage ne peut pas etre immobilise\n");
     }
 }
 
 
 void nouvelleDestination(Personnage* perso, Monde* monde, int newdx, int newdy){
   if (perso->dx==-1  && perso->dy==-1){
-    printf("votre personnage est immobilise, il ne peut pas se déplacer");
+    printf("votre personnage est immobilise, il ne peut pas se déplacer\n");
   }
   else {
       if ((newdx==perso->px) && (newdy==perso->py)){
@@ -328,7 +328,7 @@ void deplacementPerso(Personnage* perso, Monde * monde){
         }
 }
 
-int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleur_t couleur, int* tresor){
+int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, int* tresor){
     // objectif trouver une case libre autour du chateau
     int *T = malloc(2*sizeof(int));
     if(T==NULL){
@@ -340,7 +340,7 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
 
       for(int i=-1; i<=1; i++){
           for (int j=-1; j<=1;j++){
-            if (monde->plateau[cx+i][cy+j].perso==NULL){
+            if ((monde->plateau[cx+i][cy+j].perso==NULL) && (monde->plateau[cx+i][cy+j].chateau==NULL)){
               *Tp= cx+i;
               *(Tp+1)=cy+j;
               return T;
@@ -350,8 +350,8 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
 
       for(int i=-2; i<=2; i++){
           for (int j=-2; j<=2;j++){
-            if((i==2) || (j==2)){
-              if (monde->plateau[cx+i][cy+j].perso==NULL){
+            if((i==2) || (i==2) || (j==-2) || (j==2)){
+              if ((monde->plateau[cx+i][cy+j].perso==NULL) && (monde->plateau[cx+i][cy+j].chateau==NULL)){
                 *Tp= cx+i;
                 *(Tp+1)=cy+j;
                  return T;
@@ -367,8 +367,8 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
 void TourManant( Personnage* manant, ListePerso* Jeu, Monde * monde, int * tresor){
 
     if((manant->dx!=-1) && (manant->dy!=-1)){
-      printf("souhaitez-vous immobilise le manant sur la case (%d,%d) \n oui ou non ?", manant->px, manant->py);
-      char str[3];
+      printf("souhaitez-vous immobilise le manant sur la case (%d,%d) \n oui ou non ?\n", manant->px, manant->py);
+      char str[4];
       char str1[4]="oui";
       fgets(str,4,stdin);
       if(strcmp(str1,str)==0){
@@ -376,7 +376,7 @@ void TourManant( Personnage* manant, ListePerso* Jeu, Monde * monde, int * treso
       }
       else{
         if ((manant->px!=manant->dx) && (manant->py!=manant->dy)){
-            printf("votre personnage est en déplacement");
+            printf("votre personnage est en déplacement\n");
             deplacementPerso(manant,monde);
         } else{
           int newdx, newdy;
@@ -390,16 +390,18 @@ void TourManant( Personnage* manant, ListePerso* Jeu, Monde * monde, int * treso
           }
         }
       }
-      else { productionManant(manant, tresor);}
+      else {
+        printf("le manat (%d,%d) produit 1 piece d'or\n",manant->px,manant->py);
+        productionManant(manant, tresor);}
 }
 
 void TourGuerrier(Personnage * guerrier, ListePerso * Jeu, Monde *monde){
   if ((guerrier->px!=guerrier->dx) && (guerrier->py!=guerrier->dy)){
-      printf("votre personnage est en cours en déplacement");
+      printf("votre personnage est en cours en déplacement\n");
       deplacementPerso(guerrier,monde);
   } else {
-      printf("souhaitez-vous déplacer le guerrier de la case (%d,%d) \n oui ou non : ",guerrier->px,guerrier->py);
-      char str[3];
+      printf("souhaitez-vous déplacer le guerrier de la case (%d,%d) \n oui ou non\n : ",guerrier->px,guerrier->py);
+      char str[4];
       char str1[4]="oui";
       fgets(str,4,stdin);
       if (strcmp(str1,str)==0) {
@@ -412,23 +414,23 @@ void TourGuerrier(Personnage * guerrier, ListePerso * Jeu, Monde *monde){
         deplacementPerso(guerrier,monde);
       }
       else{
-        printf("souhaitez-vous que votre guerrier se fasse hara-kiri \n oui ou non : ");
+        printf("souhaitez-vous que votre guerrier se fasse hara-kiri \n oui ou non : \n");
         fgets(str,4,stdin);
         if (strcmp(str1,str)==0){
           suicide(guerrier,Jeu,monde);
         }
         else
-        { printf("votre guerrier en case(%d,%d) n'a pas joue !",guerrier->px,guerrier->py); }
+        { printf("votre guerrier en case(%d,%d) n'a pas joue !\n",guerrier->px,guerrier->py); }
       }
    }
 }
 void TourSeigneur(Personnage * seigneur, ListePerso * Jeu, Monde *monde){
   if ((seigneur->px!=seigneur->dx) && (seigneur->py!=seigneur->dy)){
-      printf("votre personnage est en cours en déplacement");
+      printf("votre personnage est en cours en déplacement\n");
       deplacementPerso(seigneur,monde);
   } else {
-      printf("souhaitez-vous déplacer le seigneur de la case (%d,%d) \n oui ou non : ",seigneur->px,seigneur->py);
-      char str[3];
+      printf("souhaitez-vous déplacer le seigneur de la case (%d,%d) \n oui ou non : \n",seigneur->px,seigneur->py);
+      char str[4];
       char str1[4]="oui";
       fgets(str,4,stdin);
       if (strcmp(str1,str)==0) {
@@ -441,13 +443,40 @@ void TourSeigneur(Personnage * seigneur, ListePerso * Jeu, Monde *monde){
         deplacementPerso(seigneur,monde);
 
       } else{
-          printf("souhaitez-vous que votre seigneur se fasse hara-kiri \n oui ou non : ");
+          printf("souhaitez-vous que votre seigneur se fasse hara-kiri \n oui ou non : \n");
           fgets(str,4,stdin);
           if (strcmp(str1,str)==0){
             suicide(seigneur,Jeu,monde);
           }
           else
-          { printf("votre seigneur en case (%d,%d) n'a pas joue ! ", seigneur->px, seigneur->py); }
+          { printf("votre seigneur en case (%d,%d) n'a pas joue !\n ", seigneur->px, seigneur->py); }
       }
    }
+}
+void TourChateau(ListePerso*Jeu, Monde* monde, int* tresor){
+    Personnage * chateau=Jeu->tete;
+    if ((chateau->tempsProd!=0) || (chateau->typeProd!=Rien)){
+        printf("le chateau est en cours de production d'un ");
+        switch(chateau->typeProd){
+          case 1: printf("Seigneur pour encore %d tours\n",chateau->tempsProd); break;
+          case 2: printf("Guerrier pour encore %d tours\n",chateau->tempsProd); break;
+          case 3: printf("Manant pour encore %d tours\n", chateau->tempsProd); break;
+          default : printf("pas de type de production définie\n");
+        }
+        chateau->tempsProd--;
+        if (chateau->tempsProd==0){
+          chateau->typeProd=Rien;
+        }
+    }
+    else { // partie où le chateau ne produit rien, le temps de production est bien revenue à 0 et la production Rien;
+      printf("souhaitez-vous que votre chateau en case (%d,%d) produise ? \n oui ou non ?",chateau->px,chateau->py);
+      char str[4];
+      char str1[4]="oui";
+      fgets(str,4,stdin);
+      if(strcmp(str1,str)==0){
+          ChateauProduction(Jeu,monde,tresor);
+      }else{
+        printf(" vous avez repondu non, vous passez donc le tour de votre chateau\n");
+      }
+    }
 }
