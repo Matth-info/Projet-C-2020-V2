@@ -19,7 +19,7 @@ void lancementdePartie(ListePerso* JeuRouge, ListePerso* JeuBleu, Monde *monde, 
   *tresorRouge=50;
   *tresorBleu=50;
 }
-// fonctions à créer
+
 // fonctions suicide des seigneurs et des guerriers
 
 // fonctions productions des manants
@@ -359,7 +359,7 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
             }
           }
       }
-      return NULL; 
+      return NULL;
 
     }
 }
