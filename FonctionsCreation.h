@@ -12,7 +12,7 @@ void CreerManant(ListePerso* Jeu,Monde* monde, couleur_t couleur, int px, int py
 
 void CreerGuerrier(ListePerso* Jeu, Monde* monde, couleur_t couleur, int px, int py, int* tresor);
 
-void ChateauProduction(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int* tresor);
+void ChateauProduction(ListePerso* Jeu, Monde* monde, int* tresor);
 
 Case** CreerPlateau(int nbcolonne, int nbligne);
 
