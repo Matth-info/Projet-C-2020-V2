@@ -10,5 +10,7 @@ void nouvelleDestination(Personnage* perso,Monde* monde, int newdx, int newdy);
 void deplacementPerso(Personnage* perso, Monde * monde);
 void immobilisation(Personnage* perso);
 int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleur_t couleur, int* tresor);
-
+void TourGuerrier(Personnage * guerrier, ListePerso * Jeu, Monde *monde);
+void TourManant( Personnage* manant, ListePerso* Jeu, Monde * monde, int * tresor);
+void TourSeigneur(Personnage * seigneur, ListePerso * Jeu, Monde *monde);
 #endif
