@@ -183,3 +183,45 @@ Monde *CreerMonde(Case ** Land){
       monde->plateau=Land;
       return monde;
 }
+
+
+void ChateauProduction(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int* tresor) {
+  if(Jeu->tete->tempsProd != 0) {
+    printf("le chateau est déjà en production");
+  }
+  else {
+    int * T = TrouverCaseLibre(monde, Jeu->tete, Jeu, couleur, tresor);
+    if (T == NULL) {
+      printf("Aucune case libre trouvee");
+    }
+    else {
+      int i;
+      printf("Rentrer le numero  du personnage: \n \t 1:Seigneur, 20 pieces d'or \n \t 2:Guerrier, 5 pieces d'or  \n \t 3:Manant, 1 piece d'or \n \t 4:Rien \n");
+      scanf("%d", &i);
+      int savetresor = *tresor;
+
+
+      switch(i) {
+        case 1: CreerSeigneur(Jeu, monde, couleur, T[0], T[1], tresor);
+          if(savetresor == *tresor) ChateauProduction(Jeu, monde, couleur, tresor);
+          Jeu->tete->typeProd = Seigneur;
+          Jeu->tete->tempsProd = 6;
+          break;
+        case 2: CreerGuerrier(Jeu, monde, couleur, T[0], T[1], tresor); 
+          if(savetresor == *tresor) ChateauProduction(Jeu, monde, couleur, tresor);
+          Jeu->tete->typeProd = Guerrier;
+          Jeu->tete->tempsProd = 4;
+          break;
+        case 3: CreerManant(Jeu, monde, couleur, T[0], T[1], tresor); 
+          if(savetresor == *tresor) ChateauProduction(Jeu, monde, couleur, tresor);
+          Jeu->tete->typeProd = Manant;
+          Jeu->tete->tempsProd = 2;
+          break;
+        case 4: Jeu->tete->typeProd = Rien; break;
+      }
+
+  
+
+    }
+  }
+}
