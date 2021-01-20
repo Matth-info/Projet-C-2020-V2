@@ -368,9 +368,9 @@ void TourManant( Personnage* manant, ListePerso* Jeu, Monde * monde, int * treso
 
     if((manant->dx!=-1) && (manant->dy!=-1)){
       printf("souhaitez-vous immobilise le manant sur la case (%d,%d) oui ou non ?", manant->px, manant->py);
-      char* str[3];
-      char str1[3]="oui";
-      fgets(str,3,stdin);
+      char str[3];
+      char str1[4]="oui";
+      fgets(str,4,stdin);
       if(strcmp(str1,str)==0){
         immobilisation(manant);
       }
