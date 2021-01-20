@@ -330,19 +330,19 @@ void deplacementPerso(Personnage* perso, Monde * monde){
 
 int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleur_t couleur, int* tresor){
     // objectif trouver une case libre autour du chateau
-    int * T = malloc(2*sizeof(int));
+    int *T = malloc(2*sizeof(int));
     if(T==NULL){
       return NULL;
     } else{
-
+      int* Tp=T;
       int cx=chateau->px;
       int cy=chateau->py;
 
       for(int i=-1; i<=1; i++){
           for (int j=-1; j<=1;j++){
             if (monde->plateau[cx+i][cy+j].perso==NULL){
-              *T= cx+i;
-              *(T+1)=cy+j;
+              *Tp= cx+i;
+              *(Tp+1)=cy+j;
               return T;
             }
           }
@@ -352,8 +352,8 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
           for (int j=-2; j<=2;j++){
             if((i==2) || (j==2)){
               if (monde->plateau[cx+i][cy+j].perso==NULL){
-                *T= cx+i;
-                *(T+1)=cy+j;
+                *Tp= cx+i;
+                *(Tp+1)=cy+j;
                  return T;
               }
             }
@@ -363,3 +363,5 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
 
     }
 }
+
+void TourPersonnage(Personnage* perso, ListePerso* Perso Monde* monde, ){}
