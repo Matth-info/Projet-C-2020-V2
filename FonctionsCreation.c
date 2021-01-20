@@ -3,6 +3,7 @@
 #include<string.h>
 #include"structure.h"
 #include"FonctionsCreation.h"
+#include"FonctionsAction.h"
 
 
 ListePerso * initJeu(void){ // creation d'une liste doublement chainee
@@ -190,7 +191,8 @@ void ChateauProduction(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int* t
     printf("le chateau est deja en production\n");
   }
   else {
-    int* T = TrouverCaseLibre(monde, Jeu->tete, Jeu, couleur, tresor);
+    int* T;
+    T= TrouverCaseLibre(monde, Jeu->tete, Jeu, couleur, tresor);
     if (T == NULL) {
       printf("Aucune case libre trouvee\n");
     }
@@ -207,12 +209,12 @@ void ChateauProduction(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int* t
           Jeu->tete->typeProd = Seigneur;
           Jeu->tete->tempsProd = 6;
           break;
-        case 2: CreerGuerrier(Jeu, monde, couleur, T[0], T[1], tresor); 
+        case 2: CreerGuerrier(Jeu, monde, couleur, T[0], T[1], tresor);
           if(savetresor == *tresor) ChateauProduction(Jeu, monde, couleur, tresor);
           Jeu->tete->typeProd = Guerrier;
           Jeu->tete->tempsProd = 4;
           break;
-        case 3: CreerManant(Jeu, monde, couleur, T[0], T[1], tresor); 
+        case 3: CreerManant(Jeu, monde, couleur, T[0], T[1], tresor);
           if(savetresor == *tresor) ChateauProduction(Jeu, monde, couleur, tresor);
           Jeu->tete->typeProd = Manant;
           Jeu->tete->tempsProd = 2;
