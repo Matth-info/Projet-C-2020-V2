@@ -35,7 +35,7 @@ int main(int argc, char const *argv[])
   AffichagePlateau(monde);
   printf("\n");
 
-  int newdx, newdy;
+  *int newdx, newdy;
   printf("entrer les coordonnees de la nouvelle destination de l'agent Seigneur Rouge\n");
   printf("nouvelle ligne dx : ");
   scanf("%d",&newdx);
