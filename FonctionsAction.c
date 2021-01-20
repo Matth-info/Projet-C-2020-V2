@@ -364,4 +364,5 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
     }
 }
 
-void TourPersonnage(Personnage* perso, ListePerso* Perso Monde* monde, ){}
+  
+}
