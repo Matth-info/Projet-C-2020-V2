@@ -363,3 +363,32 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
 
     }
 }
+
+void TourManant( Personnage* manant, ListePerso* Jeu, Monde * monde, int * tresor){
+
+    if((manant->dx!=-1) && (manant->dy!=-1)){
+      printf("souhaitez-vous immobilise le manant sur la case (%d,%d) oui ou non ?", manant->px, manant->py);
+      char* str[3];
+      char str1[3]="oui";
+      fgets(str,3,stdin);
+      if(strcmp(str1,str)==0){
+        immobilisation(manant);
+      }
+      else{
+        if ((manant->px!=manant->dx) && (manant->py!=manant->dy)){
+            printf("votre personnage est en déplacement");
+            deplacementPerso(manant,monde);
+        } else{
+          int newdx, newdy;
+          printf("entrer les coordonnees de la nouvelle destination du manant (%d,%d)\n", manant->px, manant->py);
+          printf("nouvelle ligne dx : ");
+          scanf("%d",&newdx);
+          printf("nouvelle colonne dy : ");
+          scanf("%d",&newdy);
+          nouvelleDestination(manant, monde, newdx, newdy);
+          deplacementPerso(manant,monde);
+          }
+        }
+      }
+      else { productionManant(manant, tresor);}
+}
