@@ -332,7 +332,7 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
     // objectif trouver une case libre autour du chateau
     int *T = malloc(2*sizeof(int));
     if(T==NULL){
-      return NULL;
+      return T;
     } else{
       int* Tp=T;
       int cx=chateau->px;
@@ -364,4 +364,4 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
     }
 }
 
-void TourPersonnage(Personnage* perso, ListePerso* Perso Monde* monde, ){}
+// void TourPersonnage(Personnage* perso, ListePerso* Perso Monde* monde, ){}
