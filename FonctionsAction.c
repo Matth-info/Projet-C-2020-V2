@@ -8,18 +8,12 @@
 void lancementdePartie(ListePerso* JeuRouge, ListePerso* JeuBleu, Monde *monde, int* tresorRouge, int * tresorBleu)
 {
   CreerChateau(JeuRouge, monde ,Rouge,7,7);
-  //CreerGuerrier(JeuRouge,monde, Rouge,7,6,tresorRouge);
-  //CreerManant(JeuRouge,monde,Rouge,7,6,tresorRouge);
+  CreerManant(JeuRouge,monde,Rouge,7,6,tresorRouge);
   CreerSeigneur(JeuRouge,monde, Rouge,6,7,tresorRouge);
 
-  //CreerManant(JeuRouge,monde,Rouge,5,5,tresorRouge);
-
-
   CreerChateau(JeuBleu,monde, Bleu,0,0);
-
   CreerManant(JeuBleu,monde, Bleu ,5,5,tresorBleu);
-  //CreerSeigneur(JeuBleu,monde, Bleu,1,0,tresorBleu);
-  //CreerGuerrier(JeuBleu,monde, Bleu,0,1,tresorBleu);
+  CreerSeigneur(JeuBleu,monde, Bleu,1,0,tresorBleu);
 
   // retablir le tresor à 50 pieces d'or
   *tresorRouge=50;
