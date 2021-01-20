@@ -5,7 +5,7 @@
 
 void AffichageJeu(ListePerso* Jeu)
 {
-
+  printf("\n");
   if (Jeu->nbPerso==0){
     printf("Liste de jeu vide");
   }
@@ -41,6 +41,7 @@ void AffichageJeu(ListePerso* Jeu)
       }
     }
   }
+  printf("\n");
 }
 
 void AffichagePlateau(Monde* monde){
