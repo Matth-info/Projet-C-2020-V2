@@ -186,44 +186,55 @@ Monde *CreerMonde(Case ** Land){
 }
 
 
-void ChateauProduction(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int* tresor) {
+void ChateauProduction(ListePerso* Jeu, Monde* monde, int* tresor) {
   if(Jeu->tete->tempsProd != 0) {
     printf("le chateau est deja en production\n");
   }
   else {
     int* T;
-    T= TrouverCaseLibre(monde, Jeu->tete, Jeu, couleur, tresor);
+    T= TrouverCaseLibre(monde, Jeu->tete, Jeu, tresor);
     if (T == NULL) {
-      printf("Aucune case libre trouvee\n");
+      printf("Aucune case libre trouvee au tour du chateau (%d,%d)\n", Jeu->tete->px, Jeu->tete->py);
     }
     else {
       int i;
-      printf("Rentrer le numero  du personnage: \n \t 1:Seigneur, 20 pieces d'or \n \t 2:Guerrier, 5 pieces d'or  \n \t 3:Manant, 1 piece d'or \n \t 4:Rien \n");
+      printf("Rentrer le numero  du personnage: \n \t 1: un Seigneur en (%d,%d) pour 20 pieces d'or \n \t 2: un Guerrier en (%d,%d) pour 5 pieces d'or  \n \t 3: un Manant en (%d,%d) pour 1 piece d'or \n \t 4: Rien \n",T[0],T[1],T[0],T[1],T[0],T[1]);
       scanf("%d", &i);
-      int savetresor = *tresor;
-
+      int savetresor = *tresor; // comparer le trésor d'avant et d'après l'appel à la fonction permettra de savoir si la création du nouveau personnage a bien eu lieu;
 
       switch(i) {
-        case 1: CreerSeigneur(Jeu, monde, couleur, T[0], T[1], tresor);
-          if(savetresor == *tresor) ChateauProduction(Jeu, monde, couleur, tresor);
-          Jeu->tete->typeProd = Seigneur;
-          Jeu->tete->tempsProd = 6;
+        case 1: CreerSeigneur(Jeu, monde, Jeu->tete->couleur, T[0], T[1], tresor);
+          if(savetresor == *tresor){
+            printf("avec un tresor de %d pieces d'or, vous n'avez pas assez pour creer un Seigneur", *tresor);
+            ChateauProduction(Jeu, monde, tresor);
+          }else{
+              Jeu->tete->typeProd = Seigneur;
+              Jeu->tete->tempsProd = 6;
+          }
           break;
-        case 2: CreerGuerrier(Jeu, monde, couleur, T[0], T[1], tresor);
-          if(savetresor == *tresor) ChateauProduction(Jeu, monde, couleur, tresor);
-          Jeu->tete->typeProd = Guerrier;
-          Jeu->tete->tempsProd = 4;
+        case 2: CreerGuerrier(Jeu, monde, Jeu->tete->couleur, T[0], T[1], tresor);
+          if(savetresor == *tresor) {
+              ChateauProduction(Jeu, monde, tresor);
+              printf("avec un tresor de %d pieces d'or, vous n'avez pas assez pour créer un Guerrier", *tresor);
+          } else{
+            Jeu->tete->typeProd = Guerrier;
+            Jeu->tete->tempsProd = 4;
+          }
           break;
-        case 3: CreerManant(Jeu, monde, couleur, T[0], T[1], tresor);
-          if(savetresor == *tresor) ChateauProduction(Jeu, monde, couleur, tresor);
+        case 3: CreerManant(Jeu, monde, Jeu->tete->couleur, T[0], T[1], tresor);
+          if(savetresor == *tresor){
+            printf("avec un tresor de %d pieces d'or, vous n'avez pas assez pour créer un Manant", *tresor);
+            ChateauProduction(Jeu, monde, tresor);
+          }else{
           Jeu->tete->typeProd = Manant;
           Jeu->tete->tempsProd = 2;
+          }
           break;
-        case 4: Jeu->tete->typeProd = Rien; break;
-        default: printf("Valeur rentree incorrect\n"); ChateauProduction(Jeu, monde, couleur, tresor);
+        case 4: Jeu->tete->typeProd = Rien;
+                break;
+        default: printf("Valeur rentree incorrect\n");
+                ChateauProduction(Jeu, monde, tresor);
       }
-
-
     }
   }
 }
