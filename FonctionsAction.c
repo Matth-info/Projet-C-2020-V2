@@ -367,7 +367,7 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleu
 void TourManant( Personnage* manant, ListePerso* Jeu, Monde * monde, int * tresor){
 
     if((manant->dx!=-1) && (manant->dy!=-1)){
-      printf("souhaitez-vous immobilise le manant sur la case (%d,%d) oui ou non ?", manant->px, manant->py);
+      printf("souhaitez-vous immobilise le manant sur la case (%d,%d) \n oui ou non ?", manant->px, manant->py);
       char str[3];
       char str1[4]="oui";
       fgets(str,4,stdin);
@@ -391,4 +391,63 @@ void TourManant( Personnage* manant, ListePerso* Jeu, Monde * monde, int * treso
         }
       }
       else { productionManant(manant, tresor);}
+}
+
+void TourGuerrier(Personnage * guerrier, ListePerso * Jeu, Monde *monde){
+  if ((guerrier->px!=guerrier->dx) && (guerrier->py!=guerrier->dy)){
+      printf("votre personnage est en cours en déplacement");
+      deplacementPerso(guerrier,monde);
+  } else {
+      printf("souhaitez-vous déplacer le guerrier de la case (%d,%d) \n oui ou non : ",guerrier->px,guerrier->py);
+      char str[3];
+      char str1[4]="oui";
+      fgets(str,4,stdin);
+      if (strcmp(str1,str)==0) {
+        int newdx, newdy;
+        printf("nouvelle ligne dx : ");
+        scanf("%d",&newdx);
+        printf("nouvelle colonne dy : ");
+        scanf("%d",&newdy);
+        nouvelleDestination(guerrier,monde,newdx,newdy);
+        deplacementPerso(guerrier,monde);
+        break;
+      }
+      printf("souhaitez-vous que votre guerrier se fasse hara-kiri \n oui ou non : ");
+      fgets(str,4,stdin);
+      if (strcmp(str1,str)==0){
+        suicide(guerrier,Jeu,monde);
+      }
+      else
+      { printf("votre guerrier en case(%d,%d) n'a pas joue ! ",guerrier->px;guerrier->py); }
+
+   }
+}
+void TourSeigneur(Personnage * seigneur, ListePerso * Jeu, Monde *monde){
+  if ((seigneur->px!=seigneur->dx) && (seigneur->py!=seigneur->dy)){
+      printf("votre personnage est en cours en déplacement");
+      deplacementPerso(seigneur,monde);
+  } else {
+      printf("souhaitez-vous déplacer le seigneur de la case (%d,%d) \n oui ou non : ",seigneur->px,seigneur->py);
+      char str[3];
+      char str1[4]="oui";
+      fgets(str,4,stdin);
+      if (strcmp(str1,str)==0) {
+        int newdx, newdy;
+        printf("nouvelle ligne dx : ");
+        scanf("%d",&newdx);
+        printf("nouvelle colonne dy : ");
+        scanf("%d",&newdy);
+        nouvelleDestination(seigneur,monde,newdx,newdy);
+        deplacementPerso(seigneur,monde);
+        break;
+      }
+      printf("souhaitez-vous que votre seigneur se fasse hara-kiri \n oui ou non : ");
+      fgets(str,4,stdin);
+      if (strcmp(str1,str)==0){
+        suicide(seigneur,Jeu,monde);
+      }
+      else
+      { printf("votre seigneur en case (%d,%d) n'a pas joue ! ", seigneur->px; seigneur->py); }
+
+   }
 }
