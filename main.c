@@ -25,17 +25,8 @@ int main(int argc, char const *argv[])
   int tresorR = 50;
 
   lancementdePartie(JeuRouge,JeuBleu,monde,&tresorR,&tresorB);
-<<<<<<< Updated upstream
-  /*CreerGuerrier(JeuRouge,monde,Rouge, 3, 4, &tresorR);
-  CreerManant(JeuRouge,monde,Rouge, 3, 4, &tresorR);
-  CreerGuerrier(JeuRouge,monde,Rouge, 3, 4, &tresorR);
-  CreerSeigneur(JeuRouge,monde,Rouge, 3, 4, &tresorR);*/
-=======
-  CreerGuerrier(JeuRouge,monde,Rouge, 3, 4, &tresorR);
-  CreerManant(JeuRouge,monde,Rouge, 4, 3, &tresorR);
-  CreerGuerrier(JeuRouge,monde,Rouge, 4, 5, &tresorR);
-  CreerSeigneur(JeuRouge,monde,Rouge, 4, 4, &tresorR);
->>>>>>> Stashed changes
+  
+  ChateauProduction(JeuRouge, monde, Rouge, &tresorR);
 
   AffichageTresor(&tresorR, &tresorB);
   AffichageJeu(JeuRouge);
@@ -44,7 +35,7 @@ int main(int argc, char const *argv[])
   AffichagePlateau(monde);
   printf("\n");
 
-  *int newdx, newdy;
+  int newdx, newdy;
   printf("entrer les coordonnees de la nouvelle destination de l'agent Seigneur Rouge\n");
   printf("nouvelle ligne dx : ");
   scanf("%d",&newdx);
