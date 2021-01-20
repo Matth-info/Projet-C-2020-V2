@@ -9,4 +9,6 @@ void destructionChateau(ListePerso* Attaquant, ListePerso* Perdant, Monde* monde
 void nouvelleDestination(Personnage* perso,Monde* monde, int newdx, int newdy);
 void deplacementPerso(Personnage* perso, Monde * monde);
 void immobilisation(Personnage* perso);
+int* TrouverCaseLibre(Monde* monde, Personnage* chateau, ListePerso* Jeu, couleur_t couleur, int* tresor);
+
 #endif
