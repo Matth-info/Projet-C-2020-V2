@@ -410,16 +410,16 @@ void TourGuerrier(Personnage * guerrier, ListePerso * Jeu, Monde *monde){
         scanf("%d",&newdy);
         nouvelleDestination(guerrier,monde,newdx,newdy);
         deplacementPerso(guerrier,monde);
-        break;
       }
-      printf("souhaitez-vous que votre guerrier se fasse hara-kiri \n oui ou non : ");
-      fgets(str,4,stdin);
-      if (strcmp(str1,str)==0){
-        suicide(guerrier,Jeu,monde);
+      else{
+        printf("souhaitez-vous que votre guerrier se fasse hara-kiri \n oui ou non : ");
+        fgets(str,4,stdin);
+        if (strcmp(str1,str)==0){
+          suicide(guerrier,Jeu,monde);
+        }
+        else
+        { printf("votre guerrier en case(%d,%d) n'a pas joue !",guerrier->px,guerrier->py); }
       }
-      else
-      { printf("votre guerrier en case(%d,%d) n'a pas joue ! ",guerrier->px;guerrier->py); }
-
    }
 }
 void TourSeigneur(Personnage * seigneur, ListePerso * Jeu, Monde *monde){
@@ -439,15 +439,15 @@ void TourSeigneur(Personnage * seigneur, ListePerso * Jeu, Monde *monde){
         scanf("%d",&newdy);
         nouvelleDestination(seigneur,monde,newdx,newdy);
         deplacementPerso(seigneur,monde);
-        break;
-      }
-      printf("souhaitez-vous que votre seigneur se fasse hara-kiri \n oui ou non : ");
-      fgets(str,4,stdin);
-      if (strcmp(str1,str)==0){
-        suicide(seigneur,Jeu,monde);
-      }
-      else
-      { printf("votre seigneur en case (%d,%d) n'a pas joue ! ", seigneur->px; seigneur->py); }
 
+      } else{
+          printf("souhaitez-vous que votre seigneur se fasse hara-kiri \n oui ou non : ");
+          fgets(str,4,stdin);
+          if (strcmp(str1,str)==0){
+            suicide(seigneur,Jeu,monde);
+          }
+          else
+          { printf("votre seigneur en case (%d,%d) n'a pas joue ! ", seigneur->px, seigneur->py); }
+      }
    }
 }
