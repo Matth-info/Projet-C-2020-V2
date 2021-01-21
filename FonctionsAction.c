@@ -370,7 +370,7 @@ void TourManant( Personnage* manant, ListePerso* Jeu, Monde * monde, int * treso
       char str[4];
       char str1[4]="oui";
       printf("souhaitez-vous immobilise le manant sur la case (%d,%d) \n oui ou non ?\n", manant->px, manant->py);
-      fgets(str,4,stdin);
+      scanf("%s",str);
       if(strcmp(str,str1)==0){
         immobilisation(manant);
       }else{
@@ -399,10 +399,10 @@ void TourGuerrier(Personnage * guerrier, ListePerso * Jeu, Monde *monde){
       printf("votre personnage est en cours en déplacement\n");
       deplacementPerso(guerrier,monde);
   } else {
-      printf("souhaitez-vous déplacer le guerrier de la case (%d,%d) \n oui ou non\n : ",guerrier->px,guerrier->py);
+      printf("souhaitez-vous deplacer le guerrier de la case (%d,%d) \n oui ou non\n : ",guerrier->px,guerrier->py);
       char str[4];
       char str1[4]="oui";
-      fgets(str,4,stdin);
+      scanf("%s",str);
       if (strcmp(str1,str)==0) {
         int newdx, newdy;
         printf("nouvelle ligne dx : ");
@@ -414,7 +414,7 @@ void TourGuerrier(Personnage * guerrier, ListePerso * Jeu, Monde *monde){
       }
       else{
         printf("souhaitez-vous que votre guerrier se fasse hara-kiri \n oui ou non : \n");
-        fgets(str,4,stdin);
+        scanf("%s",str);
         if (strcmp(str1,str)==0){
           suicide(guerrier,Jeu,monde);
         }
@@ -431,7 +431,7 @@ void TourSeigneur(Personnage *seigneur, ListePerso * Jeu, Monde *monde){
       char str[4];
       char str1[4]="oui";
       printf("souhaitez-vous deplacer le seigneur de la case (%d,%d) \n oui ou non : \n",seigneur->px,seigneur->py);
-      fgets(str,4,stdin);
+      scanf("%s", str);
       if (strcmp(str1,str)==0) {
         int newdx, newdy;
         printf("nouvelle ligne dx : ");
@@ -443,7 +443,7 @@ void TourSeigneur(Personnage *seigneur, ListePerso * Jeu, Monde *monde){
 
       } else{
           printf("souhaitez-vous que votre seigneur se fasse hara-kiri \n oui ou non : \n");
-          fgets(str,4,stdin);
+          scanf("%s",str);
           if (strcmp(str1,str)==0){
             suicide(seigneur,Jeu,monde);
           }
@@ -471,11 +471,38 @@ void TourChateau(ListePerso*Jeu, Monde* monde, int* tresor){
       printf("souhaitez-vous que votre chateau en case (%d,%d) produise ? \n oui ou non ?",chateau->px,chateau->py);
       char str[4];
       char str1[4]="oui";
-      fgets(str,4,stdin);
+      scanf("%s",str);
       if(strcmp(str1,str)==0){
           ChateauProduction(Jeu,monde,tresor);
       }else{
         printf(" vous avez repondu non, vous passez donc le tour de votre chateau\n");
       }
     }
+}
+
+
+void Transformartion(Personnage* Seigneur,ListePerso*Jeu, Monde* monde, couleur_t couleur, int* tresor) {
+  if(Seigneur->dx >=0 || Seigneur->dy >=0)
+    printf("Le seigneur n'est pas immobile, il ne peut pas se transformer");
+  else {
+    printf("Souhaitez vous transfrormer votre seigneur en (%d,%d) en chateau pour 30 piece d'or? \n oui ou non?",Seigneur->px,Seigneur->py );
+    char str[4];
+    char str1[4]="oui";
+    scanf("%s",str);
+    if(strcmp(str1,str)==0){
+      if(tresor < 30)
+        printf("vous n'avez pas assez de pièce d'or");
+      else {
+        int x = Seigneur->px;
+        int y = Seigneur->py;
+        suicide(Seigneur, Jeu, monde);
+        Personnage* Jeu_2 = initJeu(void);
+        CreerChateau(Jeu_2, monde, couleur, x, y);
+        Jeu->fin->suivant = Jeu_2->tete;
+        Jeu_2->tete->precedent = Jeu->fin;
+        printf("Le Seigneur s'est transforme en chateau en (%d,%d)",x,y);
+        tresor-=30;
+      }
+    }
+  }
 }
