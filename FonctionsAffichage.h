@@ -3,7 +3,7 @@
 
 
 void AffichageJeu(ListePerso* Jeu);
-
+void AffichageJeuVoisin(ListePerso * JeuVoisin);
 void AffichagePlateau(Monde* monde);
 
 void AffichageTresor(int* tresorRouge, int* tresorBleu);
