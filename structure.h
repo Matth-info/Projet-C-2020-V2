@@ -20,6 +20,10 @@ typedef struct Personnage{ //equivalent du maillon dans les TD/TPs
 
   struct Personnage* PersoPrecedent; // dans le ListePerso
   struct Personnage* PersoSuivant;
+
+  struct Personnage* PersoPrecedentVoisin; // chateau voisin pour les chateaux et agents sur la même case pour les agents
+  struct Personnage* PersoPrecedentVoisin; // les voisins de case pour les agents seront initilisés à NULL , pas possible avant le niveau 4 d'avoir plusieur personnage sur la case. 
+
 }Personnage;
 
 
