@@ -18,7 +18,7 @@ ListePerso * initJeu(void){ // creation d'une liste doublement chainee
 }
 
 
-void CreerChateau(ListePerso *Jeu, Monde * monde, couleur_t couleur,int px, int py){ // fonction pour remplir un espace alloué pour un chateau// Tete d'une ListePerso
+void CreerChateau(ListePerso *Jeu, ListePerso* JeuVoisin, Monde * monde, couleur_t couleur,int px, int py){ // fonction pour remplir un espace alloué pour un chateau// Tete d'une ListePerso
   Personnage* Castle =malloc(sizeof(Personnage));
   if (Jeu->nbPerso>0){
     printf("la liste de jeu contient déjà un chateau, initialisation de la liste impossible"); // si il y a déjà un personnage dans la double liste chainée alors on ne peut pas rajouter un Chateau car il en exite déjà un forcément
