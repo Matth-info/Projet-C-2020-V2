@@ -18,13 +18,11 @@ ListePerso * initJeu(void){ // creation d'une liste doublement chainee
 }
 
 
-void CreerChateau(ListePerso *Jeu, ListePerso* JeuVoisinChateau, Monde * monde, couleur_t couleur,int px, int py){ // fonction pour remplir un espace alloué pour un chateau// Tete d'une ListePerso
+void CreerChateau(ListePerso* JeuVoisinChateau, Monde * monde, couleur_t couleur,int px, int py){ // fonction pour remplir un espace alloué pour un chateau// Tete d'une ListePerso
   Personnage* Castle =malloc(sizeof(Personnage));
-  if (Jeu->nbPerso>0){
-    printf("la liste de jeu contient déjà un chateau, initialisation de la liste impossible"); // si il y a déjà un personnage dans la double liste chainée alors on ne peut pas rajouter un Chateau car il en exite déjà un forcément
-  }
-  else
-  {
+  if (castle==NULL){
+    printf("impossible de créer le chateau")
+  }else{
     Castle->couleur = couleur;
     Castle->typePerso=Chateau;
     Castle->px=px;
@@ -33,36 +31,33 @@ void CreerChateau(ListePerso *Jeu, ListePerso* JeuVoisinChateau, Monde * monde, 
     Castle->dy=-1; // (les manants immobiles auront egalement ces coordonnees)
     Castle->typeProd=Rien;
     Castle->tempsProd=0;
-
     Castle->PersoPrecedent=NULL;
     Castle->PersoSuivant=NULL;
-    Jeu->tete=Castle;
-    Jeu->fin=Castle;
-    Jeu->nbPerso++;
 
-    monde->plateau[px][py].chateau=Castle; // ici on accede au plateau de jeu, à la case px, py et on relie le membre chateau au Castle
-
-    if (JeuVoisinChateau->nbPerso==0){ // si le nombre de personnage dans la liste Jeu voisin n'est pas nul, alors il y a déjà d'autres chateau initiallisaer;
-        switch(couleur){
-          case 0: monde->CampRouge=Castle;
-                  JeuVoisinChateau->tete=Castle;
-                  JeuVoisinChateau->fin=Castle;
-                  break;
-          case 1: monde->CampBleu=Castle;
-                  JeuVoisinChateau->tete=Castle;
-                  JeuVoisinChateau->fin=Castle;
-                  break;
+    if (JeuVoisinChateau->nbPerso==0){ // premier Chateau de la liste de Voisin
+      JeuVoisinChateau->tete=Castle;
+      JeuVoisinChateau->fin=Castle;
+      JeuVoisinChateau->nbPerso++;
+      switch(couleur){
+        case 0: monde->CampRouge=Castle;
+                break;
+        case 1: monde->CampBleu=Castle;
+                break;
         }
     }
-    Castle->PersoPrecedentVoisin=JeuVoisinChateau->fin;
-    Castle->PersoSuivantVoisin= NULL;// la tete ne change jamais = toujours un chateau en tete de sa liste.
+    else{
+      Castle->PersoPrecedentVoisin=JeuVoisinChateau->fin;
+      Castle->PersoSuivantVoisin= NULL;
+      JeuVoisinChateau->fin->PersoSuivant=Castle;
+      JeuVoisinChateau->fin=Castle;
 
-    JeuVoisinChateau->fin->PersoSuivant=Castle;
-    JeuVoisinChateau->fin=Castle;
+      JeuVoisinChateau->nbPerso++;
+    }
+    monde->plateau[px][py].chateau=Castle; // ici on accede au plateau de jeu, à la case px, py et on relie le membre chateau au Castle
+    }
 
-    JeuVoisinChateau->nbPerso++;
-  }
 }
+
 
 void CreerSeigneur(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, int py, int* tresor){ // un seigneur est rataché à un chateau forcément
   Personnage* seigneur=malloc(sizeof(Personnage));
