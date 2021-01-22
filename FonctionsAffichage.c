@@ -3,7 +3,7 @@
 #include"FonctionsAffichage.h"
 #include<stdio.h>
 
-void AffichageJeu(ListePerso* Jeu)
+void AffichageJeu(Personnage* Castle)
 {
   printf("\n");
   if (Jeu->nbPerso==0){
@@ -11,14 +11,14 @@ void AffichageJeu(ListePerso* Jeu)
   }
   else
   {
-    int couleur= Jeu->tete->couleur;
+    int couleur= Castle->couleur;
     if (couleur== 0){
-      printf("Personnages dans la liste Rouge du Chateau Cr (%d,%d):\n",Jeu->tete->px,Jeu->tete->py);
+      printf("Personnages dans la liste Rouge du Chateau Cr (%d,%d):\n",Castle->px,Castle->py);
     }
     else {
-      printf("Personnages dans la liste Bleue du Chateau Cb(%d,%d):\n",Jeu->tete->px,Jeu->tete->py);
+      printf("Personnages dans la liste Bleue du Chateau Cb(%d,%d):\n",Castle->px,Castle->py);
     }
-    for (Personnage * persotemp=Jeu->tete ; persotemp!=NULL ; persotemp=persotemp->PersoSuivant)
+    for (Personnage * persotemp=Castle ; persotemp!=NULL ; persotemp=persotemp->PersoSuivant)
     {
       switch(persotemp->typePerso){
         case 0: printf("chateau");
@@ -42,6 +42,12 @@ void AffichageJeu(ListePerso* Jeu)
     }
   }
   printf("\n");
+}
+
+void AffichageJeuVoisin(Personnage* Castle) {
+  for(Personnage* castletemp = Castle; castletemp!=NULL; castletemp = castletemp->PersoSuivantVoisin) {
+    AffichageJeu(castletemp);
+  }
 }
 
 void AffichagePlateau(Monde* monde){
