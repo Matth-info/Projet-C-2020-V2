@@ -129,16 +129,16 @@ void CreerGuerrier(Personnage* Castle,Monde* monde, couleur_t couleur, int px, i
     guerrier->PersoSuivant = NULL;
   }
   else {
-    guerrier->PersoPrecedent = Perso; // la tete ne change jamais = toujours un chateau en tete de sa liste.
-    guerrier->PersoSuivant = Perso->PersoSuivant;
+    guerrier->PersoPrecedent = Persotemp; // la tete ne change jamais = toujours un chateau en tete de sa liste.
+    guerrier->PersoSuivant = Persotemp->PersoSuivant;
 
-    Perso->PersoSuivant->PersoPrecedent = guerrier;
-    Perso->PersoSuivant = guerrier;
+    Persotemp->PersoSuivant->PersoPrecedent = guerrier;
+    Persotemp->PersoSuivant = guerrier;
   }
 
   Jeu->nbPerso++;
 
-  monde->plateau[px][py].perso=guerrier;
+  monde->plateau[px][py].persotemp=guerrier;
   *tresor=*tresor-5;
   }
 }
