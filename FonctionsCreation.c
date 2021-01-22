@@ -20,8 +20,8 @@ ListePerso * initJeu(void){ // creation d'une liste doublement chainee
 
 void CreerChateau(ListePerso* JeuVoisinChateau, Monde * monde, couleur_t couleur,int px, int py){ // fonction pour remplir un espace alloué pour un chateau// Tete d'une ListePerso
   Personnage* Castle =malloc(sizeof(Personnage));
-  if (castle==NULL){
-    printf("impossible de créer le chateau")
+  if (Castle==NULL){
+    printf("impossible de créer le chateau");
   }else{
     Castle->couleur = couleur;
     Castle->typePerso=Chateau;
@@ -48,7 +48,7 @@ void CreerChateau(ListePerso* JeuVoisinChateau, Monde * monde, couleur_t couleur
     else{
       Castle->PersoPrecedentVoisin=JeuVoisinChateau->fin;
       Castle->PersoSuivantVoisin= NULL;
-      JeuVoisinChateau->fin->PersoSuivant=Castle;
+      JeuVoisinChateau->fin->PersoSuivantVoisin=Castle;
       JeuVoisinChateau->fin=Castle;
 
       JeuVoisinChateau->nbPerso++;
@@ -61,7 +61,7 @@ void CreerChateau(ListePerso* JeuVoisinChateau, Monde * monde, couleur_t couleur
 
 void CreerSeigneur(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, int py, int* tresor){ // un seigneur est rataché à un chateau forcément
   Personnage* seigneur=malloc(sizeof(Personnage));
-  if (seigneur==NULL || Jeu->nbPerso==0 || *tresor-20 < 0 ){
+  if (seigneur==NULL || chateau->typePerso!=Chateau || *tresor-20 < 0 ){
       printf("creation du Seigneur impossible\n ");
   }
   else
@@ -98,7 +98,7 @@ void CreerSeigneur(Personnage* chateau, Monde* monde,  couleur_t couleur, int px
 
 void CreerGuerrier(Personnage* chateau,Monde* monde, couleur_t couleur, int px, int py, int * tresor) {
   Personnage* guerrier = malloc(sizeof(Personnage));
-  if (guerrier == NULL || Jeu->nbPerso == 0 || *tresor - 5 < 0){
+  if ((guerrier == NULL) || (chateau->typePerso != Chateau) || (*tresor - 5 < 0)){
     printf("creation du Guerrier impossible");
   }
   else{
@@ -116,7 +116,7 @@ void CreerGuerrier(Personnage* chateau,Monde* monde, couleur_t couleur, int px, 
 
   Personnage* Persotemp = chateau;
 
-  while(Persotemp->suivant != NULL) {
+  while(Persotemp->PersoSuivant!= NULL) {
     Persotemp = Persotemp->PersoSuivant;
   }
 
@@ -148,7 +148,7 @@ void CreerGuerrier(Personnage* chateau,Monde* monde, couleur_t couleur, int px, 
 
 void CreerManant(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, int py, int* tresor) {
   Personnage* manant = malloc(sizeof(Personnage));
-  if (manant == NULL || Jeu->nbPerso == 0 || *tresor-1 < 0){
+  if ((manant == NULL) || (chateau->typePerso!=Chateau) || (*tresor-1 < 0) ){
     printf("creation du manant impossible");
   }
   else
