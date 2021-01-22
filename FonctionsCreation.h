@@ -4,7 +4,7 @@
 
 ListePerso * initJeu(void);
 
-void CreerChateau(ListePerso* Jeu,ListePerso* JeuVoisinChateau,  Monde* monde, couleur_t couleur,int px, int py);
+void CreerChateau(ListePerso* JeuVoisinChateau,  Monde* monde, couleur_t couleur,int px, int py);
 
 void CreerSeigneur(Personnage* chateau, Monde* monde, couleur_t couleur, int px, int py, int* tresor);
 
