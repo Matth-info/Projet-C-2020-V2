@@ -218,7 +218,7 @@ void ChateauProduction(Personnage* chateau, Monde* monde, int* tresor) {
   }
   else {
     int* T;
-    T= TrouverCaseLibre(monde, chateau, Jeu, tresor);
+    T= TrouverCaseLibre(monde, chateau, tresor);
     if (T == NULL) {
       printf("Aucune case libre trouvee au tour du chateau (%d,%d)\n", chateau->px, chateau->py);
     }
@@ -232,7 +232,7 @@ void ChateauProduction(Personnage* chateau, Monde* monde, int* tresor) {
         case 1: CreerSeigneur(chateau, monde, chateau->couleur, T[0], T[1], tresor);
           if(savetresor == *tresor){
             printf("avec un tresor de %d pieces d'or, vous n'avez pas assez pour creer un Seigneur", *tresor);
-            ChateauProduction(Castle, monde, tresor);
+            ChateauProduction(chateau, monde, tresor);
           }else{
               chateau->typeProd = Seigneur;
               chateau->tempsProd = 6;
