@@ -92,7 +92,7 @@ void CreerSeigneur(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int px, in
   }
 }
 
-void CreerGuerrier(ListePerso* Jeu,Monde* monde, couleur_t couleur, int px, int py, int * tresor) {
+void CreerGuerrier(Personnage* Castle,Monde* monde, couleur_t couleur, int px, int py, int * tresor) {
   Personnage* guerrier = malloc(sizeof(Personnage));
   if (guerrier == NULL || Jeu->nbPerso == 0 || *tresor - 5 < 0){
     printf("creation du Guerrier impossible");
@@ -110,16 +110,22 @@ void CreerGuerrier(ListePerso* Jeu,Monde* monde, couleur_t couleur, int px, int 
   guerrier->PersoSuivantVoisin=NULL;
   guerrier->PersoPrecedentVoisin=NULL; // à modifier lorsque l'on sera au niveau 4;
 
-  Personnage* Perso = Jeu->fin;
+  Personnage* Persotemp = Castle;
 
-  while(Perso->typePerso == Manant) {
-    Perso = Perso->PersoPrecedent;
+  while(Persotemp->suivant != NULL) {
+    Persotemp = Persotemp->PersoSuivant;
   }
 
-  if(Perso == Jeu->fin) {
-    guerrier->PersoPrecedent=Jeu->fin;
-    Jeu->fin->PersoSuivant = guerrier;
-    Jeu->fin = guerrier;
+  Personnage* fin = Persotemp;
+
+  while(Persotemp->typePerso == Manant) {
+    Persotemp = Persotemp->PersoPrecedent;
+  }
+
+  if(Persotemp == fin) {
+    guerrier->PersoPrecedent=fin;
+    fin->PersoSuivant = guerrier;
+    fin = guerrier;
     guerrier->PersoSuivant = NULL;
   }
   else {
