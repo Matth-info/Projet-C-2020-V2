@@ -6,8 +6,8 @@
 void AffichageJeu(Personnage* Castle)
 {
     printf("\n");
-    int couleur= Castle->couleur;
-    if (couleur== 0){
+
+    if (Castle->couleur== Rouge){
       printf("Personnages dans la liste Rouge du Chateau Cr (%d,%d):\n",Castle->px,Castle->py);
     }
     else {
@@ -18,13 +18,13 @@ void AffichageJeu(Personnage* Castle)
       switch(persotemp->typePerso){
         case 0: printf("chateau");
                 break;
-        case 1: printf("seigneur");
+        case 1: printf("\tseigneur");
                 break;
-        case 2 : printf("guerrier");
+        case 2 : printf("\tguerrier");
                 break;
-        case 3 : printf("manant");
+        case 3 : printf("\tmanant");
                 break;
-        default : printf("type de Personnage inconnu");
+        default : printf("Type de Personnage inconnu");
       }
 
       switch(persotemp->couleur){
@@ -52,12 +52,17 @@ void AffichagePlateau(Monde* monde){
     printf("L'initialisation du Monde n'a pas fonctionnée");
   }
   printf("\nPlateau de jeu actuellement\n");
+
+  for(int j=0;j<8;j++){
+    printf("%d\t     ",j);
+  }
+
   for(int i=0; i<8; i++){
     printf("\n");
     for (int l=0; l<8; l++){
       for (int m=0; m<8; m++){
-      printf("_"); // affichage de ligne de sepatation entre les lignes (effet cadrillage)
-      }
+        printf("_"); // affichage de ligne de sepatation entre les lignes (effet cadrillage)
+        }
     }
     printf("\n");
     for (int j=0; j<8; j++){
@@ -96,7 +101,7 @@ void AffichagePlateau(Monde* monde){
             }
           }
       } printf("\t|");
-  }
+  } printf("%d ", i);
 } printf("\n");
 }
 
