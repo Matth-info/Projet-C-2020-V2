@@ -45,11 +45,22 @@ void CreerChateau(ListePerso *Jeu, ListePerso* JeuVoisinChateau, Monde * monde, 
     if (JeuVoisinChateau->nbPerso==0){ // si le nombre de personnage dans la liste Jeu voisin n'est pas nul, alors il y a déjà d'autres chateau initiallisaer;
         switch(couleur){
           case 0: monde->CampRouge=Castle;
+                  JeuVoisinChateau->tete=Castle;
+                  JeuVoisinChateau->fin=Castle;
                   break;
           case 1: monde->CampBleu=Castle;
+                  JeuVoisinChateau->tete=Castle;
+                  JeuVoisinChateau->fin=Castle;
                   break;
         }
     }
+    Castle->PersoPrecedentVoisin=JeuVoisinChateau->fin;
+    Castle->PersoSuivantVoisin= NULL;// la tete ne change jamais = toujours un chateau en tete de sa liste.
+
+    JeuVoisinChateau->fin->PersoSuivant=Castle;
+    JeuVoisinChateau->fin=Castle;
+
+    JeuVoisinChateau->nbPerso++;
   }
 }
 
