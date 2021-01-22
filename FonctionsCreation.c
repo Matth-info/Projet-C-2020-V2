@@ -53,7 +53,7 @@ void CreerChateau(ListePerso *Jeu, ListePerso* JeuVoisinChateau, Monde * monde, 
   }
 }
 
-void CreerSeigneur(Personnage* Castle, Monde* monde,  couleur_t couleur, int px, int py, int* tresor){ // un seigneur est rataché à un chateau forcément
+void CreerSeigneur(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, int py, int* tresor){ // un seigneur est rataché à un chateau forcément
   Personnage* seigneur=malloc(sizeof(Personnage));
   if (seigneur==NULL || Jeu->nbPerso==0 || *tresor-20 < 0 ){
       printf("creation du Seigneur impossible\n ");
@@ -73,15 +73,15 @@ void CreerSeigneur(Personnage* Castle, Monde* monde,  couleur_t couleur, int px,
     seigneur->PersoSuivantVoisin=NULL;
 
 
-    if (Castle->PersoSuivant == NULL){
+    if (chateau->PersoSuivant == NULL){
       seigneur->PersoSuivant=NULL;
-      seigneur->PersoPrecedent=Castle;
-      Castle->PersoSuivant=seigneur;
+      seigneur->PersoPrecedent=chateau;
+      chateau->PersoSuivant=seigneur;
     } else{
-      seigneur->PersoSuivant=Castle->PersoSuivant;
-      seigneur->PersoPrecedent=Castle; // la tete ne change jamais = toujours un chateau en tete de sa liste.
-      Castle->PersoSuivant->PersoPrecedent=seigneur;
-      Castle->PersoSuivant=seigneur;
+      seigneur->PersoSuivant=chateau->PersoSuivant;
+      seigneur->PersoPrecedent=chateau; // la tete ne change jamais = toujours un chateau en tete de sa liste.
+      chateau->PersoSuivant->PersoPrecedent=seigneur;
+      chateau->PersoSuivant=seigneur;
     }
 
     monde->plateau[px][py].perso=seigneur;
@@ -90,7 +90,7 @@ void CreerSeigneur(Personnage* Castle, Monde* monde,  couleur_t couleur, int px,
   }
 }
 
-void CreerGuerrier(Personnage* Castle,Monde* monde, couleur_t couleur, int px, int py, int * tresor) {
+void CreerGuerrier(Personnage* chateau,Monde* monde, couleur_t couleur, int px, int py, int * tresor) {
   Personnage* guerrier = malloc(sizeof(Personnage));
   if (guerrier == NULL || Jeu->nbPerso == 0 || *tresor - 5 < 0){
     printf("creation du Guerrier impossible");
@@ -108,7 +108,7 @@ void CreerGuerrier(Personnage* Castle,Monde* monde, couleur_t couleur, int px, i
   guerrier->PersoSuivantVoisin=NULL;
   guerrier->PersoPrecedentVoisin=NULL; // à modifier lorsque l'on sera au niveau 4;
 
-  Personnage* Persotemp = Castle;
+  Personnage* Persotemp = chateau;
 
   while(Persotemp->suivant != NULL) {
     Persotemp = Persotemp->PersoSuivant;
@@ -140,7 +140,7 @@ void CreerGuerrier(Personnage* Castle,Monde* monde, couleur_t couleur, int px, i
   }
 }
 
-void CreerManant(Personnage* Castle, Monde* monde,  couleur_t couleur, int px, int py, int* tresor) {
+void CreerManant(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, int py, int* tresor) {
   Personnage* manant = malloc(sizeof(Personnage));
   if (manant == NULL || Jeu->nbPerso == 0 || *tresor-1 < 0){
     printf("creation du manant impossible");
@@ -158,7 +158,7 @@ void CreerManant(Personnage* Castle, Monde* monde,  couleur_t couleur, int px, i
 
   manant->PersoPrecedentVoisin=NULL;
   manant->PersoSuivantVoisin=NULL;
-  Personnage* fin = Castle;
+  Personnage* fin = chateau;
   while(fin->PersoSuivant != NULL)
     fin = fin->PersoSuivant;
   manant->PersoPrecedent=fin;
@@ -201,15 +201,15 @@ Monde *CreerMonde(Case ** Land){
 }
 
 
-void ChateauProduction(ListePerso* Jeu, Monde* monde, int* tresor) {
-  if(Jeu->tete->tempsProd != 0) {
+void ChateauProduction(Personnage* chateau, Monde* monde, int* tresor) {
+  if(chateau->tempsProd != 0) {
     printf("le chateau est deja en production\n");
   }
   else {
     int* T;
-    T= TrouverCaseLibre(monde, Jeu->tete, Jeu, tresor);
+    T= TrouverCaseLibre(monde, chateau, Jeu, tresor);
     if (T == NULL) {
-      printf("Aucune case libre trouvee au tour du chateau (%d,%d)\n", Jeu->tete->px, Jeu->tete->py);
+      printf("Aucune case libre trouvee au tour du chateau (%d,%d)\n", chateau->px, chateau->py);
     }
     else {
       int i;
@@ -218,37 +218,37 @@ void ChateauProduction(ListePerso* Jeu, Monde* monde, int* tresor) {
       int savetresor = *tresor; // comparer le trésor d'avant et d'après l'appel à la fonction permettra de savoir si la création du nouveau personnage a bien eu lieu;
 
       switch(i) {
-        case 1: CreerSeigneur(Jeu, monde, Jeu->tete->couleur, T[0], T[1], tresor);
+        case 1: CreerSeigneur(chateau, monde, chateau->couleur, T[0], T[1], tresor);
           if(savetresor == *tresor){
             printf("avec un tresor de %d pieces d'or, vous n'avez pas assez pour creer un Seigneur", *tresor);
-            ChateauProduction(Jeu, monde, tresor);
+            ChateauProduction(Castle, monde, tresor);
           }else{
-              Jeu->tete->typeProd = Seigneur;
-              Jeu->tete->tempsProd = 6;
+              chateau->typeProd = Seigneur;
+              chateau->tempsProd = 6;
           }
           break;
-        case 2: CreerGuerrier(Jeu, monde, Jeu->tete->couleur, T[0], T[1], tresor);
+        case 2: CreerGuerrier(chateau, monde, chateau->couleur, T[0], T[1], tresor);
           if(savetresor == *tresor) {
-              ChateauProduction(Jeu, monde, tresor);
+              ChateauProduction(chateau, monde, tresor);
               printf("avec un tresor de %d pieces d'or, vous n'avez pas assez pour créer un Guerrier", *tresor);
           } else{
-            Jeu->tete->typeProd = Guerrier;
-            Jeu->tete->tempsProd = 4;
+            chateau->typeProd = Guerrier;
+            chateau->tempsProd = 4;
           }
           break;
-        case 3: CreerManant(Jeu, monde, Jeu->tete->couleur, T[0], T[1], tresor);
+        case 3: CreerManant(chateau, monde, chateau->couleur, T[0], T[1], tresor);
           if(savetresor == *tresor){
             printf("avec un tresor de %d pieces d'or, vous n'avez pas assez pour créer un Manant", *tresor);
-            ChateauProduction(Jeu, monde, tresor);
+            ChateauProduction(chateau, monde, tresor);
           }else{
-          Jeu->tete->typeProd = Manant;
-          Jeu->tete->tempsProd = 2;
+          chateau->typeProd = Manant;
+          chateau->tempsProd = 2;
           }
           break;
-        case 4: Jeu->tete->typeProd = Rien;
+        case 4: chateau->typeProd = Rien;
                 break;
         default: printf("Valeur rentree incorrect\n");
-                ChateauProduction(Jeu, monde, tresor);
+                ChateauProduction(chateau, monde, tresor);
       }
 
     }
