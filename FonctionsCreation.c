@@ -53,7 +53,7 @@ void CreerChateau(ListePerso *Jeu, ListePerso* JeuVoisinChateau, Monde * monde, 
   }
 }
 
-void CreerSeigneur(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int px, int py, int* tresor){ // un seigneur est rataché à un chateau forcément
+void CreerSeigneur(Personnage* Castle, Monde* monde,  couleur_t couleur, int px, int py, int* tresor){ // un seigneur est rataché à un chateau forcément
   Personnage* seigneur=malloc(sizeof(Personnage));
   if (seigneur==NULL || Jeu->nbPerso==0 || *tresor-20 < 0 ){
       printf("creation du Seigneur impossible\n ");
@@ -73,18 +73,16 @@ void CreerSeigneur(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int px, in
     seigneur->PersoSuivantVoisin=NULL;
 
 
-    if (Jeu->nbPerso==1){
+    if (Castle->PersoSuivant == NULL){
       seigneur->PersoSuivant=NULL;
-      seigneur->PersoPrecedent=Jeu->tete;
-      Jeu->tete->PersoSuivant=seigneur;
-      Jeu->fin=seigneur;
+      seigneur->PersoPrecedent=Castle;
+      Castle->PersoSuivant=seigneur;
     } else{
-      seigneur->PersoSuivant=Jeu->tete->PersoSuivant;
-      seigneur->PersoPrecedent=Jeu->tete; // la tete ne change jamais = toujours un chateau en tete de sa liste.
-      Jeu->tete->PersoSuivant->PersoPrecedent=seigneur;
-      Jeu->tete->PersoSuivant=seigneur;
+      seigneur->PersoSuivant=Castle->PersoSuivant;
+      seigneur->PersoPrecedent=Castle; // la tete ne change jamais = toujours un chateau en tete de sa liste.
+      Castle->PersoSuivant->PersoPrecedent=seigneur;
+      Castle->PersoSuivant=seigneur;
     }
-    Jeu->nbPerso++;
 
     monde->plateau[px][py].perso=seigneur;
     *tresor=*tresor-20;
@@ -136,14 +134,13 @@ void CreerGuerrier(Personnage* Castle,Monde* monde, couleur_t couleur, int px, i
     Persotemp->PersoSuivant = guerrier;
   }
 
-  Jeu->nbPerso++;
 
-  monde->plateau[px][py].persotemp=guerrier;
+  monde->plateau[px][py].perso=guerrier;
   *tresor=*tresor-5;
   }
 }
 
-void CreerManant(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int px, int py, int* tresor) {
+void CreerManant(Personnage* Castle, Monde* monde,  couleur_t couleur, int px, int py, int* tresor) {
   Personnage* manant = malloc(sizeof(Personnage));
   if (manant == NULL || Jeu->nbPerso == 0 || *tresor-1 < 0){
     printf("creation du manant impossible");
@@ -161,14 +158,14 @@ void CreerManant(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int px, int 
 
   manant->PersoPrecedentVoisin=NULL;
   manant->PersoSuivantVoisin=NULL;
-
-  manant->PersoPrecedent=Jeu->fin;
+  Personnage* fin = Castle;
+  while(fin->PersoSuivant != NULL)
+    fin = fin->PersoSuivant;
+  manant->PersoPrecedent=fin;
   manant->PersoSuivant= NULL;// la tete ne change jamais = toujours un chateau en tete de sa liste.
 
-  Jeu->fin->PersoSuivant=manant;
-  Jeu->fin=manant;
+  fin->PersoSuivant=manant;
 
-  Jeu->nbPerso++;
   monde->plateau[px][py].perso=manant;
   *tresor=*tresor-1;
   }
