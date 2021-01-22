@@ -39,13 +39,15 @@ int main(int argc, char const *argv[])
       char str[4];
       char str1[4]="oui";
       scanf("%s",str);
+      int ProchainAJouer=0;
       if(strcmp(str1,str)==0){
-          sauvergardeJeu(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB);
+          sauvergardeJeu(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,ProchainAJouer);
           return 0;
-      } else{
-        printf("debut du tour du joueur Rouge\n");
+      }
 
-        for(Personnage* ChateauR=JeuRougeVoisin->tete; ChateauR!=NULL; ChateauR=ChateauR->PersoSuivantVoisin){
+      printf("debut du tour du joueur Rouge\n");
+
+      for(Personnage* ChateauR=JeuRougeVoisin->tete; ChateauR!=NULL; ChateauR=ChateauR->PersoSuivantVoisin){
           for(Personnage* persotemp=ChateauR; persotemp!=NULL; persotemp=persotemp->PersoSuivant){
             switch(persotemp->typePerso){
               case 0: TourChateau(persotemp, monde,&tresorR);
@@ -62,9 +64,19 @@ int main(int argc, char const *argv[])
           AffichageTresor(&tresorR,&tresorB);
           }
         }
+      ProchainAJouer=1;
+      printf("voulez-vous sauvegarder la partie ? \noui ou non ?: ");
+      char str2[4];
+      scanf("%s",str2);
 
-        printf(" debut du tour du joueur Bleu\n");
-        for(Personnage* ChateauB=JeuBleuVoisin->tete; ChateauB!=NULL; ChateauB=ChateauB->PersoSuivantVoisin){
+      if(strcmp(str1,str2)==0){
+        sauvergardeJeu(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,ProchainAJouer);
+        return 0;
+      }
+
+      printf(" debut du tour du joueur Bleu\n");
+
+      for(Personnage* ChateauB=JeuBleuVoisin->tete; ChateauB!=NULL; ChateauB=ChateauB->PersoSuivantVoisin){
           for(Personnage* persotemp=ChateauB; persotemp!=NULL; persotemp=persotemp->PersoSuivant){
             switch (persotemp->typePerso){
               case 0: TourChateau(persotemp, monde,&tresorB);
@@ -82,7 +94,6 @@ int main(int argc, char const *argv[])
          }
        }
       printf("%d tours restants\n", objTours - (++cmpt_tour));
-      }
-    } // sortie du while (fin de partie);
+      } // sortie du while (fin de partie);
   return 0;
 }
