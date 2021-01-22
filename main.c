@@ -12,20 +12,29 @@ int main(int argc, char const *argv[])
 {
 
   // creation du plateau de Jeu de depart
-  ListePerso * JeuRouge=initJeu();
-  ListePerso * JeuBleu=initJeu();
+  ListePerso * JeuRougeVoisin=initJeu();
+  ListePerso * JeuBleuVoisin=initJeu();
+
   Case** plateau = CreerPlateau(8,8);
   Monde *monde= CreerMonde(plateau);
   int tresorR = 50;
   int tresorB = 50;
-  lancementdePartie(JeuRouge,JeuBleu,monde,&tresorR,&tresorB);
-  int cmpt_tour=0;
 
+  lancementdePartie(JeuRougeVoisin,JeuBleuVoisin,monde,&tresorR,&tresorB);
+  //int cmpt_tour=0;
+
+  CreerChateau(JeuBleuVoisin,monde,Bleu,5,5);
+  CreerChateau(JeuBleu,JeuBleuVoisin,monde,Bleu,6,6);
+  AffichageJeuVoisin(JeuBleuVoisin);
+  AffichagePlateau(monde);
+
+  /*
   AffichageJeu(JeuRouge);
   AffichageJeu(JeuBleu);
   AffichagePlateau(monde);
-
-  while ((cmpt_tour!=10) || (monde->CampBleu!=NULL) || (monde->CampRouge!=NULL)){
+  */
+/*
+  while ((cmpt_tour!=2) || (monde->CampBleu!=NULL) || (monde->CampRouge!=NULL)){
     for(Personnage* persotemp=JeuRouge->tete; persotemp!=NULL; persotemp=persotemp->PersoSuivant){
       printf("le numero de personnage est %d\n", persotemp->typePerso);
       switch(persotemp->typePerso){
@@ -57,7 +66,8 @@ int main(int argc, char const *argv[])
       AffichageJeu(JeuBleu);
       AffichagePlateau(monde);
     }
-    printf("%d tours restants",10 - ++cmpt_tour);
+    printf("%d tours restants",2 - ++cmpt_tour);
   }
+*/
   return 0;
 }
