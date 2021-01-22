@@ -5,15 +5,15 @@
 #include"FonctionsCreation.h"
 #include"FonctionsAction.h"
 
-void lancementdePartie(ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde *monde, int* tresorRouge, int * tresorBleu)
+void lancementdePartie(ListePerso* JeuRouge, ListePerso* JeuBleu, Monde *monde, int* tresorRouge, int * tresorBleu)
 {
-  CreerChateau(JeuRougeVoisin, monde ,Rouge,7,7);
-  CreerManant(JeuRougeVoisin,monde,Rouge,7,6,tresorRouge);
-  CreerSeigneur(JeuRougeVoisin,monde, Rouge,6,7,tresorRouge);
+  CreerChateau(JeuRouge, monde ,Rouge,7,7);
+  CreerManant(JeuRouge,monde,Rouge,7,6,tresorRouge);
+  CreerSeigneur(JeuRouge,monde, Rouge,6,7,tresorRouge);
 
-  CreerChateau(JeuBleuVoisin,monde, Bleu,0,0);
-  CreerManant(JeuBleuVoisin,monde, Bleu ,0,1,tresorBleu);
-  CreerSeigneur(JeuBleuVoisin,monde, Bleu,1,0,tresorBleu);
+  CreerChateau(JeuBleu,monde, Bleu,0,0);
+  CreerManant(JeuBleu,monde, Bleu ,0,1,tresorBleu);
+  CreerSeigneur(JeuBleu,monde, Bleu,1,0,tresorBleu);
 
   // retablir le tresor à 50 pieces d'or
   *tresorRouge=50;
@@ -24,7 +24,7 @@ void lancementdePartie(ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Mo
 
 // fonctions productions des manants
 
-void trahisonManant(Personnage* manant, Personnage* Attaquant, Personnage* Perdant){ // attaquant et perdant représente les chateaux affiliés aux manants
+void trahisonManant(Personnage* manant, ListePerso *Attaquant, ListePerso* Perdant){
   if (manant->typePerso!=Manant){
     printf("le personnage n'est pas un manant");
   }else{
@@ -35,16 +35,14 @@ void trahisonManant(Personnage* manant, Personnage* Attaquant, Personnage* Perda
       manant->couleur=Bleu;
 
       manant->PersoPrecedent->PersoSuivant=NULL;
+      Perdant->fin=manant->PersoPrecedent;
 
 
       printf("\t -Le manant traitre est rouge (%d,%d), il passe dans le camp bleu\n", manant->px,manant->py);
-      //trouver le dernier personnage Bleu (attaquant relié au chateau)
-      Personnage* dernierperso=Attaquant;
-      while(dernierperso->PersoSuivant!=NULL){
-        dernierperso=dernierperso->PersoSuivant;
-      }
-      manant->PersoPrecedent=dernierperso;
+      manant->PersoPrecedent=Attaquant->fin;
       manant->PersoSuivant=NULL;
+      Attaquant->fin->PersoSuivant=manant;
+      Attaquant->fin=manant;
     }
     else {
       manant->dx=manant->px;
@@ -52,20 +50,22 @@ void trahisonManant(Personnage* manant, Personnage* Attaquant, Personnage* Perda
       manant->couleur=Rouge;
 
       manant->PersoPrecedent->PersoSuivant=NULL;
+      Perdant->fin=manant->PersoPrecedent;
+
 
       printf("\t - Le manant traitre est bleu (%d,%d), il passe dans le camp rouge\n",manant->px,manant->py);
-      Personnage* dernierperso=Attaquant;
-      while(dernierperso->PersoSuivant!=NULL){
-        dernierperso=dernierperso->PersoSuivant;
-      }
-      manant->PersoPrecedent=dernierperso;
+      manant->PersoPrecedent=Attaquant->fin;
       manant->PersoSuivant=NULL;
+      Attaquant->fin->PersoSuivant=manant;
+      Attaquant->fin=manant;
     }
+
+    Attaquant->nbPerso++;
+    Perdant->nbPerso--;
   }
 }
 // la fonction suicide se produit après la fonction de trahison des manant de la liste
-void suicide(Personnage* Harakiri, Monde* monde){
-
+void suicide(Personnage* Harakiri,ListePerso *Perdant, Monde* monde){
   if (Harakiri->typePerso==Chateau || Harakiri->typePerso==Manant){
     printf("ce type d'agent ne se suicide pas");
   }else {
@@ -76,10 +76,13 @@ void suicide(Personnage* Harakiri, Monde* monde){
 
 
     if (Harakiri->PersoSuivant==NULL){ // cas où le harakiri est en bout de chaine
-      harakiri->PersoPrecedent->PersoSuivant=NULL;
+      Perdant->fin->PersoPrecedent->PersoSuivant=NULL;
+      Perdant->fin = Perdant->fin->PersoPrecedent;
+      Perdant->nbPerso--;
     } else {
       Harakiri->PersoPrecedent->PersoSuivant=Harakiri->PersoSuivant;
       Harakiri->PersoSuivant->PersoPrecedent=Harakiri->PersoPrecedent;
+      Perdant->nbPerso--;
       }
 
       monde->plateau[Harakiri->px][Harakiri->py].perso=NULL;
@@ -88,56 +91,37 @@ void suicide(Personnage* Harakiri, Monde* monde){
 }
 
 // cette fonction detruit et libere la liste de Jeu lié au chateau qui vient d'être détruit
-void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant, Monde* monde, ListePerso* JeuVoisinPerdant){
+void destructionChateau(ListePerso* Attaquant, ListePerso* Perdant, Monde* monde){
     //la destruction du chateau soit la tete de la liste Perdant va provoquer le suicide des Seigneurs et des guerriers
     // et la trahison de tout les manants;
-    if(ChateauPerdant->couleur==Rouge){
-      printf("Destruction du chateau Rouge de la case(%d,%d) : \n",ChateauPerdant->px,ChateauPerdant->py);
-    } else {printf("Destruction du chateau Bleu de la case(%d,%d): \n",ChateauPerdant->px,ChateauPerdant->py);}
+    if(Perdant->tete->couleur==Rouge){
+      printf("Destruction du chateau Rouge de la case(%d,%d) : \n",Perdant->tete->px,Perdant->tete->py);
+    } else {printf("Destruction du chateau Bleu de la case(%d,%d): \n",Perdant->tete->px,Perdant->tete->py);}
 
-      Personnage * dernierperso=ChateauPerdant;
-      while (dernierperso->PersoSuivant!=NULL){
-        dernierperso=dernierperso->PersoSuivant;
-      }
-
-      while (dernierperso->PersoSuivant->typePerso==Manant){
-          trahisonManant(dernierperso->PersoSuivant,ChateauAttaquant,ChateauPerdant);
-          dernierperso=dernierperso->PersoPrecedent;
+      Personnage* persotemp =Perdant->fin;
+      while (persotemp->typePerso==Manant){
+          trahisonManant(persotemp,Attaquant,Perdant);
+          persotemp=Perdant->fin;
         }
         // comme les manants sont obligatoirement à la fin de la liste de Jeu, on les lit et ils trahissent consécutivement;
         // à ce niveau il n' y a plus de manant dans la liste des perdants;
-
-      while( (dernierperso->PersoSuivant->typePerso==Seigneur) || (dernierperso->PersoSuivant->typePerso==Guerrier) ){
-          suicide(dernierperso->PersoSuivant,monde);
-          dernierperso=dernierperso->PersoPrecedent;
+      Personnage* harakiri=Perdant->fin;
+      while( (harakiri->typePerso==Seigneur) || (harakiri->typePerso==Guerrier) ){
+          suicide(harakiri,Perdant,monde);
+          harakiri=Perdant->fin;
         }
 
       // a ce niveau il n'y a plus que le chateau dans la liste
-      if (JeuVoisinPerdant->tete==ChateauPerdant){ // premier chateau dans la liste voisin;
-        ChateauPerdant->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
-        JeuVoisinPerdant->tete=ChateauPerdant->PersoSuivantVoisin;
-        JeuVoisinPerdant->nbPerso--;
+      if(Perdant->nbPerso==1){
+        monde->plateau[Perdant->tete->px][Perdant->tete->py].chateau=NULL;
+        if(Perdant->tete->couleur==Rouge){
+          monde->CampRouge=NULL;
+        }else{monde->CampBleu=NULL;}
+        free(Perdant->tete);
+        free(Perdant);
+        printf("fin du processus de destruction\n");
       }
-      if (JeuVoisinPerdant->fin==ChateauPerdant){ // dernier chateau dans la liste voisin
-        ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=NULL;
-        JeuVoisinPerdant->fin=ChateauPerdant->PersoPrecedentVoisin;
-      }
-
-      if ((ChateauPerdant->PersoSuivant!=NULL) && (ChateauPerdant->PersoPrecedentVoisin!=NULL)){ // si le chateau enlevé n'est ni au début ni à la fin de la liste des chateau voisin
-          monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
-          ChateauPerdant->PersoSuivantVoisin->PersoPrecedent=ChateauPerdant->PersoPrecedentVoisin;
-          ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=ChateauPerdant->PersoSuivantVoisin;
-      }
-      JeuVoisinPerdant->nbPerso--;
-      if (JeuVoisinPerdant->nbPerso==0){
-          if(ChateauPerdant->couleur==Rouge){
-            monde->CampRouge=NULL;
-          }else {monde->CampBleu=NULL;} // tester si CampRouge ou CampBleu pointe vers NULL signifierait que le CampRouge ou Bleu à perdu la partie;
-      }
-      printf("fin du processus de destruction du chateau (%d,%d)", ChateauPerdant->px, ChateauPerdant->py);
-      free(ChateauPerdant);
 }
-
 
 
 void productionManant(Personnage* manant, int* tresor){
@@ -154,7 +138,7 @@ void productionManant(Personnage* manant, int* tresor){
 }
 
 void immobilisation(Personnage* perso){
-  if ((perso->typePerso==Manant) || (perso->typePerso==Seigneur)){
+  if (perso->typePerso==Manant){
     perso->dx=-1;
     perso->dy=-1;
     // le personnage est immobilisé; Manant ou seigneur
@@ -512,8 +496,8 @@ void Transformartion(Personnage* Seigneur,ListePerso*Jeu, Monde* monde, int* tre
         int x = Seigneur->px;
         int y = Seigneur->py;
         suicide(Seigneur, Jeu, monde);
-        ListePerso* Jeu_2 = initJeu(void);
-        CreerChateau(Jeu_2, monde, Jeu->tete->couleur, x, y);
+        Jeu Jeu_2 = initJeu(void);
+        CreerChateau(Jeu_2, monde, couleur, x, y);
         Jeu->fin->suivant = Jeu_2->tete;
         Jeu_2->tete->precedent = Jeu->fin;
         printf("Le Seigneur s'est transforme en chateau en (%d,%d)",x,y);
