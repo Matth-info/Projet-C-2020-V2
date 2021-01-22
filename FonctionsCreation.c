@@ -235,6 +235,8 @@ void ChateauProduction(ListePerso* Jeu, Monde* monde, int* tresor) {
         default: printf("Valeur rentree incorrect\n");
                 ChateauProduction(Jeu, monde, tresor);
       }
+
     }
+    free(T);
   }
 }
