@@ -439,7 +439,7 @@ void TourGuerrier(Personnage * guerrier, Monde *monde){
       }
    }
 }
-void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, Monde *monde){
+void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, Monde *monde, int*tresor){
   if ((seigneur->px!=seigneur->dx) && (seigneur->py!=seigneur->dy)){
       printf("votre personnage est en cours en déplacement\n");
       deplacementPerso(seigneur,monde);
@@ -522,7 +522,7 @@ void Transformartion(Personnage* Seigneur,ListePerso *JeuVoisin, Monde* monde, i
         suicide(Seigneur, monde);
         CreerChateau(JeuVoisin, monde,couleur_seigneur, x, y);
         printf("Le Seigneur s'est transforme en chateau en (%d,%d)",x,y);
-        tresor-=30;
+        *tresor-=30;
       }
     }
   }
