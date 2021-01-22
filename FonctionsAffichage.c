@@ -44,11 +44,7 @@ void AffichageJeu(Personnage* Castle)
   printf("\n");
 }
 
-void AffichageJeuVoisin(Personnage* Castle) {
-  for(Personnage* castletemp = Castle; castletemp!=NULL; castletemp = castletemp->PersoSuivantVoisin) {
-    AffichageJeu(castletemp);
-  }
-}
+
 
 void AffichagePlateau(Monde* monde){
   if (monde==NULL){
