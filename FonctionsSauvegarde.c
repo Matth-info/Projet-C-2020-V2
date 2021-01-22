@@ -10,7 +10,7 @@
 #define T_MAX 256
 
 //objectif créer un fichier de sauvegarde .got qui respecte les critères de sauvegardes afin de pouvoir facilement le récupérer et rétablir le jeu.
-void sauvergardeJeu(Monde* monde,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, int* tresorR, int* tresorB){
+void sauvergardeJeu(Monde* monde,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, int* tresorR, int* tresorB, int ProchainAJouer){
   FILE* fichier =NULL;
   printf("entrer le nom du fichier avec l'extension .got :");
   char str[T_MAX]="";
@@ -19,9 +19,13 @@ void sauvergardeJeu(Monde* monde,ListePerso* JeuRougeVoisin, ListePerso* JeuBleu
   if (fichier==NULL){
     printf("erreur lors de la creation du fichier");
   }
+  if (ProchainAJouer==0){
   fprintf(fichier,"R  %d\n",*tresorR);
   fprintf(fichier,"B  %d\n",*tresorB);
-
+  }else{
+  fprintf(fichier,"B  %d\n",*tresorB);
+  fprintf(fichier,"R  %d\n",*tresorR);
+  }
 
   for(Personnage* ChateauR=JeuRougeVoisin->tete; ChateauR!=NULL; ChateauR=ChateauR->PersoSuivantVoisin){
     for(Personnage* persotemp=ChateauR; persotemp!=NULL; persotemp=persotemp->PersoSuivant){
