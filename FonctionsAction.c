@@ -496,7 +496,7 @@ void TourChateau(Personnage* Chateau, Monde* monde, int* tresor){
 }
 
 
-void Transformartion(Personnage* Seigneur,ListePerso*Jeu, Monde* monde, int* tresor) {
+void Transformartion(Personnage* Seigneur,ListePerso*JeuVoisin, Monde* monde, int* tresor) {
   if(Seigneur->dx !=-1 || Seigneur->dy!=-1)
     printf("Le seigneur n'est pas immobile, il ne peut pas se transformer");
   else {
@@ -510,8 +510,8 @@ void Transformartion(Personnage* Seigneur,ListePerso*Jeu, Monde* monde, int* tre
       else {
         int x = Seigneur->px;
         int y = Seigneur->py;
-        suicide(Seigneur, Jeu, monde);
-        ListePerso* Jeu_2 = initJeu(void);
+        suicide(Seigneur, monde);
+
         CreerChateau(Jeu_2, monde, Jeu->tete->couleur, x, y);
         Jeu->fin->suivant = Jeu_2->tete;
         Jeu_2->tete->precedent = Jeu->fin;
