@@ -6,7 +6,7 @@
 void AffichageJeu(Personnage* Castle)
 {
   printf("\n");
-  if (Jeu->nbPerso==0){
+  if (Castle->PersoSuivant==NULL){
     printf("Liste de jeu vide");
   }
   else
