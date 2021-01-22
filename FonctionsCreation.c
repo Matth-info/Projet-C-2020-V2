@@ -18,7 +18,7 @@ ListePerso * initJeu(void){ // creation d'une liste doublement chainee
 }
 
 
-void CreerChateau(ListePerso *Jeu, ListePerso* JeuVoisin, Monde * monde, couleur_t couleur,int px, int py){ // fonction pour remplir un espace alloué pour un chateau// Tete d'une ListePerso
+void CreerChateau(ListePerso *Jeu, ListePerso* JeuVoisinChateau, Monde * monde, couleur_t couleur,int px, int py){ // fonction pour remplir un espace alloué pour un chateau// Tete d'une ListePerso
   Personnage* Castle =malloc(sizeof(Personnage));
   if (Jeu->nbPerso>0){
     printf("la liste de jeu contient déjà un chateau, initialisation de la liste impossible"); // si il y a déjà un personnage dans la double liste chainée alors on ne peut pas rajouter un Chateau car il en exite déjà un forcément
@@ -41,11 +41,14 @@ void CreerChateau(ListePerso *Jeu, ListePerso* JeuVoisin, Monde * monde, couleur
     Jeu->nbPerso++;
 
     monde->plateau[px][py].chateau=Castle; // ici on accede au plateau de jeu, à la case px, py et on relie le membre chateau au Castle
-    switch(couleur){
-      case 0: monde->CampRouge=Castle;
-              break;
-      case 1: monde->CampBleu=Castle;
-              break;
+
+    if (JeuVoisinChateau->nbPerso==0){ // si le nombre de personnage dans la liste Jeu voisin n'est pas nul, alors il y a déjà d'autres chateau initiallisaer;
+        switch(couleur){
+          case 0: monde->CampRouge=Castle;
+                  break;
+          case 1: monde->CampBleu=Castle;
+                  break;
+        }
     }
   }
 }
@@ -65,6 +68,9 @@ void CreerSeigneur(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int px, in
     seigneur->dy=py;
     seigneur->typeProd=Rien; // le seigneur ne produit rien mais peut devenir un chateau (il faudra faire une fonction transformation)
     seigneur->tempsProd=-1;
+
+    seigneur->PersoPrecedentVoisin=NULL; // à modifier au niveau 4
+    seigneur->PersoSuivantVoisin=NULL;
 
 
     if (Jeu->nbPerso==1){
@@ -100,6 +106,9 @@ void CreerGuerrier(ListePerso* Jeu,Monde* monde, couleur_t couleur, int px, int 
   guerrier->dy = py;
   guerrier->typeProd = Rien;
   guerrier->tempsProd = -1;
+
+  guerrier->PersoSuivantVoisin=NULL;
+  guerrier->PersoPrecedentVoisin=NULL; // à modifier lorsque l'on sera au niveau 4;
 
   Personnage* Perso = Jeu->fin;
 
@@ -143,6 +152,9 @@ void CreerManant(ListePerso* Jeu, Monde* monde,  couleur_t couleur, int px, int 
   manant->dy = py;
   manant->typeProd = Rien;
   manant->tempsProd = -1;
+
+  manant->PersoPrecedentVoisin=NULL;
+  manant->PersoSuivantVoisin=NULL;
 
   manant->PersoPrecedent=Jeu->fin;
   manant->PersoSuivant= NULL;// la tete ne change jamais = toujours un chateau en tete de sa liste.
