@@ -11,8 +11,8 @@ void deplacementPerso(Personnage* perso, Monde * monde);
 void immobilisation(Personnage* perso);
 int* TrouverCaseLibre(Monde* monde, Personnage* chateau, int* tresor);
 void TourGuerrier(Personnage * guerrier, Monde *monde);
-void TourManant( Personnage* manant, Monde * monde, int * tresor);
-void TourSeigneur(Personnage * seigneur,ListePerso* JeuVoisin, Monde *monde);
+void TourManant(Personnage* manant, Monde * monde, int * tresor);
+void TourSeigneur(Personnage * seigneur,ListePerso* JeuVoisin, Monde *monde, int* tresor);
 void TourChateau(Personnage * chateau,Monde* monde, int* tresor);
 void Transformartion(Personnage* Seigneur,ListePerso*JeuVoisin, Monde* monde, int* tresor);
 #endif
