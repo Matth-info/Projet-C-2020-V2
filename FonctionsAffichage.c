@@ -3,17 +3,6 @@
 #include"FonctionsAffichage.h"
 #include<stdio.h>
 
-
-
-
-
-
-
-
-
-
-
-
 void AffichageJeu(Personnage* Castle)
 {​
   printf("\n");
@@ -55,8 +44,8 @@ void AffichageJeu(Personnage* Castle)
 }​
 
 
-void AffichageJeuVoisin(Personnage* Castle) {​
-  for(Personnage* castletemp = Castle; castletemp!=NULL; castletemp = castletemp->PersoSuivantVoisin) {​
+void AffichageJeuVoisin(ListePerso* JeuVoisin) {​
+  for(Personnage* castletemp =  JeuVoisin->tete; castletemp!=NULL; castletemp = castletemp->PersoSuivantVoisin) {​
     AffichageJeu(castletemp);
   }​
 }​
