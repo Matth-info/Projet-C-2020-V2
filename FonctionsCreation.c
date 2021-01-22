@@ -219,7 +219,7 @@ void ChateauProduction(Personnage* chateau, Monde* monde, int* tresor) {
     }
     else {
       int i;
-      printf("Rentrer le numero  du personnage: \n \t 1: un Seigneur en (%d,%d) pour 20 pieces d'or \n \t 2: un Guerrier en (%d,%d) pour 5 pieces d'or  \n \t 3: un Manant en (%d,%d) pour 1 piece d'or \n \t 4: Rien \n",T[0],T[1],T[0],T[1],T[0],T[1]);
+      printf("Rentrer le numero  du personnage: \n \t 1: un Seigneur en (%d,%d) pour 20 pieces d'or et 6 tours \n \t 2: un Guerrier en (%d,%d) pour 5 pieces d'or et 4 tours  \n \t 3: un Manant en (%d,%d) pour 1 piece d'or et 2 tours \n \t 4: Rien \n",T[0],T[1],T[0],T[1],T[0],T[1]);
       scanf("%d", &i);
       int savetresor = *tresor; // comparer le trésor d'avant et d'après l'appel à la fonction permettra de savoir si la création du nouveau personnage a bien eu lieu;
 
@@ -238,8 +238,8 @@ void ChateauProduction(Personnage* chateau, Monde* monde, int* tresor) {
               ChateauProduction(chateau, monde, tresor);
               printf("avec un tresor de %d pieces d'or, vous n'avez pas assez pour créer un Guerrier", *tresor);
           } else{
-            chateau->typeProd = Guerrier;
-            chateau->tempsProd = 4;
+              chateau->typeProd = Guerrier;
+              chateau->tempsProd = 4;
           }
           break;
         case 3: CreerManant(chateau, monde, chateau->couleur, T[0], T[1], tresor);
