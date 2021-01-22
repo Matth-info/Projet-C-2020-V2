@@ -478,20 +478,20 @@ void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, Monde *monde, int*t
 }
 void TourChateau(Personnage* chateau, Monde* monde, int* tresor){
     if ((chateau->tempsProd!=0) || (chateau->typeProd!=Rien)){
-        printf("le chateau est en cours de production d'un ");
+        printf("le chateau (%d,%d) est en cours de production d'un ",chateau->px,chateau->py);
+        chateau->tempsProd--;
         switch(chateau->typeProd){
           case 1: printf("Seigneur pour encore %d tours\n",chateau->tempsProd); break;
           case 2: printf("Guerrier pour encore %d tours\n",chateau->tempsProd); break;
           case 3: printf("Manant pour encore %d tours\n", chateau->tempsProd); break;
           default : printf("pas de type de production définie\n");
         }
-        chateau->tempsProd--;
         if (chateau->tempsProd==0){
           chateau->typeProd=Rien;
         }
     }
     else { // partie où le chateau ne produit rien, le temps de production est bien revenue à 0 et la production Rien;
-      printf("souhaitez-vous que votre chateau en case (%d,%d) produise ? \n oui ou non ?",chateau->px,chateau->py);
+      printf("souhaitez-vous que votre chateau en case (%d,%d) produise ? \noui ou non ? :",chateau->px,chateau->py);
       char str[4];
       char str1[4]="oui";
       scanf("%s",str);
