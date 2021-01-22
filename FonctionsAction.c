@@ -481,8 +481,8 @@ void TourChateau(ListePerso*Jeu, Monde* monde, int* tresor){
 }
 
 
-void Transformartion(Personnage* Seigneur,ListePerso*Jeu, Monde* monde, couleur_t couleur, int* tresor) {
-  if(Seigneur->dx >=0 || Seigneur->dy >=0)
+void Transformartion(Personnage* Seigneur,ListePerso*Jeu, Monde* monde, int* tresor) {
+  if(Seigneur->dx !=-1 || Seigneur->dy!=-1)
     printf("Le seigneur n'est pas immobile, il ne peut pas se transformer");
   else {
     printf("Souhaitez vous transfrormer votre seigneur en (%d,%d) en chateau pour 30 piece d'or? \n oui ou non?",Seigneur->px,Seigneur->py );
