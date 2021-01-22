@@ -1,0 +1,6 @@
+#ifndef FONCTIONSCOMBATS_H
+#define FONCTIONSCOMBATS_H
+
+
+
+#endif
