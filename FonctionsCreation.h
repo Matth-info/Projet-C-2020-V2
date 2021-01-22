@@ -6,7 +6,7 @@ ListePerso * initJeu(void);
 
 void CreerChateau(ListePerso* Jeu,ListePerso* JeuVoisinChateau,  Monde* monde, couleur_t couleur,int px, int py);
 
-void CreerSeigneur(ListePerso* Jeu, Monde* monde, couleur_t couleur, int px, int py, int* tresor);
+void CreerSeigneur(Personnage* Castle, Monde* monde, couleur_t couleur, int px, int py, int* tresor);
 
 void CreerManant(Personnage* Castle,Monde* monde, couleur_t couleur, int px, int py, int* tresor);
 
