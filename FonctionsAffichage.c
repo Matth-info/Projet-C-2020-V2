@@ -54,7 +54,7 @@ void AffichagePlateau(Monde* monde){
   printf("\nPlateau de jeu actuellement\n");
 
   for(int j=0;j<8;j++){
-    printf("%d\t     ",j);
+    printf("%d\t    ",j);
   }
 
   for(int i=0; i<8; i++){
