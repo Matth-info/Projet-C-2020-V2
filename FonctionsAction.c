@@ -8,12 +8,12 @@
 void lancementdePartie(ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde *monde, int* tresorRouge, int * tresorBleu)
 {
   CreerChateau(JeuRougeVoisin, monde ,Rouge,7,7);
-  CreerManant(JeuRougeVoisin,monde,Rouge,7,6,tresorRouge);
-  CreerSeigneur(JeuRougeVoisin,monde, Rouge,6,7,tresorRouge);
+  CreerManant(JeuRougeVoisin->tete,monde,Rouge,7,6,tresorRouge);
+  CreerSeigneur(JeuRougeVoisin->tete,monde, Rouge,6,7,tresorRouge);
 
   CreerChateau(JeuBleuVoisin,monde, Bleu,0,0);
-  CreerManant(JeuBleuVoisin,monde, Bleu ,0,1,tresorBleu);
-  CreerSeigneur(JeuBleuVoisin,monde, Bleu,1,0,tresorBleu);
+  CreerManant(JeuBleuVoisin->tete,monde, Bleu ,0,1,tresorBleu);
+  CreerSeigneur(JeuBleuVoisin->tete,monde, Bleu,1,0,tresorBleu);
 
   // retablir le tresor à 50 pieces d'or
   *tresorRouge=50;
@@ -76,7 +76,7 @@ void suicide(Personnage* Harakiri, Monde* monde){
 
 
     if (Harakiri->PersoSuivant==NULL){ // cas où le harakiri est en bout de chaine
-      harakiri->PersoPrecedent->PersoSuivant=NULL;
+      Harakiri->PersoPrecedent->PersoSuivant=NULL;
     } else {
       Harakiri->PersoPrecedent->PersoSuivant=Harakiri->PersoSuivant;
       Harakiri->PersoSuivant->PersoPrecedent=Harakiri->PersoPrecedent;
@@ -439,7 +439,7 @@ void TourGuerrier(Personnage * guerrier, Monde *monde){
       }
    }
 }
-void TourSeigneur(Personnage *seigneur,, Monde *monde){
+void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, Monde *monde){
   if ((seigneur->px!=seigneur->dx) && (seigneur->py!=seigneur->dy)){
       printf("votre personnage est en cours en déplacement\n");
       deplacementPerso(seigneur,monde);
@@ -464,11 +464,19 @@ void TourSeigneur(Personnage *seigneur,, Monde *monde){
             suicide(seigneur,monde);
           }
           else
-          { printf("votre seigneur en case (%d,%d) n'a pas joue !\n ", seigneur->px, seigneur->py); }
+          { char str[4];
+            printf("souhaitez-vous immobiliser le seigneur de la case (%d,%d) \n oui ou non : \n",seigneur->px,seigneur->py);
+            scanf("%s", str);
+            if (strcmp(str1,str)==0) {
+              immobilisation(seigneur);
+              Transformartion(seigneur,JeuVoisin, monde, tresor);
+            } else { printf("votre seigneur en case (%d,%d) n'a pas joue !\n ", seigneur->px, seigneur->py);}
+          }
+
       }
    }
 }
-void TourChateau(Personnage* Chateau, Monde* monde, int* tresor){
+void TourChateau(Personnage* chateau, Monde* monde, int* tresor){
     if ((chateau->tempsProd!=0) || (chateau->typeProd!=Rien)){
         printf("le chateau est en cours de production d'un ");
         switch(chateau->typeProd){
@@ -488,7 +496,7 @@ void TourChateau(Personnage* Chateau, Monde* monde, int* tresor){
       char str1[4]="oui";
       scanf("%s",str);
       if(strcmp(str1,str)==0){
-          ChateauProduction(Jeu,monde,tresor);
+          ChateauProduction(chateau,monde,tresor);
       }else{
         printf(" vous avez repondu non, vous passez donc le tour de votre chateau\n");
       }
@@ -505,7 +513,7 @@ void Transformartion(Personnage* Seigneur,ListePerso *JeuVoisin, Monde* monde, i
     char str1[4]="oui";
     scanf("%s",str);
     if(strcmp(str1,str)==0){
-      if(tresor < 30)
+      if( *tresor < 30)
         printf("vous n'avez pas assez de pièce d'or");
       else {
         int x = Seigneur->px;
