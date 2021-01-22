@@ -2,7 +2,9 @@
 #define FONCTIONSAFFICHAGE_H
 
 
-void AffichageJeu(ListePerso* Jeu);
+void AffichageJeu(Personnage* Castle);
+
+void AffichageJeuvoisin(Personnage* Castle);
 
 void AffichagePlateau(Monde* monde);
 
