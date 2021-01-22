@@ -4,10 +4,12 @@
 
 void AffichageJeu(Personnage* Castle);
 
-void AffichageJeuvoisin(Personnage* Castle);
+void AffichageJeuVoisin(ListePerso* JeuVoisin);
 
 void AffichagePlateau(Monde* monde);
 
 void AffichageTresor(int* tresorRouge, int* tresorBleu);
+
+
 
 #endif
