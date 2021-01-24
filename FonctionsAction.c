@@ -4,6 +4,7 @@
 #include"structure.h"
 #include"FonctionsCreation.h"
 #include"FonctionsAction.h"
+#include "FonctionsAffichage.h"
 
 void lancementdePartie(ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde *monde, int* tresorRouge, int * tresorBleu)
 {
@@ -526,4 +527,23 @@ void Transformartion(Personnage* Seigneur,ListePerso *JeuVoisin, Monde* monde, i
       }
     }
   }
+}
+
+void TourDeJeu(Monde* monde,ListePerso* JeuVoisin,int*tresor){
+      for(Personnage* Chateau=JeuVoisin->tete; Chateau!=NULL; Chateau=Chateau->PersoSuivantVoisin){
+          for(Personnage* persotemp=Chateau; persotemp!=NULL; persotemp=persotemp->PersoSuivant){
+            switch(persotemp->typePerso){
+              case 0: TourChateau(persotemp, monde,tresor);
+                      break;
+              case 1: TourSeigneur(persotemp, JeuVoisin, monde, tresor);
+                      break;
+              case 2: TourGuerrier(persotemp, monde);
+                      break;
+              case 3: TourManant(persotemp,monde,tresor);
+                      break;
+            }
+          AffichageJeu(Chateau);
+          AffichagePlateau(monde);
+          }
+        }
 }
