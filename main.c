@@ -48,7 +48,7 @@ int main(int argc, char **argv)
   printf("rentrez le nombre de tours a jouer : "),
   scanf("%d",&objTours);
 
-  while ((cmpt_tour!=objTours) || (monde->CampBleu!=NULL) || (monde->CampRouge!=NULL)){
+  while ((cmpt_tour!=objTours) && (monde->CampBleu!=NULL) && (monde->CampRouge!=NULL)){
       if ((ProchainAJouer==0) || (argc==1)){ //tour commencant par le joueur Rouge (cas de chargement et nouvelle partie)
           if (DemandeSauvegarde(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,0)==0){
               return 0;
@@ -79,6 +79,8 @@ int main(int argc, char **argv)
 
           printf("%d tours restants\n", objTours - (++cmpt_tour));
       } // sortie du while (fin de partie);
+    } if(cmpt_tour==objTours){
+      printf("Le nombre de tours de jeu a ete atteint, fin de la partie");
     }
   return 0;
 }
