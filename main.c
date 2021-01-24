@@ -6,13 +6,10 @@
 #include"FonctionsAffichage.h"
 #include"FonctionsAction.h"
 #include"FonctionsSauvegarde.h"
+#define T_MAX 256
 
-
-
-
-int main(int argc, char const *argv[])
+int main(int argc, char **argv)
 {
-
   // creation du plateau de Jeu de depart
   ListePerso * JeuRougeVoisin=initJeu();
   ListePerso * JeuBleuVoisin=initJeu();
@@ -21,79 +18,67 @@ int main(int argc, char const *argv[])
   Monde *monde= CreerMonde(plateau);
   int tresorR = 50;
   int tresorB = 50;
+  int ProchainAJouer;
 
-  lancementdePartie(JeuRougeVoisin,JeuBleuVoisin,monde,&tresorR,&tresorB);
-  int cmpt_tour=0;
+  if(argc==2){
+      printf("chargement de la partie du fichier %s\n",argv[argc-1]);
+      ProchainAJouer=Chargementpartie(argc,argv,monde, JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB);
+      if (ProchainAJouer==0){
+        printf("le joueur rouge commencera a jouer\n");
+      }
+      if (ProchainAJouer==1){
+        printf("le joueur bleu commencera a jouer\n");
+      }
+      printf("fin du chargement de la partie\n");
+    }
+  else{
+    printf("pas de fichier rentre en sauvegarde\n lancement automatique d'une nouvelle partie\n");
+    lancementdePartie(JeuRougeVoisin,JeuBleuVoisin,monde,&tresorR,&tresorB);
+    }
+
+
+  AffichageTresor(&tresorR,&tresorB);
   AffichageJeuVoisin(JeuBleuVoisin);
   AffichageJeuVoisin(JeuRougeVoisin);
   AffichagePlateau(monde);
 
+  int cmpt_tour=0;
   int objTours;
+
   printf("rentrez le nombre de tours a jouer : "),
   scanf("%d",&objTours);
 
-
   while ((cmpt_tour!=objTours) || (monde->CampBleu!=NULL) || (monde->CampRouge!=NULL)){
-      // demande à chaque tour si les joueurs veulent sauvegarder la partie
-      printf("voulez-vous sauvegarder la partie ? \noui ou non ?: ");
-      char str[4];
-      char str1[4]="oui";
-      scanf("%s",str);
-      int ProchainAJouer=0;
-      if(strcmp(str1,str)==0){
-          sauvergardeJeu(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,ProchainAJouer);
-          return 0;
-      }
-
-      printf("debut du tour du joueur Rouge\n");
-
-      for(Personnage* ChateauR=JeuRougeVoisin->tete; ChateauR!=NULL; ChateauR=ChateauR->PersoSuivantVoisin){
-          for(Personnage* persotemp=ChateauR; persotemp!=NULL; persotemp=persotemp->PersoSuivant){
-            switch(persotemp->typePerso){
-              case 0: TourChateau(persotemp, monde,&tresorR);
-                      break;
-              case 1: TourSeigneur(persotemp, JeuRougeVoisin, monde, &tresorR);
-                      break;
-              case 2: TourGuerrier(persotemp, monde);
-                      break;
-              case 3: TourManant(persotemp,monde,&tresorR);
-                      break;
-            }
-          AffichageJeu(ChateauR);
-          AffichagePlateau(monde);
-          AffichageTresor(&tresorR,&tresorB);
+      if ((ProchainAJouer==0) || (argc==1)){ //tour commencant par le joueur Rouge (cas de chargement et nouvelle partie)
+          if (DemandeSauvegarde(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,0)==0){
+              return 0;
           }
-        }
-      ProchainAJouer=1;
-      printf("voulez-vous sauvegarder la partie ? \noui ou non ?: ");
-      char str2[4];
-      scanf("%s",str2);
+          printf("debut du tour du joueur Rouge\n");
+          TourDeJeu(monde,JeuRougeVoisin,&tresorR);
 
-      if(strcmp(str1,str2)==0){
-        sauvergardeJeu(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,ProchainAJouer);
-        return 0;
-      }
+          if (DemandeSauvegarde(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,1)==0){
+              return 0;
+          }
+          printf(" debut du tour du joueur Bleu\n");
+          TourDeJeu(monde,JeuBleuVoisin,&tresorB);
 
-      printf(" debut du tour du joueur Bleu\n");
-
-      for(Personnage* ChateauB=JeuBleuVoisin->tete; ChateauB!=NULL; ChateauB=ChateauB->PersoSuivantVoisin){
-          for(Personnage* persotemp=ChateauB; persotemp!=NULL; persotemp=persotemp->PersoSuivant){
-            switch (persotemp->typePerso){
-              case 0: TourChateau(persotemp, monde,&tresorB);
-                      break;
-              case 1: TourSeigneur(persotemp, JeuBleuVoisin, monde,&tresorB);
-                      break;
-              case 2: TourGuerrier(persotemp, monde);
-                      break;
-              case 3: TourManant(persotemp, monde,&tresorB);
-                      break;
-            }
-          AffichageJeu(ChateauB);
-          AffichagePlateau(monde);
-          AffichageTresor(&tresorR,&tresorB);
-         }
-       }
-      printf("%d tours restants\n", objTours - (++cmpt_tour));
+          printf("%d tours restants\n", objTours - (++cmpt_tour));
       } // sortie du while (fin de partie);
+      else{
+          if (DemandeSauvegarde(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,1)==0){
+              return 0;
+          }
+          printf(" debut du tour du joueur Bleu\n");
+          TourDeJeu(monde,JeuBleuVoisin,&tresorB);
+
+          if (DemandeSauvegarde(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,0)==0){
+              return 0;
+          }
+          printf("debut du tour du joueur Rouge\n");
+          TourDeJeu(monde,JeuRougeVoisin,&tresorR);
+
+          printf("%d tours restants\n", objTours - (++cmpt_tour));
+      } // sortie du while (fin de partie);
+    }
   return 0;
 }
