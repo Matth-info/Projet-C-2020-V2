@@ -58,7 +58,6 @@ void CreerChateau(ListePerso* JeuVoisinChateau, Monde * monde, couleur_t couleur
 
 }
 
-
 void CreerSeigneur(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, int py, int* tresor){ // un seigneur est rataché à un chateau forcément
   Personnage* seigneur=malloc(sizeof(Personnage));
   if (seigneur==NULL || chateau->typePerso!=Chateau || *tresor-20 < 0 ){
@@ -95,6 +94,7 @@ void CreerSeigneur(Personnage* chateau, Monde* monde,  couleur_t couleur, int px
 
   }
 }
+
 
 void CreerGuerrier(Personnage* chateau,Monde* monde, couleur_t couleur, int px, int py, int * tresor) {
   Personnage* guerrier = malloc(sizeof(Personnage));
@@ -177,6 +177,8 @@ void CreerManant(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, 
   }
 }
 
+
+
 Case** CreerPlateau(int nbcolonne, int nbligne){// fonction creation d'un plateau de jeu commpose de nbcolonne * nbligne case
   if (nbcolonne<4 || nbligne<4){
     printf("dimension du plateau trop petite, veuillez rentrer de nouvelle dimension du plateau de jeu");
@@ -252,6 +254,7 @@ void ChateauProduction(Personnage* chateau, Monde* monde, int* tresor) {
           }
           break;
         case 4: chateau->typeProd = Rien;
+                chateau->tempsProd= 0; 
                 break;
         default: printf("Valeur rentree incorrect\n");
                 ChateauProduction(chateau, monde, tresor);
