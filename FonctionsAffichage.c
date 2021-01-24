@@ -8,7 +8,7 @@ void AffichageJeu(Personnage* Castle)
     printf("\n");
 
     if (Castle->couleur== Rouge){
-      printf("Personnages dans la liste Rouge du Chateau Cr (%d,%d):\n",Castle->px,Castle->py);
+      printf("Personnages dans la liste Rouge du Chateau Cr(%d,%d):\n",Castle->px,Castle->py);
     }
     else {
       printf("Personnages dans la liste Bleue du Chateau Cb(%d,%d):\n",Castle->px,Castle->py);
