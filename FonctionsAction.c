@@ -146,7 +146,7 @@ void productionManant(Personnage* manant, int* tresor){
     printf("le personnage n'est pas un manant\n");
   }else{
     if ((manant->dx!=manant->px || manant->dy !=manant->py ) && (manant->dx!=-1 || manant->dy!=-1)){
-      printf(" le manant est en déplacement, il ne peut rien produire");
+      printf(" le manant est en deplacement, il ne peut rien produire");
     }
     if (manant->dx==-1 && manant->dy==-1){ // le manant est immobile
       (*tresor)++;
@@ -167,7 +167,7 @@ void immobilisation(Personnage* perso){
 
 void nouvelleDestination(Personnage* perso, Monde* monde, int newdx, int newdy){
   if (perso->dx==-1  && perso->dy==-1){
-    printf("votre personnage est immobilise, il ne peut pas se déplacer\n");
+    printf("votre personnage est immobilise, il ne peut pas se deplacer\n");
   }
   else {
       if ((newdx==perso->px) && (newdy==perso->py)){
@@ -392,7 +392,7 @@ void TourManant( Personnage* manant, Monde * monde, int * tresor){
         immobilisation(manant);
       }else{
         if ((manant->px!=manant->dx) && (manant->py!=manant->dy)){
-            printf("votre personnage est en déplacement\n");
+            printf("votre manant est en deplacement\n");
             deplacementPerso(manant,monde);
         } else{
           int newdx, newdy;
@@ -413,7 +413,7 @@ void TourManant( Personnage* manant, Monde * monde, int * tresor){
 
 void TourGuerrier(Personnage * guerrier, Monde *monde){
   if ((guerrier->px!=guerrier->dx) && (guerrier->py!=guerrier->dy)){
-      printf("votre personnage est en cours en déplacement\n");
+      printf("votre guerrier est en cours en deplacement\n");
       deplacementPerso(guerrier,monde);
   } else {
       printf("souhaitez-vous deplacer le guerrier de la case (%d,%d) \n oui ou non\n : ",guerrier->px,guerrier->py);
@@ -442,7 +442,7 @@ void TourGuerrier(Personnage * guerrier, Monde *monde){
 }
 void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, Monde *monde, int*tresor){
   if ((seigneur->px!=seigneur->dx) && (seigneur->py!=seigneur->dy)){
-      printf("votre personnage est en cours en déplacement\n");
+      printf("votre seigneur est en cours en deplacement\n");
       deplacementPerso(seigneur,monde);
   } else {
       char str[4];
@@ -515,7 +515,7 @@ void Transformartion(Personnage* Seigneur,ListePerso *JeuVoisin, Monde* monde, i
     scanf("%s",str);
     if(strcmp(str1,str)==0){
       if( *tresor < 30)
-        printf("vous n'avez pas assez de pièce d'or");
+        printf("vous n'avez pas assez de piece d'or");
       else {
         int x = Seigneur->px;
         int y = Seigneur->py;
