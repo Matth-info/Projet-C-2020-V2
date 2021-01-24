@@ -369,10 +369,12 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau,int* tresor){
       for(int i=-2; i<=2; i++){
           for (int j=-2; j<=2;j++){
             if(cx+i>=0 && cy+j>=0){
-              if ((monde->plateau[cx+i][cy+j].perso==NULL) && (monde->plateau[cx+i][cy+j].chateau==NULL)){
-                *Tp= cx+i;
-                *(Tp+1)=cy+j;
-                 return T;
+              if((i==2)||(i==-2)||(j==2)||(j==-2)) {
+                if ((monde->plateau[cx+i][cy+j].perso==NULL) && (monde->plateau[cx+i][cy+j].chateau==NULL)){
+                  *Tp= cx+i;
+                  *(Tp+1)=cy+j;
+                  return T;
+                }
               }
             }
           }
