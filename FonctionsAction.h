@@ -15,4 +15,5 @@ void TourManant(Personnage* manant, Monde * monde, int * tresor);
 void TourSeigneur(Personnage * seigneur,ListePerso* JeuVoisin, Monde *monde, int* tresor);
 void TourChateau(Personnage * chateau,Monde* monde, int* tresor);
 void Transformartion(Personnage* Seigneur,ListePerso*JeuVoisin, Monde* monde, int* tresor);
+void TourDeJeu(Monde* monde,ListePerso* JeuVoisin,int*tresor);
 #endif
