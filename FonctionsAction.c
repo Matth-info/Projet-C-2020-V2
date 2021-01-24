@@ -394,7 +394,7 @@ void TourManant( Personnage* manant, Monde * monde, int * tresor){
       if(strcmp(str,str1)==0){
         immobilisation(manant);
       }else{
-        if ((manant->px!=manant->dx) && (manant->py!=manant->dy)){
+        if ((manant->px!=manant->dx) || (manant->py!=manant->dy)){
             printf("votre manant est en deplacement\n");
             deplacementPerso(manant,monde);
         } else{
@@ -415,7 +415,7 @@ void TourManant( Personnage* manant, Monde * monde, int * tresor){
 }
 
 void TourGuerrier(Personnage * guerrier, Monde *monde){
-  if ((guerrier->px!=guerrier->dx) && (guerrier->py!=guerrier->dy)){
+  if ((guerrier->px!=guerrier->dx) || (guerrier->py!=guerrier->dy)){
       printf("votre guerrier est en cours en deplacement\n");
       deplacementPerso(guerrier,monde);
   } else {
@@ -444,7 +444,7 @@ void TourGuerrier(Personnage * guerrier, Monde *monde){
    }
 }
 void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, Monde *monde, int*tresor){
-  if ((seigneur->px!=seigneur->dx) && (seigneur->py!=seigneur->dy)){
+  if ((seigneur->px!=seigneur->dx) || (seigneur->py!=seigneur->dy)){
       printf("votre seigneur est en cours en deplacement\n");
       deplacementPerso(seigneur,monde);
   } else {
