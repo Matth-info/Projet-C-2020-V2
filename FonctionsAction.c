@@ -354,20 +354,21 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau,int* tresor){
       int* Tp=T;
       int cx=chateau->px;
       int cy=chateau->py;
-
       for(int i=-1; i<=1; i++){
           for (int j=-1; j<=1;j++){
-            if ((monde->plateau[cx+i][cy+j].perso==NULL) && (monde->plateau[cx+i][cy+j].chateau==NULL)){
+            if(cx+i>=0 && cy+j>=0) {
+              if ((monde->plateau[cx+i][cy+j].perso==NULL) && (monde->plateau[cx+i][cy+j].chateau==NULL)){
               *Tp= cx+i;
               *(Tp+1)=cy+j;
               return T;
+              }
             }
           }
       }
 
       for(int i=-2; i<=2; i++){
           for (int j=-2; j<=2;j++){
-            if((i==2) || (i==2) || (j==-2) || (j==2)){
+            if(cx+i>=0 && cy+j>=0){
               if ((monde->plateau[cx+i][cy+j].perso==NULL) && (monde->plateau[cx+i][cy+j].chateau==NULL)){
                 *Tp= cx+i;
                 *(Tp+1)=cy+j;
@@ -542,7 +543,7 @@ void TourDeJeu(Monde* monde,ListePerso* JeuVoisin,int*tresor){
               case 3: TourManant(persotemp,monde,tresor);
                       break;
             }
-          AffichageJeu(Chateau);
+          AffichageJeuVoisin(JeuVoisin);
           AffichagePlateau(monde);
           }
         }
