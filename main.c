@@ -54,13 +54,13 @@ int main(int argc, char **argv)
               return 0;
           }
           printf("debut du tour du joueur Rouge\n");
-          TourDeJeu(monde,JeuRougeVoisin,&tresorR);
+          TourDeJeu(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR);
 
           if (DemandeSauvegarde(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,1)==0){
               return 0;
           }
           printf(" debut du tour du joueur Bleu\n");
-          TourDeJeu(monde,JeuBleuVoisin,&tresorB);
+          TourDeJeu(monde,JeuBleuVoisin,JeuRougeVoisin,&tresorB);
 
           printf("%d tours restants\n", objTours - (++cmpt_tour));
       } // sortie du while (fin de partie);
@@ -69,13 +69,13 @@ int main(int argc, char **argv)
               return 0;
           }
           printf(" debut du tour du joueur Bleu\n");
-          TourDeJeu(monde,JeuBleuVoisin,&tresorB);
+          TourDeJeu(monde,JeuBleuVoisin, JeuRougeVoisin, &tresorB);
 
           if (DemandeSauvegarde(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,0)==0){
               return 0;
           }
           printf("debut du tour du joueur Rouge\n");
-          TourDeJeu(monde,JeuRougeVoisin,&tresorR);
+          TourDeJeu(monde,JeuRougeVoisin, JeuBleuVoisin, &tresorR);
 
           printf("%d tours restants\n", objTours - (++cmpt_tour));
       } // sortie du while (fin de partie);
