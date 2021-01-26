@@ -20,8 +20,8 @@ int main(int argc, char **argv)
   int tresorB = 50;
   int ProchainAJouer;
 
-  if(argc==2){
-      printf("chargement de la partie du fichier %s\n",argv[argc-1]);
+  if(argv[1]!=NULL){
+      printf("chargement de la partie du fichier %s\n",argv[1]);
       ProchainAJouer=Chargementpartie(argc,argv,monde, JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB);
       if (ProchainAJouer==0){
         printf("le joueur rouge commencera a jouer\n");
@@ -81,6 +81,6 @@ int main(int argc, char **argv)
       } // sortie du while (fin de partie);
     } if(cmpt_tour==objTours){
       printf("Le nombre de tours de jeu a ete atteint, fin de la partie");
-    }
+    } Score(argc,argv,monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB);
   return 0;
 }
