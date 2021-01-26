@@ -5,6 +5,10 @@
 #include"FonctionsCreation.h"
 #include"FonctionsAction.h"
 #include "FonctionsAffichage.h"
+#include "FonctionsCombat.h"
+
+
+mouvement_t mouvements[9] ={{Nord,-1,0}, {Sud,1,0}, {Est,0,1}, {Ouest, 0, -1}, {NordEst,1,-1}, {NordOuest,-1,-1}, {SudEst,1,1}, {SudOuest, -1, 1}};
 
 void lancementdePartie(ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde *monde, int* tresorRouge, int * tresorBleu)
 {
@@ -101,35 +105,47 @@ void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant
         dernierperso=dernierperso->PersoSuivant;
       }
 
-      while (dernierperso->PersoSuivant->typePerso==Manant){
-          trahisonManant(dernierperso->PersoSuivant,ChateauAttaquant,ChateauPerdant);
+      while (dernierperso->typePerso==Manant){
           dernierperso=dernierperso->PersoPrecedent;
+          trahisonManant(dernierperso->PersoSuivant,ChateauAttaquant,ChateauPerdant);
         }
         // comme les manants sont obligatoirement à la fin de la liste de Jeu, on les lit et ils trahissent consécutivement;
         // à ce niveau il n' y a plus de manant dans la liste des perdants;
 
-      while( (dernierperso->PersoSuivant->typePerso==Seigneur) || (dernierperso->PersoSuivant->typePerso==Guerrier) ){
-          suicide(dernierperso->PersoSuivant,monde);
+      while( (dernierperso->typePerso==Seigneur) || (dernierperso->typePerso==Guerrier) ){
           dernierperso=dernierperso->PersoPrecedent;
+          suicide(dernierperso->PersoSuivant,monde);
         }
 
       // a ce niveau il n'y a plus que le chateau dans la liste
-      if (JeuVoisinPerdant->tete==ChateauPerdant){ // premier chateau dans la liste voisin;
-        ChateauPerdant->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
-        JeuVoisinPerdant->tete=ChateauPerdant->PersoSuivantVoisin;
+      if(JeuVoisinPerdant->nbPerso > 1) {
+        if (JeuVoisinPerdant->tete==ChateauPerdant){ // premier chateau dans la liste voisin;
+          ChateauPerdant->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
+          JeuVoisinPerdant->tete=ChateauPerdant->PersoSuivantVoisin;
+          // JeuVoisinPerdant->nbPerso--;
+        }
+        if (JeuVoisinPerdant->fin==ChateauPerdant){ // dernier chateau dans la liste voisin
+          ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=NULL;
+          JeuVoisinPerdant->fin=ChateauPerdant->PersoPrecedentVoisin;
+        }
+
+        if ((ChateauPerdant->PersoSuivant!=NULL) && (ChateauPerdant->PersoPrecedentVoisin!=NULL)){ // si le chateau enlevé n'est ni au début ni à la fin de la liste des chateau voisin
+            monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
+            ChateauPerdant->PersoSuivantVoisin->PersoPrecedent=ChateauPerdant->PersoPrecedentVoisin;
+            ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=ChateauPerdant->PersoSuivantVoisin;
+        }
         JeuVoisinPerdant->nbPerso--;
       }
-      if (JeuVoisinPerdant->fin==ChateauPerdant){ // dernier chateau dans la liste voisin
-        ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=NULL;
-        JeuVoisinPerdant->fin=ChateauPerdant->PersoPrecedentVoisin;
+      else {
+        JeuVoisinPerdant->tete = NULL;
+        JeuVoisinPerdant->fin = NULL;
+        monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
+        JeuVoisinPerdant->nbPerso--;
+        if(ChateauPerdant->couleur==Rouge){
+            monde->CampRouge=NULL;
+          }else {monde->CampBleu=NULL;}
       }
 
-      if ((ChateauPerdant->PersoSuivant!=NULL) && (ChateauPerdant->PersoPrecedentVoisin!=NULL)){ // si le chateau enlevé n'est ni au début ni à la fin de la liste des chateau voisin
-          monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
-          ChateauPerdant->PersoSuivantVoisin->PersoPrecedent=ChateauPerdant->PersoPrecedentVoisin;
-          ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=ChateauPerdant->PersoSuivantVoisin;
-      }
-      JeuVoisinPerdant->nbPerso--;
       if (JeuVoisinPerdant->nbPerso==0){
           if(ChateauPerdant->couleur==Rouge){
             monde->CampRouge=NULL;
@@ -165,7 +181,7 @@ void immobilisation(Personnage* perso){
 }
 
 
-void nouvelleDestination(Personnage* perso, Monde* monde, int newdx, int newdy){
+void nouvelleDestination(Personnage* perso, ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde* monde, int newdx, int newdy){
   if (perso->dx==-1  && perso->dy==-1){
     printf("votre personnage est immobilise, il ne peut pas se deplacer\n");
   }
@@ -178,28 +194,70 @@ void nouvelleDestination(Personnage* perso, Monde* monde, int newdx, int newdy){
           scanf("%d",&newdx1);
           printf("nouvelle colonne dy : ");
           scanf("%d",&newdy1);
-          nouvelleDestination(perso, monde, newdx1, newdy1);
+          nouvelleDestination(perso,JeuRougeVoisin,JeuBleuVoisin, monde, newdx1, newdy1);
       }
       else{
-        if ( (newdy>=8) || (newdy<0) ||(newdx>=8) || (newdx<0) || (monde->plateau[newdx][newdy].perso!=NULL) || (monde->plateau[newdx][newdy].chateau!=NULL)) { // cas ou la case n'est pas vide
+        if ( (newdy>=8) || (newdy<0) ||(newdx>=8) || (newdx<0) ) { // cas ou la case n'est pas vide
           // traite du cas ou la case de destination n'appartient pas au plateau créé
-            printf("la case destination est deja occupee ou n'exite pas, veuillez rentrer de nouvelles coordonnees\n");
-            int newdx1, newdy1;
-            printf("nouvelle ligne dx : ");
-            scanf("%d",&newdx1);
-            printf("nouvelle colonne dy : ");
-            scanf("%d",&newdy1);
-            nouvelleDestination(perso, monde, newdx1, newdy1);
-          } else{
-            printf("la case a atteindre est vide, l'objectif de destination a bien ete ajoute\n");
+          printf("la case destination n'existe pas, veuillez rentrer de nouvelles coordonnees\n");
+          int newdx1, newdy1;
+          printf("nouvelle ligne dx : ");
+          scanf("%d",&newdx1);
+          printf("nouvelle colonne dy : ");
+          scanf("%d",&newdy1);
+          nouvelleDestination(perso,JeuRougeVoisin,JeuBleuVoisin, monde, newdx1, newdy1);
+          }
+            
+          else{
+            printf("la case est valide, l'objectif de destination a bien ete ajoute\n");
             perso->dx=newdx;
             perso->dy=newdy;
-            }
+          }
       }
   }
 }
 
-void deplacementPerso(Personnage* perso, Monde * monde){
+void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, direction_t direction) {
+  int dx = mouvements[direction].dx;
+  int dy = mouvements[direction].dy;
+  if (monde->plateau[perso->px + dx][perso->py + dy].perso!=NULL || monde->plateau[perso->px + dx][perso->py + dy].chateau!=NULL) {
+    if(monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) {
+      if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].perso->couleur) {
+        combat(perso, monde->plateau[perso->px + dx][perso->py + dy].perso,JeuRougeVoisin, JeuBleuVoisin, monde);
+        if(monde->plateau[perso->px + dx][perso->py + dy].perso == NULL) {
+          monde->plateau[perso->px + dx][perso->py + dy].perso=perso;
+          monde->plateau[perso->px][perso->py].perso=NULL;
+          perso->px--;
+        }
+      } else {
+        printf("le personnage a rencontre une case occupee par un personnage de la meme couleur pendant son deplacement \n cela met fin a son deplacement\n");
+        perso->dx=perso->px;
+        perso->dy=perso->py;
+      }
+    } else {
+      if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].chateau->couleur) {
+        combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);
+        if(monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL) {
+          monde->plateau[perso->px + dx][perso->py + dy].chateau=perso;
+          monde->plateau[perso->px][perso->py].chateau=NULL;
+          perso->px += dx;
+          perso->py += dy;
+        } else {
+          printf("le personnage a rencontre une case occupee par un personnage de la meme couleur pendant son deplacement \n cela met fin a son deplacement\n");
+          perso->dx=perso->px;
+          perso->dy=perso->py;
+        }
+      }
+    }
+  } else {
+    monde->plateau[perso->px + dx][perso->py + dy].perso=perso;
+    monde->plateau[perso->px][perso->py].perso=NULL;
+    perso->px += dx;
+    perso->py += dy;
+  }
+}
+
+void deplacementPerso(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde){
 // Cette fonction ne fait que constater la différence entre la case de la position actuelle et la case destination.
 // attention px et dx represente le numéro de ligne et py et dy le numero de colonne
  // dans cette partie le personnage va se deplacer en empruntant le plus court chemin
@@ -211,112 +269,45 @@ void deplacementPerso(Personnage* perso, Monde * monde){
 
       if ((deltaX > 0) && (deltaY> 0)){
         printf("deplacement vers le sud est\n");
-        if (monde->plateau[perso->px+1][perso->py+1].perso!=NULL || monde->plateau[perso->px+1][perso->py+1].chateau!=NULL){
-          printf("le personnage a rencontre un case occupee pendant son deplacement \n cela met fin a son deplacement\n");
-          perso->dx=perso->px;
-          perso->dy=perso->py;
-        }else{
-          monde->plateau[perso->px+1][perso->py+1].perso=perso;
-          monde->plateau[perso->px][perso->py].perso=NULL;
-          perso->px++;
-          perso->py++;
-        }
+        moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, SudEst);
       }
-
+      
       if((deltaX > 0) && (deltaY < 0)){
         printf("deplacement vers le sud ouest\n");
-        if (monde->plateau[perso->px-1][perso->py+1].perso!=NULL || monde->plateau[perso->px-1][perso->py+1].chateau!=NULL){
-          printf("le personnage a rencontre un case occupee pendant son deplacement \n cela met fin a son deplacement\n");
-          perso->dx=perso->px;
-          perso->dy=perso->py;
-        }else{
-          monde->plateau[perso->px-1][perso->py+1].perso=perso;
-          monde->plateau[perso->px][perso->py].perso=NULL;
-          perso->px--;
-          perso->py++;
-        }
+        moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, SudOuest);
       }
 
       if ((deltaX < 0) && (deltaY > 0)){
         printf("deplacement vers le nord est\n");
-        if (monde->plateau[perso->px+1][perso->py-1].perso!=NULL || monde->plateau[perso->px+1][perso->py-1].chateau!=NULL){
-          printf("le personnage a rencontre un case occupee pendant son deplacement \n cela met fin a son deplacement\n");
-          perso->dx=perso->px;
-          perso->dy=perso->py;
-        } else{
-          monde->plateau[perso->px+1][perso->py-1].perso=perso;
-          monde->plateau[perso->px][perso->py].perso=NULL;
-          perso->px++;
-          perso->py--;
-        }
+        moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, NordEst);
       }
 
       if ((deltaX < 0) && (deltaY < 0)){
        printf("deplacement vers le nord ouest\n");
-       if (monde->plateau[perso->px-1][perso->py-1].perso!=NULL || monde->plateau[perso->px-1][perso->py-1].chateau!=NULL){
-         printf("le personnage a rencontre un case occupee pendant son deplacement \n cela met fin a son deplacement\n");
-         perso->dx=perso->px;
-         perso->dy=perso->py;
-       }else{
-        monde->plateau[perso->px-1][perso->py-1].perso=perso;
-        monde->plateau[perso->px][perso->py].perso=NULL;
-        perso->px--;
-        perso->py--;
-        }
+       moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, NordOuest);
       }
 
-      if ((deltaY==0) && (deltaX<0)){
-          printf("deplacement nord\n");
-          if (monde->plateau[perso->px-1][perso->py].perso!=NULL || monde->plateau[perso->px-1][perso->py].chateau!=NULL){
-            printf("le personnage a rencontre un case occupee pendant son deplacement \n cela met fin a son deplacement\n");
-            perso->dx=perso->px;
-            perso->dy=perso->py;
-          }else {
-          monde->plateau[perso->px-1][perso->py].perso=perso;
-          monde->plateau[perso->px][perso->py].perso=NULL;
-          perso->px--;
-          }
-        }
-
-      if ((deltaY==0) && (deltaX>0)){
-          printf("deplacement sud\n");
-          if (monde->plateau[perso->px+1][perso->py].perso!=NULL || monde->plateau[perso->px+1][perso->py].chateau!=NULL){
-            printf("le personnage a rencontre un case occupee pendant son deplacement \n cela met fin a son deplacement\n");
-            perso->dx=perso->px;
-            perso->dy=perso->py;
-          } else{
-            monde->plateau[perso->px+1][perso->py].perso=perso;
-            monde->plateau[perso->px][perso->py].perso=NULL;
-            perso->px++;
-            }
+      if ((deltaY==0) && (deltaX<0)) {
+        printf("deplacement nord\n");
+        moovedir(perso, JeuRougeVoisin, JeuBleuVoisin, monde, Nord);
       }
-      if ((deltaX==0) && (deltaY>0)){
-          printf("deplacement vers l'Est\n");
-          if (monde->plateau[perso->px][perso->py+1].perso!=NULL || monde->plateau[perso->px][perso->py+1].chateau!=NULL){
-            printf("le personnage a rencontre un case occupee pendant son deplacement \n cela met fin a son deplacement\n");
-            perso->dx=perso->px;
-            perso->dy=perso->py;
-          }else {
-            monde->plateau[perso->px][perso->py+1].perso=perso;
-            monde->plateau[perso->px][perso->py].perso=NULL;
-            perso->py++;
-          }
+      
+      if ((deltaY==0) && (deltaX>0)) {
+        printf("deplacement sud\n");
+        moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, Sud);
       }
 
-      if ((deltaX==0) && (deltaY<0)){
-          printf("deplacement vers l'Ouest\n");
-          if (monde->plateau[perso->px][perso->py-1].perso!=NULL || monde->plateau[perso->px][perso->py-1].chateau!=NULL){
-            printf("le personnage a rencontre un case occupee pendant son deplacement \n cela met fin a son deplacement\n");
-            perso->dx=perso->px;
-            perso->dy=perso->py;
-          } else{
-            monde->plateau[perso->px][perso->py-1].perso=perso;
-            monde->plateau[perso->px][perso->py].perso=NULL;
-            perso->py--;
-          }
+      if ((deltaX==0) && (deltaY>0)) {
+        printf("deplacement vers l'Est\n");
+        moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, Est);
       }
 
-      if ((deltaX==0) && (deltaY==0)){
+      if ((deltaX==0) && (deltaY<0)) {
+        printf("deplacement vers l'Ouest\n");
+        moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, Ouest);
+      }
+
+      if ((deltaX==0) && (deltaY==0) && (perso != NULL)){
         printf("votre personnage est reste a la meme position\n");
       } else{
             if  ((perso->dx==perso->px) && (perso->dy==perso->py)){
@@ -384,7 +375,7 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau,int* tresor){
     }
 }
 
-void TourManant( Personnage* manant, Monde * monde, int * tresor){
+void TourManant(Personnage* manant,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, int * tresor) {
 
     if((manant->dx!=-1) && (manant->dy!=-1)){
       char str[4];
@@ -396,7 +387,7 @@ void TourManant( Personnage* manant, Monde * monde, int * tresor){
       }else{
         if ((manant->px!=manant->dx) || (manant->py!=manant->dy)){
             printf("votre manant est en deplacement\n");
-            deplacementPerso(manant,monde);
+            deplacementPerso(manant, JeuRougeVoisin, JeuBleuVoisin, monde);
         } else{
           int newdx, newdy;
           printf("entrer les coordonnees de la nouvelle destination du manant (%d,%d)\n", manant->px, manant->py);
@@ -404,20 +395,20 @@ void TourManant( Personnage* manant, Monde * monde, int * tresor){
           scanf("%d",&newdx);
           printf("nouvelle colonne dy : ");
           scanf("%d",&newdy);
-          nouvelleDestination(manant, monde, newdx, newdy);
-          deplacementPerso(manant,monde);
+          nouvelleDestination(manant,JeuRougeVoisin, JeuBleuVoisin, monde, newdx, newdy);
+          deplacementPerso(manant, JeuRougeVoisin, JeuBleuVoisin,monde);
           }
         }
     }else {
-        printf("le manat (%d,%d) produit 1 piece d'or\n",manant->px,manant->py);
+        printf("le manant (%d,%d) produit 1 piece d'or\n",manant->px,manant->py);
         productionManant(manant, tresor);
     }
 }
 
-void TourGuerrier(Personnage * guerrier, Monde *monde){
+void TourGuerrier(Personnage * guerrier, ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde *monde) {
   if ((guerrier->px!=guerrier->dx) || (guerrier->py!=guerrier->dy)){
       printf("votre guerrier est en cours en deplacement\n");
-      deplacementPerso(guerrier,monde);
+      deplacementPerso(guerrier, JeuRougeVoisin, JeuBleuVoisin,monde);
   } else {
       printf("souhaitez-vous deplacer le guerrier de la case (%d,%d) \n oui ou non\n : ",guerrier->px,guerrier->py);
       char str[4];
@@ -429,8 +420,8 @@ void TourGuerrier(Personnage * guerrier, Monde *monde){
         scanf("%d",&newdx);
         printf("nouvelle colonne dy : ");
         scanf("%d",&newdy);
-        nouvelleDestination(guerrier,monde,newdx,newdy);
-        deplacementPerso(guerrier,monde);
+        nouvelleDestination(guerrier, JeuRougeVoisin, JeuBleuVoisin, monde,newdx,newdy);
+        deplacementPerso(guerrier, JeuRougeVoisin, JeuBleuVoisin,monde);
       }
       else{
         printf("souhaitez-vous que votre guerrier se fasse hara-kiri \n oui ou non : \n");
@@ -443,10 +434,10 @@ void TourGuerrier(Personnage * guerrier, Monde *monde){
       }
    }
 }
-void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, Monde *monde, int*tresor){
+void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, ListePerso* JeuVoisinAdverse, Monde *monde, int*tresor){
   if ((seigneur->px!=seigneur->dx) || (seigneur->py!=seigneur->dy)){
       printf("votre seigneur est en cours en deplacement\n");
-      deplacementPerso(seigneur,monde);
+      deplacementPerso(seigneur,JeuVoisin, JeuVoisinAdverse, monde);
   } else {
       char str[4];
       char str1[4]="oui";
@@ -458,8 +449,8 @@ void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, Monde *monde, int*t
         scanf("%d",&newdx);
         printf("nouvelle colonne dy : ");
         scanf("%d",&newdy);
-        nouvelleDestination(seigneur,monde,newdx,newdy);
-        deplacementPerso(seigneur,monde);
+        nouvelleDestination(seigneur,JeuVoisin, JeuVoisinAdverse,monde,newdx,newdy);
+        deplacementPerso(seigneur,JeuVoisin, JeuVoisinAdverse,monde);
 
       } else{
           printf("souhaitez-vous que votre seigneur se fasse hara-kiri \n oui ou non : \n");
@@ -532,17 +523,17 @@ void Transformartion(Personnage* Seigneur,ListePerso *JeuVoisin, Monde* monde, i
   }
 }
 
-void TourDeJeu(Monde* monde,ListePerso* JeuVoisin,int*tresor){
+void TourDeJeu(Monde* monde,ListePerso* JeuVoisin, ListePerso* JeuVoisinAdverse, int*tresor){
       for(Personnage* Chateau=JeuVoisin->tete; Chateau!=NULL; Chateau=Chateau->PersoSuivantVoisin){
           for(Personnage* persotemp=Chateau; persotemp!=NULL; persotemp=persotemp->PersoSuivant){
             switch(persotemp->typePerso){
               case 0: TourChateau(persotemp, monde,tresor);
                       break;
-              case 1: TourSeigneur(persotemp, JeuVoisin, monde, tresor);
+              case 1: TourSeigneur(persotemp, JeuVoisin, JeuVoisinAdverse, monde, tresor);
                       break;
-              case 2: TourGuerrier(persotemp, monde);
+              case 2: TourGuerrier(persotemp, JeuVoisin, JeuVoisinAdverse, monde);
                       break;
-              case 3: TourManant(persotemp,monde,tresor);
+              case 3: TourManant(persotemp,JeuVoisin, JeuVoisinAdverse,monde,tresor);
                       break;
             }
           AffichageJeuVoisin(JeuVoisin);
