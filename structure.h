@@ -2,6 +2,7 @@
 #define STRUCTURE_H
 
 #include<stdio.h>
+#define T_MAX 256
 
 typedef enum typePerso {Chateau, Seigneur, Guerrier, Manant} typePerso_t;
 typedef enum typeProd {seigneur,guerrier,manant,Rien} typeProd_t;
@@ -43,5 +44,10 @@ typedef struct {
   Personnage* CampRouge;
   Personnage* CampBleu;
 }Monde;
+
+typedef struct CoupleNS{
+  char nomVainqueur[T_MAX];
+  int score;
+}CoupleNS;
 
 #endif
