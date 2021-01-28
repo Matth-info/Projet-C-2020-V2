@@ -134,7 +134,7 @@ void sauvergardeJeu(Monde* monde,ListePerso* JeuRougeVoisin, ListePerso* JeuBleu
   scanf("%s",str);
   fichier=fopen(str,"w");
   if (fichier==NULL){
-    printf("erreur lors de la creation du fichier");
+    printf("erreur lors de la creation du fichier\n");
   }
   if (ProchainAJouer==0){
   fprintf(fichier,"R  %d\n",*tresorR);
@@ -159,9 +159,9 @@ void sauvergardeJeu(Monde* monde,ListePerso* JeuRougeVoisin, ListePerso* JeuBleu
               case 3: fprintf(fichier,"m ");
                       break;
           }
-          fprintf(fichier,"%d %d",persotemp->px,persotemp->py);
+          fprintf(fichier,"%d %d ",persotemp->px,persotemp->py);
           if (persotemp->typePerso!=Chateau){
-            fprintf(fichier,"%d %d",persotemp->dx,persotemp->dy);
+            fprintf(fichier,"%d %d ",persotemp->dx,persotemp->dy);
           }else {
             switch(persotemp->typeProd){
                 case 0: fprintf(fichier,"s ");
@@ -192,9 +192,9 @@ void sauvergardeJeu(Monde* monde,ListePerso* JeuRougeVoisin, ListePerso* JeuBleu
                 case 3: fprintf(fichier,"m ");
                         break;
             }
-            fprintf(fichier,"%d %d",persotemp->px,persotemp->py);
+            fprintf(fichier,"%d %d ",persotemp->px,persotemp->py);
             if (persotemp->typePerso!=Chateau){
-              fprintf(fichier,"%d %d",persotemp->dx,persotemp->dy);
+              fprintf(fichier,"%d %d ",persotemp->dx,persotemp->dy);
             }else {
               switch(persotemp->typeProd){
                 case 0: fprintf(fichier,"s ");
@@ -206,7 +206,7 @@ void sauvergardeJeu(Monde* monde,ListePerso* JeuRougeVoisin, ListePerso* JeuBleu
                 case 3: fprintf(fichier,"r ");// r pour rien, pas de production;
                         break;
                 }
-                fprintf(fichier,"%d",persotemp->tempsProd);
+                fprintf(fichier,"%d ",persotemp->tempsProd);
               }
                fprintf(fichier,"\n");
         }
