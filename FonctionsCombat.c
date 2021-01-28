@@ -27,10 +27,10 @@ void combat(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuvoisinR
                 case 3: printf("Un seigneur en (%d,%d) attaque un Manant en (%d,%d)\n", attaquant->px, attaquant->py, defenseur->px, defenseur->py);
                         CombatSeigneurManant(attaquant,defenseur,monde);
                         break;
-                default: 
+                default:
                         break;
             } break;
-                
+
             case 2: switch(defenseur->typePerso) {
                 case 0: CombatChateau(attaquant, defenseur, JeuvoisinRouge, Jeuvoisinbleu, monde);
                         break;
@@ -53,7 +53,7 @@ void combat(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuvoisinR
                 case 2: printf("Un Manant en (%d,%d) attaque un Guerrier en (%d,%d)\n", attaquant->px, attaquant->py, defenseur->px, defenseur->py);
                         CombatManantGuerrier(attaquant,defenseur,monde);
                         break;
-                default: 
+                default:
                         break;
             } break;
         }
@@ -62,31 +62,31 @@ void combat(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuvoisinR
 
 
 
-void kill(Personnage* perdant, Monde* monde) {
+void kill(Personnage* perdant, Monde* monde){
 
     switch(perdant->typePerso){
         case 1: if(perdant->couleur == 0)
                     printf("Le Seigneur rouge en case (%d,%d) est mort\n",perdant->px, perdant->py);
-                else 
+                else
                     printf("Le Seigneur bleu en case (%d,%d) est mort\n",perdant->px, perdant->py);
                 break;
         case 2: if(perdant->couleur == 0)
                     printf("Le Guerrier rouge en case (%d,%d) est mort\n",perdant->px, perdant->py);
-                else 
+                else
                     printf("Le Guerrier bleu en case (%d,%d) est mort\n",perdant->px, perdant->py);
                 break;
         case 3: if(perdant->couleur == 0)
                     printf("Le Manant rouge en case (%d,%d) est mort\n",perdant->px, perdant->py);
-                else 
+                else
                     printf("Le Manant bleu en case (%d,%d) est mort\n",perdant->px, perdant->py);
                 break;
-        default: 
+        default: printf("erreur sur le type de personnage (fonction kill)");
                 break;
     }
 
     if (perdant->PersoSuivant==NULL) {
             perdant->PersoPrecedent->PersoSuivant=NULL;
-    } 
+    }
     else {
       perdant->PersoPrecedent->PersoSuivant=perdant->PersoSuivant;
       perdant->PersoSuivant->PersoPrecedent=perdant->PersoPrecedent;
@@ -212,20 +212,20 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
                 else {
                     if(defenseur->couleur == 0)
                         destructionChateau(attaquant,defenseur,monde,JeuvoisinRouge);
-                    else 
+                    else
                         destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu);
                 }
                 break;
 
         case 2: MAX = 35;
                 nb = (rand()%(MAX+1-MIN))+MIN;
-                if(nb >= 6) {
+                if(nb >= 6) { // si le chateau parvient à se défendre et à tuer son attaquant
                     kill(attaquant,monde);
                 }
                 else {
                     if(defenseur->couleur == 0)
                         destructionChateau(attaquant,defenseur, monde,JeuvoisinRouge);
-                    else 
+                    else
                         destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu);
                 }
                 break;
@@ -238,7 +238,7 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
                 else {
                 if(defenseur->couleur == 0)
                     destructionChateau(attaquant,defenseur,monde,JeuvoisinRouge);
-                else 
+                else
                     destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu);
                 }
         }
