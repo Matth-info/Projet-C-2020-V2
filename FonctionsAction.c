@@ -8,7 +8,7 @@
 #include "FonctionsCombat.h"
 
 
-mouvement_t mouvements[9] ={{Nord,-1,0}, {Sud,1,0}, {Est,0,1}, {Ouest, 0, -1}, {NordEst,1,-1}, {NordOuest,-1,-1}, {SudEst,1,1}, {SudOuest, -1, 1}};
+mouvement_t mouvements[9] ={{Nord,-1,0}, {Sud,1,0}, {Est,0,1}, {Ouest, 0, -1}, {NordEst,-1,1}, {NordOuest,-1,-1}, {SudEst,1,1}, {SudOuest, 1, -1}};
 
 void lancementdePartie(ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde *monde, int* tresorRouge, int * tresorBleu)
 {
@@ -40,8 +40,6 @@ void trahisonManant(Personnage* manant, Personnage* Attaquant, Personnage* Perda
       manant->couleur=Bleu;
 
       manant->PersoPrecedent->PersoSuivant=NULL;
-
-
       printf("\t -Le manant traitre est rouge (%d,%d), il passe dans le camp bleu\n", manant->px,manant->py);
       //trouver le dernier personnage Bleu (attaquant relié au chateau)
       Personnage* dernierperso=Attaquant;
@@ -207,7 +205,7 @@ void nouvelleDestination(Personnage* perso, ListePerso* JeuRougeVoisin, ListePer
           scanf("%d",&newdy1);
           nouvelleDestination(perso,JeuRougeVoisin,JeuBleuVoisin, monde, newdx1, newdy1);
           }
-            
+
           else{
             printf("la case est valide, l'objectif de destination a bien ete ajoute\n");
             perso->dx=newdx;
@@ -219,26 +217,27 @@ void nouvelleDestination(Personnage* perso, ListePerso* JeuRougeVoisin, ListePer
 
 void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, direction_t direction) {
   int dx = mouvements[direction].dx;
-  int dy = mouvements[direction].dy;
-  if (monde->plateau[perso->px + dx][perso->py + dy].perso!=NULL || monde->plateau[perso->px + dx][perso->py + dy].chateau!=NULL) {
+  int dy = mouvements[direction].dy; // modication transforme le OU en ET dans la ligne d'après
+  if ((monde->plateau[perso->px + dx][perso->py + dy].perso!=NULL) || (monde->plateau[perso->px + dx][perso->py + dy].chateau!=NULL)) {
     if(monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) {
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].perso->couleur) {
         combat(perso, monde->plateau[perso->px + dx][perso->py + dy].perso,JeuRougeVoisin, JeuBleuVoisin, monde);
-        if(monde->plateau[perso->px + dx][perso->py + dy].perso == NULL) {
-          monde->plateau[perso->px + dx][perso->py + dy].perso=perso;
+        if(monde->plateau[perso->px + dx][perso->py + dy].perso == NULL) { // si le personnage attaqué est tué
+          monde->plateau[perso->px + dx][perso->py + dy].perso=perso; // le personnage se déplace sur la case
           monde->plateau[perso->px][perso->py].perso=NULL;
-          perso->px--;
+          perso->px+=dx;
+          perso->py+=dy;
         }
       } else {
         printf("le personnage a rencontre une case occupee par un personnage de la meme couleur pendant son deplacement \n cela met fin a son deplacement\n");
-        perso->dx=perso->px;
+        perso->dx=perso->px; // arret du déplacement sans combat
         perso->dy=perso->py;
       }
     } else {
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].chateau->couleur) {
-        combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);
-        if(monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL) {
-          monde->plateau[perso->px + dx][perso->py + dy].chateau=perso;
+        combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);//combat d'un agent contre un chateau
+        if(monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL) { // l'attaquant détruit le chateau
+          monde->plateau[perso->px + dx][perso->py + dy].chateau=perso; //ATTENTION ici le perso prend la place du chateau
           monde->plateau[perso->px][perso->py].chateau=NULL;
           perso->px += dx;
           perso->py += dy;
@@ -249,7 +248,7 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
         }
       }
     }
-  } else {
+  } else { // cas où la case de destination n'est ni occupée par un chateau ni occupée par un agent
     monde->plateau[perso->px + dx][perso->py + dy].perso=perso;
     monde->plateau[perso->px][perso->py].perso=NULL;
     perso->px += dx;
@@ -271,7 +270,7 @@ void deplacementPerso(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* 
         printf("deplacement vers le sud est\n");
         moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, SudEst);
       }
-      
+
       if((deltaX > 0) && (deltaY < 0)){
         printf("deplacement vers le sud ouest\n");
         moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, SudOuest);
@@ -291,7 +290,7 @@ void deplacementPerso(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* 
         printf("deplacement nord\n");
         moovedir(perso, JeuRougeVoisin, JeuBleuVoisin, monde, Nord);
       }
-      
+
       if ((deltaY==0) && (deltaX>0)) {
         printf("deplacement sud\n");
         moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, Sud);
