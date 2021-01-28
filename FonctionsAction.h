@@ -16,4 +16,5 @@ void TourSeigneur(Personnage * seigneur,ListePerso* JeuVoisin, ListePerso* JeuVo
 void TourChateau(Personnage * chateau,Monde* monde, int* tresor);
 void Transformartion(Personnage* Seigneur,ListePerso*JeuVoisin, Monde* monde, int* tresor);
 void TourDeJeu(Monde* monde,ListePerso* JeuVoisin, ListePerso* JeuVoisinAdverse, int*tresor);
+void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, direction_t direction);
 #endif
