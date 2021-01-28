@@ -8,7 +8,7 @@ typedef enum typePerso {Chateau, Seigneur, Guerrier, Manant} typePerso_t;
 typedef enum typeProd {seigneur,guerrier,manant,Rien} typeProd_t;
 typedef enum couleur{Rouge, Bleu} couleur_t;
 
-typedef enum direction{Nord,Sud,Est,Ouest,NordEst, NordOuest, SudEst, SudOuest } direction_t;
+typedef enum direction{Nord,Sud,Est,Ouest,NordEst, NordOuest, SudEst, SudOuest} direction_t;
 
 typedef struct mouvement{
   direction_t direction;
