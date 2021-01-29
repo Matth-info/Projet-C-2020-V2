@@ -74,7 +74,7 @@ void suicide(Personnage* Harakiri, Monde* monde){
   }else {
 
     if (Harakiri->typePerso==Seigneur){
-      if (Harakiri->dx!=-1) || (Harakiri->dy!=-1){
+      if ((Harakiri->dx!=-1) || (Harakiri->dy!=-1)){
       printf("\t -suicide d'un Seigneur en case (%d,%d) \n",Harakiri->px, Harakiri->py);
       }
     } else{ printf("\t  -suicide d'un Guerrier en case (%d,%d)\n",Harakiri->px, Harakiri->py);}
@@ -121,7 +121,7 @@ void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant
         if (JeuVoisinPerdant->tete==ChateauPerdant){ // premier chateau dans la liste voisin;
           ChateauPerdant->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
           JeuVoisinPerdant->tete=ChateauPerdant->PersoSuivantVoisin;
-          // JeuVoisinPerdant->nbPerso--;
+
         }
         if (JeuVoisinPerdant->fin==ChateauPerdant){ // dernier chateau dans la liste voisin
           ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=NULL;
@@ -140,6 +140,7 @@ void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant
         JeuVoisinPerdant->fin = NULL;
         monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
         JeuVoisinPerdant->nbPerso--;
+
         if(ChateauPerdant->couleur==Rouge){
             monde->CampRouge=NULL;
           }else {monde->CampBleu=NULL;}
@@ -150,7 +151,7 @@ void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant
             monde->CampRouge=NULL;
           }else {monde->CampBleu=NULL;} // tester si CampRouge ou CampBleu pointe vers NULL signifierait que le CampRouge ou Bleu à perdu la partie;
       }
-      printf("fin du processus de destruction du chateau (%d,%d)", ChateauPerdant->px, ChateauPerdant->py);
+      printf("fin du processus de destruction du chateau (%d,%d)\n", ChateauPerdant->px, ChateauPerdant->py);
       free(ChateauPerdant);
 }
 
