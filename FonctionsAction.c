@@ -237,8 +237,8 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].chateau->couleur) {
         combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);//combat d'un agent contre un chateau
         if(monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL) { // l'attaquant détruit le chateau
-          monde->plateau[perso->px + dx][perso->py + dy].chateau=perso; //ATTENTION ici le perso prend la place du chateau
-          monde->plateau[perso->px][perso->py].chateau=NULL;
+          monde->plateau[perso->px + dx][perso->py + dy].perso=perso; //ATTENTION ici le perso prend la place du chateau
+          monde->plateau[perso->px][perso->py].perso=NULL;
           perso->px += dx;
           perso->py += dy;
         } else {
