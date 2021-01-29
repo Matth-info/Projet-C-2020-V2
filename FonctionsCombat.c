@@ -104,11 +104,11 @@ void CombatMemePerso(Personnage* attaquant, Personnage* defenseur, Monde* monde)
     srand(time(NULL));
 
     switch(attaquant->typePerso){
-      case 0: break
+      case 0: break;
       case 1: printf("Duel de Seigneur\n"); break;
       case 2: printf("Duel de Guerrier\n"); break;
       case 3: printf("Duel de Manant\n"); break;
-      default : printf("Erreur type Perso (fct CombatMemePerso)");
+      default : printf("Erreur type Perso (fct CombatMemePerso)\n");
     }
 
     nb = (rand()%(MAX+1-MIN))+MIN;
@@ -218,7 +218,7 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
 
         case 1: nb = (rand()%(MAX+1-MIN))+MIN;
                 if(nb >= 21) {
-                    printf("Le Chateau en (%d,%d) a reussi a survivre a l'assaut et tue le seigneur", defenseur->px,defenseur->py);
+                    printf("Le Chateau en (%d,%d) a reussi a survivre a l'assaut et tue le seigneur\n", defenseur->px,defenseur->py);
                     kill(attaquant,monde);
                 }
                 else {
@@ -231,8 +231,8 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
 
         case 2: MAX = 35;
                 nb = (rand()%(MAX+1-MIN))+MIN;
-                if(nb >= 6) { // si le chateau parvient à se défendre et à tuer son attaquant
-                    printf("Le Chateau en (%d,%d) a reussi a survivre a l'assaut et tue le guerrier", defenseur->px,defenseur->py);
+                if(nb >= 35) { // si le chateau parvient à se défendre et à tuer son attaquant
+                    printf("Le Chateau en (%d,%d) a reussi a survivre a l'assaut et tue le guerrier\n", defenseur->px,defenseur->py);
                     kill(attaquant,monde);
                 }
                 else {
@@ -246,7 +246,7 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
         case 3: MAX = 31;
                 nb = (rand()%(MAX+1-MIN))+MIN;
                 if(nb >= 2) {
-                    printf("Le Chateau en (%d,%d) a reussi a survivre a l'assaut et tue le manant", defenseur->px,defenseur->py);
+                    printf("Le Chateau en (%d,%d) a reussi a survivre a l'assaut et tue le manant\n", defenseur->px,defenseur->py);
                     kill(attaquant,monde);
                 }
                 else {
