@@ -74,19 +74,20 @@ void suicide(Personnage* Harakiri, Monde* monde){
   }else {
 
     if (Harakiri->typePerso==Seigneur){
-      printf("\t -suicide d'un Seigneur en case (%d,%d)\n",Harakiri->px, Harakiri->py);
+      if (Harakiri->dx!=-1) || (Harakiri->dy!=-1){
+      printf("\t -suicide d'un Seigneur en case (%d,%d) \n",Harakiri->px, Harakiri->py);
+      }
     } else{ printf("\t  -suicide d'un Guerrier en case (%d,%d)\n",Harakiri->px, Harakiri->py);}
-
 
     if (Harakiri->PersoSuivant==NULL){ // cas où le harakiri est en bout de chaine
       Harakiri->PersoPrecedent->PersoSuivant=NULL;
-    } else {
+    }else{
       Harakiri->PersoPrecedent->PersoSuivant=Harakiri->PersoSuivant;
       Harakiri->PersoSuivant->PersoPrecedent=Harakiri->PersoPrecedent;
-      }
+    }
 
-      monde->plateau[Harakiri->px][Harakiri->py].perso=NULL;
-      free(Harakiri);
+    monde->plateau[Harakiri->px][Harakiri->py].perso=NULL;
+    free(Harakiri);
     }
 }
 
@@ -241,13 +242,13 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
           monde->plateau[perso->px][perso->py].perso=NULL;
           perso->px += dx;
           perso->py += dy;
-        } else {
+        }
+      }else {
           printf("le personnage a rencontre une case occupee par un personnage de la meme couleur pendant son deplacement \n cela met fin a son deplacement\n");
           perso->dx=perso->px;
           perso->dy=perso->py;
         }
       }
-    }
   } else { // cas où la case de destination n'est ni occupée par un chateau ni occupée par un agent
     monde->plateau[perso->px + dx][perso->py + dy].perso=perso;
     monde->plateau[perso->px][perso->py].perso=NULL;
@@ -435,7 +436,7 @@ void TourGuerrier(Personnage * guerrier, ListePerso* JeuRougeVoisin, ListePerso*
 }
 void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, ListePerso* JeuVoisinAdverse, Monde *monde, int*tresor){
   if ((seigneur->px!=seigneur->dx) || (seigneur->py!=seigneur->dy)){
-      printf("votre seigneur est en cours en deplacement\n");
+      printf("votre seigneur (%d,%d) est en cours en deplacement\n",seigneur->dx, seigneur->dy);
       deplacementPerso(seigneur,JeuVoisin, JeuVoisinAdverse, monde);
   } else {
       char str[4];
@@ -502,7 +503,7 @@ void Transformartion(Personnage* Seigneur,ListePerso *JeuVoisin, Monde* monde, i
   if(Seigneur->dx !=-1 || Seigneur->dy!=-1)
     printf("Le seigneur n'est pas immobile, il ne peut pas se transformer");
   else {
-    printf("Souhaitez vous transfrormer votre seigneur en (%d,%d) en chateau pour 30 piece d'or? \n oui ou non?",Seigneur->px,Seigneur->py );
+    printf("Souhaitez vous transformer votre seigneur en (%d,%d) en chateau pour 30 piece d'or? \n oui ou non?",Seigneur->px,Seigneur->py );
     char str[4];
     char str1[4]="oui";
     scanf("%s",str);
