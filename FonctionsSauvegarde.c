@@ -260,7 +260,6 @@ int Chargementpartie(int argc, char** argv, Monde* monde,ListePerso * JeuRougeVo
           i++;
         }Tresor2[i-2]='\0';
         tresor2=atoi(Tresor2);
-        //printf("tresor 2: %d\n",tresor2);
         tresorBsave=tresor2;
       } else {
 
@@ -271,7 +270,6 @@ int Chargementpartie(int argc, char** argv, Monde* monde,ListePerso * JeuRougeVo
           i++;
         }Tresor1[i-2]='\0';
         tresor1=atoi(Tresor1);
-        //printf("tresor1: %d\n", tresor1);
         tresorBsave=tresor1;
 
         fgets(lignePerso,T_MAX,fichier); // on passe à la deuxième ligne;
@@ -281,7 +279,6 @@ int Chargementpartie(int argc, char** argv, Monde* monde,ListePerso * JeuRougeVo
           i++;
         } Tresor2[i-2]='\0';
         tresor2=atoi(Tresor2);
-        //printf("tresor 2 :%d\n",tresor2);
         tresorRsave=tresor2;
       }
       // fin de la récupération et du traitement des deux premières lignes
