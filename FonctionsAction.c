@@ -236,8 +236,8 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
   if ((monde->plateau[perso->px + dx][perso->py + dy].perso!=NULL) || (monde->plateau[perso->px + dx][perso->py + dy].chateau!=NULL)) {
     if(monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) {
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].perso->couleur) {
-        depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
         Personnage* Persotemp = NULL;
+        depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
         while((monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) && (monde->plateau[perso->px + dx][perso->py + dy].perso != Persotemp)) {
           combat(perso, monde->plateau[perso->px + dx][perso->py + dy].perso,JeuRougeVoisin, JeuBleuVoisin, monde);
           Persotemp = monde->plateau[perso->px + dx][perso->py + dy].perso;
@@ -246,8 +246,7 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
           combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);
         }
         if((monde->plateau[perso->px + dx][perso->py + dy].perso == NULL) && (monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL)) { // si le personnage attaqué est tué
-          monde->plateau[perso->px + dx][perso->py + dy].perso=perso; // le personnage se déplace sur la case
-          monde->plateau[perso->px][perso->py].perso=NULL;
+          arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
           perso->px+=dx;
           perso->py+=dy;
         }
@@ -288,10 +287,9 @@ void depart(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
     else {
       if (monde->plateau[perso->px][perso->py].perso == perso) {
         perso->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
-        perso->PersoSuivantVoisin = NULL;
+        monde->plateau[perso->px][perso->py].perso = perso->PersoSuivantVoisin;
       }
       else {
-        printf("ahah");
         if(perso->PersoSuivantVoisin == NULL) {
           perso->PersoPrecedentVoisin->PersoSuivantVoisin = NULL;
           perso->PersoPrecedentVoisin = NULL;
