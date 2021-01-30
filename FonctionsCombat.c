@@ -86,7 +86,7 @@ void kill(Personnage* perdant, Monde* monde){ // fonction qui annonce la mort d'
         default: printf("erreur sur le type de personnage (fonction kill)");
                 break;
     }
-
+    
     if (perdant->PersoSuivant==NULL) { // si le personnage décédé est dernier dans la liste double du chateau
             perdant->PersoPrecedent->PersoSuivant=NULL;
     }
