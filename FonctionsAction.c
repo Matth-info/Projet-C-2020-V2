@@ -86,7 +86,15 @@ void suicide(Personnage* Harakiri, Monde* monde){
       Harakiri->PersoSuivant->PersoPrecedent=Harakiri->PersoPrecedent;
     }
 
-    monde->plateau[Harakiri->px][Harakiri->py].perso=NULL;
+    if (Harakiri->PersoSuivantVoisin==NULL){// seigneur ou guerrier en bout de liste
+      Harakiri->PersoPrecedentVoisin->PersoSuivantVoisin=NULL;
+      if(monde->plateau[Harakiri->px][Harakiri->py].perso==Harakiri){
+        monde->plateau[Harakiri->px][Harakiri->py].perso=NULL;
+      }
+    }else{
+      Harakiri->PersoSuivantVoisin->PersoPrecedentVoisin= Harakiri->PersoPrecedentVoisin;
+      Harakiri->PersoPrecedentVoisin->PersoSuivantVoisin= Harakiri->PersoSuivantVoisin;
+    }
     free(Harakiri);
     }
 }
@@ -267,13 +275,13 @@ void depart(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
     else {
       monde->plateau[perso->px][perso->py].perso->PersoPrecedentVoisin->PersoSuivantVoisin = monde->plateau[perso->px][perso->py].perso->PersoSuivantVoisin;
       monde->plateau[perso->px][perso->py].perso->PersoSuivantVoisin->PersoPrecedentVoisin = monde->plateau[perso->px][perso->py].perso->PersoPrecedentVoisin;
-      
+
     }
 }
 
 void arrive(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, int px, int py) {
   if(monde->plateau[px][py].perso == NULL ) {
-    monde->plateau[px][py].perso=perso; 
+    monde->plateau[px][py].perso=perso;
     // perso->px += dx;
     // perso->py += dy;
   }
@@ -293,7 +301,7 @@ void arrive(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
         while ((Persotemp->typePerso==Manant) && (Persotemp->PersoPrecedentVoisin!=NULL)) {
           Persotemp= Persotemp->PersoPrecedentVoisin;
         }
-        if(Persotemp==finVoisin) { 
+        if(Persotemp==finVoisin) {
           if(Persotemp->typePerso==Manant) {
             perso->PersoSuivantVoisin=Persotemp;
             perso->PersoPrecedentVoisin= NULL;
@@ -314,13 +322,13 @@ void arrive(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
           Persotemp->PersoSuivantVoisin = perso;
         }
         break;
-      case 2: 
+      case 2:
         monde->plateau[px][py].perso->PersoPrecedentVoisin=perso;
         perso->PersoSuivantVoisin=monde->plateau[px][py].perso;
         perso->PersoPrecedentVoisin=NULL;
         monde->plateau[px][py].perso=perso;
         break;
-      case 3: 
+      case 3:
         finVoisin = monde->plateau[px][py].perso;
         while (finVoisin->PersoSuivantVoisin != NULL){ //recherche de l'emplacement du dernier agent dans la liste du chateau afin d'y insérer le manant
           finVoisin = finVoisin->PersoSuivantVoisin;
