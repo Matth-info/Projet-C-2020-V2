@@ -278,9 +278,14 @@ void depart(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
       monde->plateau[perso->px][perso->py].perso=NULL;
     }
     else {
-      monde->plateau[perso->px][perso->py].perso->PersoPrecedentVoisin->PersoSuivantVoisin = monde->plateau[perso->px][perso->py].perso->PersoSuivantVoisin;
-      monde->plateau[perso->px][perso->py].perso->PersoSuivantVoisin->PersoPrecedentVoisin = monde->plateau[perso->px][perso->py].perso->PersoPrecedentVoisin;
-
+      if (monde->plateau[perso->px][perso->py].perso == perso) {
+        perso->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
+        perso->PersoSuivantVoisin = NULL;
+      }
+      else {
+        perso->PersoPrecedentVoisin->PersoSuivantVoisin = perso->PersoSuivantVoisin;
+        perso->PersoSuivantVoisin->PersoPrecedentVoisin = perso->PersoPrecedentVoisin;
+      }
     }
 }
 
