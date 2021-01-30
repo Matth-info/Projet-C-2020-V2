@@ -94,6 +94,7 @@ void kill(Personnage* perdant, Monde* monde){ // fonction qui annonce la mort d'
       perdant->PersoPrecedent->PersoSuivant=perdant->PersoSuivant;
       perdant->PersoSuivant->PersoPrecedent=perdant->PersoPrecedent;
     }
+    
     if(perdant->PersoSuivantVoisin == NULL) {
         monde->plateau[perdant->px][perdant->py].perso = NULL;
     }
