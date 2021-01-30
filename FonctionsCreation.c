@@ -20,7 +20,7 @@ ListePerso * initJeu(void){ // creation d'une liste doublement chainee
 
 void CreerChateau(ListePerso* JeuVoisinChateau, Monde * monde, couleur_t couleur,int px, int py){ // fonction pour remplir un espace alloué pour un chateau// Tete d'une ListePerso
   Personnage* Castle =malloc(sizeof(Personnage));
-  if (Castle==NULL){
+  if ((Castle==NULL) || (monde->plateau[px][py].chateau!=NULL)){
     printf("impossible de créer le chateau");
   }else{
     Castle->couleur = couleur;
@@ -75,9 +75,6 @@ void CreerSeigneur(Personnage* chateau, Monde* monde,  couleur_t couleur, int px
     seigneur->typeProd=Rien; // le seigneur ne produit rien mais peut devenir un chateau (il faudra faire une fonction transformation)
     seigneur->tempsProd=-1;
 
-    seigneur->PersoPrecedentVoisin=NULL; // à modifier au niveau 4
-    seigneur->PersoSuivantVoisin=NULL;
-
 
     if (chateau->PersoSuivant == NULL){
       seigneur->PersoSuivant=NULL;
@@ -91,8 +88,47 @@ void CreerSeigneur(Personnage* chateau, Monde* monde,  couleur_t couleur, int px
     }
 
     monde->plateau[px][py].perso=seigneur;
-    *tresor=*tresor-20;
 
+    if (monde->plateau[px][py].perso==NULL){
+        seigneur->PersoPrecedentVoisin=NULL;
+        seigneur->PersoSuivantVoisin=NULL;
+        monde->plateau[px][py].perso=seigneur;
+    } else {
+      // est généré comme le placement du guerrier dans la liste doublement chainée du chateau;
+      // placer le seigneur entre des guerriers et des manants
+      // on commence par trouver le dernier élément de la liste des voisin
+        Personnage * Persotemp=monde->plateau[px][py].perso;
+        while(Persotemp->PersoSuivantVoisin!=NULL){
+          Persotemp=Persotemp->PersoSuivantVoisin;
+        }
+        Personnage * finVoisin = Persotemp;
+
+        while ((Persotemp->typePerso==Manant) && (Persotemp->PersoPrecedentVoisin!=NULL)){
+          Persotemp= Persotemp->PersoPrecedentVoisin;
+        }
+
+        if(Persotemp==finVoisin){ // cas où il n'y a pas de manant dans les voisins;
+          if(Persotemp->typePerso==Manant){
+            seigneur->PersoSuivantVoisin=Persotemp;
+            seigneur->PersoPrecedentVoisin= NULL;
+            Persotemp->PersoPrecedentVoisin=seigneur;
+            monde->plateau[px][py].perso=seigneur;
+
+          }else{
+          seigneur->PersoPrecedentVoisin=finVoisin;
+          finVoisin->PersoSuivantVoisin=seigneur;
+          seigneur->PersoSuivantVoisin=NULL;
+          }
+        }
+        else {
+          seigneur->PersoPrecedentVoisin=Persotemp;
+          seigneur->PersoSuivantVoisin = Persotemp->PersoSuivantVoisin;
+
+          Persotemp->PersoSuivantVoisin->PersoPrecedentVoisin=seigneur;
+          Persotemp->PersoSuivantVoisin = seigneur;
+        }
+      }
+      *tresor=*tresor-20;
   }
 }
 
@@ -111,9 +147,6 @@ void CreerGuerrier(Personnage* chateau,Monde* monde, couleur_t couleur, int px, 
   guerrier->dy = py;
   guerrier->typeProd = Rien;
   guerrier->tempsProd = -1;
-
-  guerrier->PersoSuivantVoisin=NULL;
-  guerrier->PersoPrecedentVoisin=NULL; // à modifier lorsque l'on sera au niveau 4;
 
   Personnage* Persotemp = chateau;
 
@@ -141,12 +174,20 @@ void CreerGuerrier(Personnage* chateau,Monde* monde, couleur_t couleur, int px, 
     Persotemp->PersoSuivant = guerrier;
   }
 
-
-  monde->plateau[px][py].perso=guerrier;
+  if (monde->plateau[px][py].perso==NULL){
+    guerrier->PersoSuivantVoisin=NULL;
+    guerrier->PersoPrecedentVoisin=NULL;
+      monde->plateau[px][py].perso=guerrier;
+  }else{
+      // le guerrier est placé en 1 ère ligne , soit la tete;
+      monde->plateau[px][py].perso->PersoPrecedentVoisin=guerrier;
+      guerrier->PersoSuivantVoisin=monde->plateau[px][py].perso;
+      guerrier->PersoPrecedentVoisin=NULL;
+      monde->plateau[px][py].perso=guerrier;
+  }
   *tresor=*tresor-5;
   }
 }
-
 void CreerManant(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, int py, int* tresor) {
   Personnage* manant = malloc(sizeof(Personnage));
   if ((manant == NULL) || (chateau->typePerso!=Chateau) || (*tresor-1 < 0) ){
@@ -163,8 +204,6 @@ void CreerManant(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, 
   manant->typeProd = Rien;
   manant->tempsProd = -1;
 
-  manant->PersoPrecedentVoisin=NULL;
-  manant->PersoSuivantVoisin=NULL;
   Personnage* fin = chateau;
   while(fin->PersoSuivant != NULL)
     fin = fin->PersoSuivant;
@@ -173,9 +212,25 @@ void CreerManant(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, 
 
   fin->PersoSuivant=manant;
 
-  monde->plateau[px][py].perso=manant;
+
+  // placement du manant dans la liste voisin de la case
+    if (monde->plateau[px][py].perso==NULL){
+      manant->PersoPrecedentVoisin=NULL;
+      manant->PersoSuivantVoisin=NULL;
+      monde->plateau[px][py].perso=manant;
+    }else{ //  il y a déjà des agents sur la case
+
+      Personnage* finVoisin = monde->plateau[px][py].perso;
+      while (finVoisin->PersoSuivantVoisin != NULL){ //recherche de l'emplacement du dernier agent dans la liste du chateau afin d'y insérer le manant
+            finVoisin = finVoisin->PersoSuivantVoisin;
+        }
+        manant->PersoPrecedentVoisin=finVoisin;
+        manant->PersoSuivantVoisin=NULL;
+        finVoisin->PersoSuivantVoisin=manant;
+    }
   *tresor=*tresor-1;
   }
+
 }
 
 
@@ -255,7 +310,7 @@ void ChateauProduction(Personnage* chateau, Monde* monde, int* tresor) {
           }
           break;
         case 4: chateau->typeProd = Rien;
-                chateau->tempsProd= 0; 
+                chateau->tempsProd= 0;
                 break;
         default: printf("Valeur rentree incorrect\n");
                 ChateauProduction(chateau, monde, tresor);
