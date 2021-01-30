@@ -231,9 +231,11 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
           perso->py+=dy;
         }
       } else {
+        depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
         printf("le personnage a rencontre une case occupee par un personnage de la meme couleur pendant son deplacement \n cela met fin a son deplacement\n");
-        perso->dx=perso->px; // arret du déplacement sans combat
-        perso->dy=perso->py;
+        arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
+        perso->px+=dx;
+        perso->py+=dy;
       }
     } else {
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].chateau->couleur) {
@@ -255,6 +257,79 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
     monde->plateau[perso->px][perso->py].perso=NULL;
     perso->px += dx;
     perso->py += dy;
+  }
+}
+
+void depart(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, int px, int py) {
+    if(monde->plateau[perso->px][perso->py].perso->PersoSuivantVoisin == NULL) {
+      monde->plateau[perso->px][perso->py].perso=NULL;
+    }
+    else {
+      monde->plateau[perso->px][perso->py].perso->PersoPrecedentVoisin->PersoSuivantVoisin = monde->plateau[perso->px][perso->py].perso->PersoSuivantVoisin;
+      monde->plateau[perso->px][perso->py].perso->PersoSuivantVoisin->PersoPrecedentVoisin = monde->plateau[perso->px][perso->py].perso->PersoPrecedentVoisin;
+      
+    }
+}
+
+void arrive(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, int px, int py) {
+  if(monde->plateau[px][py].perso == NULL ) {
+    monde->plateau[px][py].perso=perso; 
+    // perso->px += dx;
+    // perso->py += dy;
+  }
+  else {
+    Personnage* Persotemp = NULL;
+    Personnage* finVoisin = NULL;
+    switch(perso->typePerso) {
+      case 0: printf("erreur, (fonction arrive)");
+        break;
+      case 1:
+        Persotemp = monde->plateau[px][py].perso;
+        while(Persotemp->PersoSuivantVoisin!=NULL){
+          Persotemp=Persotemp->PersoSuivantVoisin;
+        }
+        finVoisin = Persotemp;
+
+        while ((Persotemp->typePerso==Manant) && (Persotemp->PersoPrecedentVoisin!=NULL)) {
+          Persotemp= Persotemp->PersoPrecedentVoisin;
+        }
+        if(Persotemp==finVoisin) { 
+          if(Persotemp->typePerso==Manant) {
+            perso->PersoSuivantVoisin=Persotemp;
+            perso->PersoPrecedentVoisin= NULL;
+            Persotemp->PersoPrecedentVoisin=perso;
+            monde->plateau[px][py].perso=perso;
+          }
+          else {
+          perso->PersoPrecedentVoisin=finVoisin;
+          finVoisin->PersoSuivantVoisin=perso;
+          perso->PersoSuivantVoisin=NULL;
+          }
+        }
+        else {
+          perso->PersoPrecedentVoisin=Persotemp;
+          perso->PersoSuivantVoisin = Persotemp->PersoSuivantVoisin;
+
+          Persotemp->PersoSuivantVoisin->PersoPrecedentVoisin=perso;
+          Persotemp->PersoSuivantVoisin = perso;
+        }
+        break;
+      case 2: 
+        monde->plateau[px][py].perso->PersoPrecedentVoisin=perso;
+        perso->PersoSuivantVoisin=monde->plateau[px][py].perso;
+        perso->PersoPrecedentVoisin=NULL;
+        monde->plateau[px][py].perso=perso;
+        break;
+      case 3: 
+        finVoisin = monde->plateau[px][py].perso;
+        while (finVoisin->PersoSuivantVoisin != NULL){ //recherche de l'emplacement du dernier agent dans la liste du chateau afin d'y insérer le manant
+          finVoisin = finVoisin->PersoSuivantVoisin;
+        }
+        perso->PersoPrecedentVoisin=finVoisin;
+        perso->PersoSuivantVoisin=NULL;
+        finVoisin->PersoSuivantVoisin=perso;
+        break;
+    }
   }
 }
 
@@ -465,7 +540,7 @@ void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, ListePerso* JeuVois
             scanf("%s", str);
             if (strcmp(str1,str)==0) {
               immobilisation(seigneur);
-              Transformartion(seigneur,JeuVoisin, monde, tresor);
+              Transformation(seigneur,JeuVoisin, monde, tresor);
             } else { printf("votre seigneur en case (%d,%d) n'a pas joue !\n ", seigneur->px, seigneur->py);}
           }
 
@@ -500,7 +575,7 @@ void TourChateau(Personnage* chateau, Monde* monde, int* tresor){
 }
 
 
-void Transformartion(Personnage* Seigneur,ListePerso *JeuVoisin, Monde* monde, int* tresor) {
+void Transformation(Personnage* Seigneur,ListePerso *JeuVoisin, Monde* monde, int* tresor) {
   if(Seigneur->dx !=-1 || Seigneur->dy!=-1)
     printf("Le seigneur n'est pas immobile, il ne peut pas se transformer");
   else {
