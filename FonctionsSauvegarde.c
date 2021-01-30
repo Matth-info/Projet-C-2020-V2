@@ -500,7 +500,7 @@ void traitementFscore(int argc, char** argv, char *NvVainqueur,int nvscore){
       printf("erreur lors de l'ouverture du fichier Score\n");
     }
     fseek(fscore,0,SEEK_SET); // revenir au début du fichier texte
-    while(fgets(str,T_MAX,fscore)!='\0'){
+    while(fgets(str,T_MAX,fscore)!=NULL){
         //str est une chaine contenant une ligne : nomVainqueur scoreVainqueur
         int i;
         int j;
