@@ -87,8 +87,6 @@ void CreerSeigneur(Personnage* chateau, Monde* monde,  couleur_t couleur, int px
       chateau->PersoSuivant=seigneur;
     }
 
-    monde->plateau[px][py].perso=seigneur;
-
     if (monde->plateau[px][py].perso==NULL){
         seigneur->PersoPrecedentVoisin=NULL;
         seigneur->PersoSuivantVoisin=NULL;
