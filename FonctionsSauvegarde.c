@@ -25,17 +25,29 @@ void CreerManantChargement(Personnage* chateau, Monde* monde,  couleur_t couleur
   manant->typeProd = Rien;
   manant->tempsProd = -1;
 
-  manant->PersoPrecedentVoisin=NULL;
-  manant->PersoSuivantVoisin=NULL;
   Personnage* fin = chateau;
-  while(fin->PersoSuivant != NULL)
+  while(fin->PersoSuivant != NULL){ //recherche de l'emplacement du dernier agent dans la liste du chateau afin d'y insérer le manant
     fin = fin->PersoSuivant;
+  }
   manant->PersoPrecedent=fin;
   manant->PersoSuivant= NULL;// la tete ne change jamais = toujours un chateau en tete de sa liste.
-
   fin->PersoSuivant=manant;
 
-  monde->plateau[px][py].perso=manant;
+// placement du manant dans la liste voisin de la case
+  if (monde->plateau[px][py].perso==NULL){
+    manant->PersoPrecedentVoisin=NULL;
+    manant->PersoSuivantVoisin=NULL;
+    monde->plateau[px][py].perso=manant;
+  }else{ //  il y a déjà des agents sur la case
+    Personnage* finVoisin = monde->plateau[px][py].perso;
+    while (finVoisin->PersoSuivantVoisin != NULL){ //recherche de l'emplacement du dernier agent dans la liste du chateau afin d'y insérer le manant
+          finVoisin = finVoisin->PersoSuivantVoisin;
+      }
+      manant->PersoPrecedentVoisin=finVoisin;
+      manant->PersoSuivantVoisin=NULL;
+      finVoisin->PersoSuivantVoisin=manant;
+  }
+
   *tresor=*tresor-1;
   }
 }
@@ -51,13 +63,10 @@ void CreerSeigneurChargement(Personnage* chateau, Monde* monde,  couleur_t coule
     seigneur->typePerso=Seigneur;
     seigneur->px=px;
     seigneur->py=py;
-    seigneur->dx=dx; // à la creation du seigneur sa destination est egale à sa position condition pour effectuer une action autre que le deplacement
+    seigneur->dx=dx;
     seigneur->dy=dy;
-    seigneur->typeProd=Rien; // le seigneur ne produit rien mais peut devenir un chateau (il faudra faire une fonction transformation)
+    seigneur->typeProd=Rien;
     seigneur->tempsProd=-1;
-
-    seigneur->PersoPrecedentVoisin=NULL; // à modifier au niveau 4
-    seigneur->PersoSuivantVoisin=NULL;
 
 
     if (chateau->PersoSuivant == NULL){
@@ -71,11 +80,50 @@ void CreerSeigneurChargement(Personnage* chateau, Monde* monde,  couleur_t coule
       chateau->PersoSuivant=seigneur;
     }
 
-    monde->plateau[px][py].perso=seigneur;
-    *tresor=*tresor-20;
+    if (monde->plateau[px][py].perso==NULL){
+        seigneur->PersoPrecedentVoisin=NULL;
+        seigneur->PersoSuivantVoisin=NULL;
+        monde->plateau[px][py].perso=seigneur;
+    } else {
+      // est généré comme le placement du guerrier dans la liste doublement chainée du chateau;
+      // placer le seigneur entre des guerriers et des manants
+      // on commence par trouver le dernier élément de la liste des voisin
+        Personnage * Persotemp=monde->plateau[px][py].perso;
+        while(Persotemp->PersoSuivantVoisin!=NULL){
+          Persotemp=Persotemp->PersoSuivantVoisin;
+        }
+        Personnage * finVoisin = Persotemp;
 
+        while ((Persotemp->typePerso==Manant) && (Persotemp->PersoPrecedentVoisin!=NULL)){
+          Persotemp= Persotemp->PersoPrecedentVoisin;
+        }
+
+        if(Persotemp==finVoisin){ // cas où il n'y a pas de manant dans les voisins;
+          if(Persotemp->typePerso==Manant){
+            seigneur->PersoSuivantVoisin=Persotemp;
+            seigneur->PersoPrecedentVoisin= NULL;
+            Persotemp->PersoPrecedentVoisin=seigneur;
+            monde->plateau[px][py].perso=seigneur;
+
+          }else{
+          seigneur->PersoPrecedentVoisin=finVoisin;
+          finVoisin->PersoSuivantVoisin=seigneur;
+          seigneur->PersoSuivantVoisin=NULL;
+          }
+        }
+        else {
+          seigneur->PersoPrecedentVoisin=Persotemp;
+          seigneur->PersoSuivantVoisin = Persotemp->PersoSuivantVoisin;
+
+          Persotemp->PersoSuivantVoisin->PersoPrecedentVoisin=seigneur;
+          Persotemp->PersoSuivantVoisin = seigneur;
+        }
+      }
+
+    *tresor=*tresor-20;
   }
 }
+
 void CreerGuerrierChargement(Personnage* chateau,Monde* monde, couleur_t couleur, int px, int py, int dx, int dy, int * tresor) {
   Personnage* guerrier = malloc(sizeof(Personnage));
   if ((guerrier == NULL) || (chateau->typePerso != Chateau) || (*tresor - 5 < 0)){
@@ -90,9 +138,6 @@ void CreerGuerrierChargement(Personnage* chateau,Monde* monde, couleur_t couleur
   guerrier->dy = dy;
   guerrier->typeProd = Rien;
   guerrier->tempsProd = -1;
-
-  guerrier->PersoSuivantVoisin=NULL;
-  guerrier->PersoPrecedentVoisin=NULL; // à modifier lorsque l'on sera au niveau 4;
 
   Personnage* Persotemp = chateau;
 
@@ -120,10 +165,20 @@ void CreerGuerrierChargement(Personnage* chateau,Monde* monde, couleur_t couleur
     Persotemp->PersoSuivant = guerrier;
   }
 
+  if (monde->plateau[px][py].perso==NULL){
+    guerrier->PersoSuivantVoisin=NULL;
+    guerrier->PersoPrecedentVoisin=NULL;
+      monde->plateau[px][py].perso=guerrier;
+  }else{
+      // le guerrier est placé en 1 ère ligne , soit la tete;
+      monde->plateau[px][py].perso->PersoPrecedentVoisin=guerrier;
+      guerrier->PersoSuivantVoisin=monde->plateau[px][py].perso;
+      guerrier->PersoPrecedentVoisin=NULL;
+      monde->plateau[px][py].perso=guerrier;
+    }
 
-  monde->plateau[px][py].perso=guerrier;
-  *tresor=*tresor-5;
   }
+  *tresor=*tresor-5;
 }
 
 //objectif créer un fichier de sauvegarde .got qui respecte les critères de sauvegardes afin de pouvoir facilement le récupérer et rétablir le jeu.
@@ -218,9 +273,9 @@ void sauvergardeJeu(Monde* monde,ListePerso* JeuRougeVoisin, ListePerso* JeuBleu
 int Chargementpartie(int argc, char** argv, Monde* monde,ListePerso * JeuRougeVoisin, ListePerso * JeuBleuVoisin, int* tresorR, int* tresorB){
   // les fichiers à compiler sont FonctionsCreation.c FonctionsAffichage.c,
   // FonctionsAction.c FonctionsCombat.c FonctionsSauvegarde.c main.c
-  // si argc==7 alors on a la présence d'un fichier de sauvegarde .got;
+  // si argc==2 alors on a la présence d'un fichier de sauvegarde .got;
   // la fonction récupère les trésors bleu et rouge (initialisé à 50 dans le main(), puis les modifie en fonction des 2 premières lignes du fichier Sauvegarde)
-  // (Problème resolu)noter que la récupération du premier tresor en tête de fichier sauvegarde fonctionne bien mais pas celle du deuxieme trésor (ex ci dessous)
+  // (Problème resolu) noter que la récupération du premier tresor en tête de fichier sauvegarde fonctionne bien mais pas celle du deuxieme trésor (ex ci dessous)
   // 10 pieces d'or dans le coffre Rouge
   //1965968678 pieces d'or dans le coffre Bleu
   int ProchainAJouer=3;
@@ -243,14 +298,12 @@ int Chargementpartie(int argc, char** argv, Monde* monde,ListePerso * JeuRougeVo
       fgets(lignePerso,T_MAX,fichier);
       if(lignePerso[0]=='R'){
         ProchainAJouer=0; // le prochain à jouer est le joueur Rouge;
-        //tresorRsave=tresor1;
         i=2;
         while(lignePerso[i]!='\0'){
           Tresor1[i-2]=lignePerso[i];
           i++;
         }Tresor1[i-2]='\0';
         tresor1=atoi(Tresor1);
-        //printf("tresor1: %d\n", tresor1);
         tresorRsave=tresor1;
 
         fgets(lignePerso,T_MAX,fichier); // on passe à la deuxième ligne;
