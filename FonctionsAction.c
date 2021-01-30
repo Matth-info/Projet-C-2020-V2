@@ -291,8 +291,15 @@ void depart(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
         perso->PersoSuivantVoisin = NULL;
       }
       else {
+        printf("ahah");
+        if(perso->PersoSuivantVoisin == NULL) {
+          perso->PersoPrecedentVoisin->PersoSuivantVoisin = NULL;
+          perso->PersoPrecedentVoisin = NULL;
+        }
+        else{
         perso->PersoPrecedentVoisin->PersoSuivantVoisin = perso->PersoSuivantVoisin;
         perso->PersoSuivantVoisin->PersoPrecedentVoisin = perso->PersoPrecedentVoisin;
+        }
       }
     }
 }
@@ -300,6 +307,8 @@ void depart(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
 void arrive(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, int px, int py) {
   if(monde->plateau[px][py].perso == NULL ) {
     monde->plateau[px][py].perso=perso;
+    perso->PersoPrecedentVoisin = NULL;
+    perso->PersoSuivantVoisin = NULL;
     // perso->px += dx;
     // perso->py += dy;
   }
