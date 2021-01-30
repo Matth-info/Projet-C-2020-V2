@@ -309,8 +309,6 @@ void arrive(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
     monde->plateau[px][py].perso=perso;
     perso->PersoPrecedentVoisin = NULL;
     perso->PersoSuivantVoisin = NULL;
-    // perso->px += dx;
-    // perso->py += dy;
   }
   else {
     Personnage* Persotemp = NULL;
