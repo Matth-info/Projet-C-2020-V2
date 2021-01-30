@@ -236,8 +236,14 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
   if ((monde->plateau[perso->px + dx][perso->py + dy].perso!=NULL) || (monde->plateau[perso->px + dx][perso->py + dy].chateau!=NULL)) {
     if(monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) {
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].perso->couleur) {
-        while((monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) && (perso != NULL)) {
+        depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
+        Personnage* Persotemp = monde->plateau[perso->px + dx][perso->py + dy].perso;
+        while((monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) && (monde->plateau[perso->px + dx][perso->py + dy].perso != Persotemp)) {
+          Persotemp = monde->plateau[perso->px + dx][perso->py + dy].perso;
           combat(perso, monde->plateau[perso->px + dx][perso->py + dy].perso,JeuRougeVoisin, JeuBleuVoisin, monde);
+        }
+        if((monde->plateau[perso->px + dx][perso->py + dy].chateau != NULL) && (monde->plateau[perso->px + dx][perso->py + dy].perso == NULL)) {
+          combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);
         }
         if(monde->plateau[perso->px + dx][perso->py + dy].perso == NULL) { // si le personnage attaqué est tué
           monde->plateau[perso->px + dx][perso->py + dy].perso=perso; // le personnage se déplace sur la case
