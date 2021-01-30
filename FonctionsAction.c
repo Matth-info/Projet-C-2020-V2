@@ -237,10 +237,10 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
     if(monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) {
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].perso->couleur) {
         depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
-        Personnage* Persotemp = monde->plateau[perso->px + dx][perso->py + dy].perso;
+        Personnage* Persotemp = NULL;
         while((monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) && (monde->plateau[perso->px + dx][perso->py + dy].perso != Persotemp)) {
-          Persotemp = monde->plateau[perso->px + dx][perso->py + dy].perso;
           combat(perso, monde->plateau[perso->px + dx][perso->py + dy].perso,JeuRougeVoisin, JeuBleuVoisin, monde);
+          Persotemp = monde->plateau[perso->px + dx][perso->py + dy].perso;
         }
         if((monde->plateau[perso->px + dx][perso->py + dy].chateau != NULL) && (monde->plateau[perso->px + dx][perso->py + dy].perso == NULL)) {
           combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);
