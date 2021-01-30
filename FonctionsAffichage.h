@@ -3,13 +3,10 @@
 
 
 void AffichageJeu(Personnage* Castle);
-
 void AffichageJeuVoisin(ListePerso* JeuVoisin);
-
 void AffichagePlateau(Monde* monde);
-
 void AffichageTresor(int* tresorRouge, int* tresorBleu);
-
+int MaxNbPerso(Monde* monde);
 
 
 #endif
