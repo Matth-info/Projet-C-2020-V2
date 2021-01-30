@@ -245,7 +245,7 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
         if((monde->plateau[perso->px + dx][perso->py + dy].chateau != NULL) && (monde->plateau[perso->px + dx][perso->py + dy].perso == NULL)) {
           combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);
         }
-        if(monde->plateau[perso->px + dx][perso->py + dy].perso == NULL) { // si le personnage attaqué est tué
+        if((monde->plateau[perso->px + dx][perso->py + dy].perso == NULL) && (monde->plateau[perso->px + dx][perso->py + dy].chateau != NULL)) { // si le personnage attaqué est tué
           monde->plateau[perso->px + dx][perso->py + dy].perso=perso; // le personnage se déplace sur la case
           monde->plateau[perso->px][perso->py].perso=NULL;
           perso->px+=dx;
