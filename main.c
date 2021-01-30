@@ -34,7 +34,7 @@ int main(int argc, char **argv)
   else{
     printf("pas de fichier rentre en sauvegarde\n lancement automatique d'une nouvelle partie\n");
     lancementdePartie(JeuRougeVoisin,JeuBleuVoisin,monde,&tresorR,&tresorB);
-    }
+  }
 
 
   AffichageTresor(&tresorR,&tresorB);
@@ -43,12 +43,8 @@ int main(int argc, char **argv)
   AffichagePlateau(monde);
 
   int cmpt_tour=0;
-  int objTours;
+  while ((monde->CampBleu!=NULL) && (monde->CampRouge!=NULL)){
 
-  printf("rentrez le nombre de tours a jouer : "),
-  scanf("%d",&objTours);
-
-  while ((cmpt_tour!=objTours) && (monde->CampBleu!=NULL) && (monde->CampRouge!=NULL)){
       if ((ProchainAJouer==0) || (argc==1)){ //tour commencant par le joueur Rouge (cas de chargement et nouvelle partie)
           if (DemandeSauvegarde(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,0)==0){
               return 0;
@@ -62,7 +58,7 @@ int main(int argc, char **argv)
           printf(" debut du tour du joueur Bleu\n");
           TourDeJeu(monde,JeuBleuVoisin,JeuRougeVoisin,&tresorB);
 
-          printf("%d tours restants\n", objTours - (++cmpt_tour));
+          printf("%d tours \n",++cmpt_tour);
       } // sortie du while (fin de partie);
       else{
           if (DemandeSauvegarde(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,1)==0){
@@ -77,10 +73,9 @@ int main(int argc, char **argv)
           printf("debut du tour du joueur Rouge\n");
           TourDeJeu(monde,JeuRougeVoisin, JeuBleuVoisin, &tresorR);
 
-          printf("%d tours restants\n", objTours - (++cmpt_tour));
+          printf("%d tours\n",++cmpt_tour);
       } // sortie du while (fin de partie);
-    } if(cmpt_tour==objTours){
-      printf("Le nombre de tours de jeu a ete atteint, fin de la partie");
-    } Score(argc,argv,monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB);
+    }
+    Score(argc,argv,monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB);
   return 0;
 }
