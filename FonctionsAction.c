@@ -87,16 +87,18 @@ void suicide(Personnage* Harakiri, Monde* monde){
     }
 
     if (Harakiri->PersoSuivantVoisin==NULL){// seigneur ou guerrier en bout de liste
-      Harakiri->PersoPrecedentVoisin->PersoSuivantVoisin=NULL;
       if(monde->plateau[Harakiri->px][Harakiri->py].perso==Harakiri){ //cas où il est seul sur la case
-        monde->plateau[Harakiri->px][Harakiri->py].perso=NULL;
-      }
+          monde->plateau[Harakiri->px][Harakiri->py].perso=NULL;
+      }else{
+          Harakiri->PersoPrecedentVoisin->PersoSuivantVoisin=NULL;}
     }else{
       if (monde->plateau[Harakiri->px][Harakiri->py].perso==Harakiri){
-        Harakiri->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
+          Harakiri->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
+          monde->plateau[Harakiri->px][Harakiri->py].perso=Harakiri->PersoSuivantVoisin;
+      }else{
+          Harakiri->PersoSuivantVoisin->PersoPrecedentVoisin= Harakiri->PersoPrecedentVoisin;
+          Harakiri->PersoPrecedentVoisin->PersoSuivantVoisin= Harakiri->PersoSuivantVoisin;
       }
-      Harakiri->PersoSuivantVoisin->PersoPrecedentVoisin= Harakiri->PersoPrecedentVoisin;
-      Harakiri->PersoPrecedentVoisin->PersoSuivantVoisin= Harakiri->PersoSuivantVoisin;
     }
     free(Harakiri);
     }
