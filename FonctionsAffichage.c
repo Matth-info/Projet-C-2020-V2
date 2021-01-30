@@ -140,9 +140,9 @@ void AffichagePlateau(Monde* monde){
                 }
               }
         }
-        if (cmp_perso_case==max){
-          printf("|");
-        }
+      }
+      if (cmp_perso_case==max){
+        printf("|");
       }
       if (cmp_perso_case < max){
         for(int j=cmp_perso_case; j<max;j++){
