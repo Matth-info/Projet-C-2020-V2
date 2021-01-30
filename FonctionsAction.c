@@ -236,7 +236,9 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
   if ((monde->plateau[perso->px + dx][perso->py + dy].perso!=NULL) || (monde->plateau[perso->px + dx][perso->py + dy].chateau!=NULL)) {
     if(monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) {
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].perso->couleur) {
-        combat(perso, monde->plateau[perso->px + dx][perso->py + dy].perso,JeuRougeVoisin, JeuBleuVoisin, monde);
+        while((monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) && (perso != NULL)) {
+          combat(perso, monde->plateau[perso->px + dx][perso->py + dy].perso,JeuRougeVoisin, JeuBleuVoisin, monde);
+        }
         if(monde->plateau[perso->px + dx][perso->py + dy].perso == NULL) { // si le personnage attaqué est tué
           monde->plateau[perso->px + dx][perso->py + dy].perso=perso; // le personnage se déplace sur la case
           monde->plateau[perso->px][perso->py].perso=NULL;
@@ -245,7 +247,6 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
         }
       } else {
         depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
-        printf("le personnage a rencontre une case occupee par un personnage de la meme couleur pendant son deplacement \n cela met fin a son deplacement\n");
         arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
         perso->px+=dx;
         perso->py+=dy;
@@ -260,14 +261,15 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
           perso->py += dy;
         }
       }else {
-          printf("le personnage a rencontre une case occupee par un personnage de la meme couleur pendant son deplacement \n cela met fin a son deplacement\n");
-          perso->dx=perso->px;
-          perso->dy=perso->py;
+          depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
+          arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
+          perso->px+=dx;
+          perso->py+=dy;
         }
       }
   } else { // cas où la case de destination n'est ni occupée par un chateau ni occupée par un agent
-    monde->plateau[perso->px + dx][perso->py + dy].perso=perso;
-    monde->plateau[perso->px][perso->py].perso=NULL;
+    depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
+    arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
     perso->px += dx;
     perso->py += dy;
   }
