@@ -288,6 +288,7 @@ void depart(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
       if (monde->plateau[perso->px][perso->py].perso == perso) {
         perso->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
         monde->plateau[perso->px][perso->py].perso = perso->PersoSuivantVoisin;
+        perso->PersoSuivantVoisin = NULL;
       }
       else { // l'agent attquant n'est pas en tête de liste voisin
         if(perso->PersoSuivantVoisin == NULL) {// l'agent est en dernière position dans la liste voisin
@@ -297,6 +298,8 @@ void depart(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
         else{ // l'agent n'est ni en première ni en dernière position
           perso->PersoPrecedentVoisin->PersoSuivantVoisin = perso->PersoSuivantVoisin;
           perso->PersoSuivantVoisin->PersoPrecedentVoisin = perso->PersoPrecedentVoisin;
+          perso->PersoSuivantVoisin = NULL;
+          perso->PersoPrecedentVoisin = NULL;
         }
       }
     }
