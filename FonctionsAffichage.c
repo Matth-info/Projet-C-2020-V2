@@ -39,10 +39,10 @@ void AffichageJeu(Personnage* Castle)
     printf("\n");
 
     if (Castle->couleur== Rouge){
-      printf("Personnages dans la liste Rouge du Chateau Cr(%d,%d):\n",Castle->px,Castle->py);
+      printf("\nPersonnages dans la liste Rouge du Chateau Cr(%d,%d):\n",Castle->px,Castle->py);
     }
     else {
-      printf("Personnages dans la liste Bleue du Chateau Cb(%d,%d):\n",Castle->px,Castle->py);
+      printf("\nPersonnages dans la liste Bleue du Chateau Cb(%d,%d):\n",Castle->px,Castle->py);
     }
     for (Personnage * persotemp=Castle ; persotemp!=NULL ; persotemp=persotemp->PersoSuivant)
     {
@@ -79,7 +79,7 @@ void AffichageJeuVoisin(ListePerso * JeuVoisin) {
 
 void AffichagePlateau(Monde* monde){
   if (monde==NULL){
-    printf("L'initialisation du Monde n'a pas fonctionnee");
+    printf("L'initialisation du Monde n'a pas fonctionnee\n");
   }
   printf("\nPlateau de jeu actuellement\n");
   int max=MaxNbPerso(monde);
