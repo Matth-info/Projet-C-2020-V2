@@ -31,7 +31,7 @@ void lancementdePartie(ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Mo
 
 void trahisonManant(Personnage* manant, Personnage* Attaquant, Personnage* Perdant,ListePerso* JeuRougeVoisin,ListePerso* JeuBleuVoisin, Monde* monde){ // attaquant et perdant represente les chateaux affiliés aux manants
   if (manant->typePerso!=Manant){
-    printf("le personnage n'est pas un manant");
+    printf("le personnage n'est pas un manant\n");
   }else{
     if (manant->couleur==Rouge){
       // devient à nouveau mobile MAIS reste sur place lors de la trahison
@@ -40,27 +40,29 @@ void trahisonManant(Personnage* manant, Personnage* Attaquant, Personnage* Perda
       manant->couleur=Bleu;
 
       manant->PersoPrecedent->PersoSuivant=NULL;
-      printf("\t -Le manant traitre est rouge (%d,%d), il passe dans le camp bleu\n", manant->px,manant->py);
+      printf("\t- Le manant traitre est rouge (%d,%d), il passe dans le camp bleu\n", manant->px,manant->py);
       //trouver le dernier personnage Bleu (attaquant relié au chateau)
       Personnage* dernierperso=Attaquant;
       while(dernierperso->PersoSuivant!=NULL){
         dernierperso=dernierperso->PersoSuivant;
       }
+      dernierperso->PersoSuivant=manant;
       manant->PersoPrecedent=dernierperso;
       manant->PersoSuivant=NULL;
     }
     else {
-      manant->dx=manant->px;
+      manant->dx=manant->px; // le manant traitre redevient mobile
       manant->dy=manant->py;
       manant->couleur=Rouge;
 
-      manant->PersoPrecedent->PersoSuivant=NULL;
+      manant->PersoPrecedent->PersoSuivant=NULL; //il y a au moins un chateau en personnage précédent
 
-      printf("\t - Le manant traitre est bleu (%d,%d), il passe dans le camp rouge\n",manant->px,manant->py);
-      Personnage* dernierperso=Attaquant;
+      printf("\t- Le manant traitre est bleu (%d,%d), il passe dans le camp rouge\n",manant->px,manant->py);
+      Personnage* dernierperso=Attaquant; // on va faire integrer le manant traitre dans à la fin de la liste attaquant
       while(dernierperso->PersoSuivant!=NULL){
         dernierperso=dernierperso->PersoSuivant;
       }
+      dernierperso->PersoSuivant=manant;
       manant->PersoPrecedent=dernierperso;
       manant->PersoSuivant=NULL;
     }
@@ -87,7 +89,7 @@ void trahisonManant(Personnage* manant, Personnage* Attaquant, Personnage* Perda
 void suicide(Personnage* Harakiri, Monde* monde){
 
   if (Harakiri->typePerso==Chateau || Harakiri->typePerso==Manant){
-    printf("ce type d'agent ne se suicide pas");
+    printf("ce type d'agent ne se suicide pas\n");
   }else {
 
     if (Harakiri->typePerso==Seigneur){
