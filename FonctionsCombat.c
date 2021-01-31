@@ -19,7 +19,7 @@ void combat(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuvoisinR
             case 0: break;
 
             case 1: switch(defenseur->typePerso) {
-                case 0: printf("Un seigneur en (%d,%d) attaque un Chateau en (%d,%d)", attaquant->px, attaquant->py, defenseur->px, defenseur->py);
+                case 0: printf("Un seigneur en (%d,%d) attaque un Chateau en (%d,%d)\n", attaquant->px, attaquant->py, defenseur->px, defenseur->py);
                         CombatChateau(attaquant, defenseur, JeuvoisinRouge, Jeuvoisinbleu, monde);
                         break;
                 case 2: printf("Un seigneur en (%d,%d) attaque un Guerrier en (%d,%d)\n", attaquant->px, attaquant->py, defenseur->px, defenseur->py);
@@ -86,7 +86,7 @@ void kill(Personnage* perdant, Monde* monde){ // fonction qui annonce la mort d'
         default: printf("erreur sur le type de personnage (fonction kill)");
                 break;
     }
-    
+
     if (perdant->PersoSuivant==NULL) { // si le personnage décédé est dernier dans la liste double du chateau
             perdant->PersoPrecedent->PersoSuivant=NULL;
     }
