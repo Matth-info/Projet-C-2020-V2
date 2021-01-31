@@ -8,7 +8,7 @@
 #include "FonctionsAffichage.h"
 #include "FonctionsCombat.h"
 
-void combat(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuvoisinRouge, ListePerso* Jeuvoisinbleu, Monde* monde) {
+void combat(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuVoisin, ListePerso* JeuVoisinAdverse, Monde* monde) {
     if(attaquant->typePerso == defenseur->typePerso) {
         CombatMemePerso(attaquant,defenseur,monde);
     }
@@ -18,7 +18,7 @@ void combat(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuvoisinR
 
             case 1: switch(defenseur->typePerso) {
                 case 0: printf("Un seigneur en (%d,%d) attaque un Chateau en (%d,%d)\n", attaquant->px, attaquant->py, defenseur->px, defenseur->py);
-                        CombatChateau(attaquant, defenseur, JeuvoisinRouge, Jeuvoisinbleu, monde);
+                        CombatChateau(attaquant, defenseur, JeuVoisin, JeuVoisinAdverse, monde);
                         break;
                 case 2: printf("Un seigneur en (%d,%d) attaque un Guerrier en (%d,%d)\n", attaquant->px, attaquant->py, defenseur->px, defenseur->py);
                         CombatSeigneurGuerrier(attaquant,defenseur,monde);
@@ -32,7 +32,7 @@ void combat(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuvoisinR
 
             case 2: switch(defenseur->typePerso) {
                 case 0: printf("Un Guerrier en (%d,%d) attaque un Chateau en (%d,%d)\n", attaquant->px, attaquant->py, defenseur->px, defenseur->py);
-                        CombatChateau(attaquant, defenseur, JeuvoisinRouge, Jeuvoisinbleu, monde);
+                        CombatChateau(attaquant, defenseur, JeuVoisin, JeuVoisinAdverse, monde);
                         break;
                 case 1: printf("Un Guerrier en (%d,%d) attaque un Seigneur en (%d,%d)\n", attaquant->px, attaquant->py, defenseur->px, defenseur->py);
                         CombatGuerrierSeigneur(attaquant,defenseur,monde);
@@ -46,7 +46,7 @@ void combat(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuvoisinR
 
             case 3: switch(defenseur->typePerso) {
                 case 0: printf("Un Manant en (%d,%d) attaque un Chateau en (%d,%d)\n", attaquant->px, attaquant->py, defenseur->px, defenseur->py);
-                        CombatChateau(attaquant, defenseur, JeuvoisinRouge, Jeuvoisinbleu, monde);
+                        CombatChateau(attaquant, defenseur, JeuVoisin, JeuVoisinAdverse, monde);
                         break;
                 case 1: printf("Un Manant en (%d,%d) attaque un Seigneur en (%d,%d)\n", attaquant->px, attaquant->py, defenseur->px, defenseur->py);
                         CombatManantSeigneur(attaquant,defenseur,monde);
@@ -247,7 +247,7 @@ void CombatManantGuerrier(Personnage* attaquant, Personnage* defenseur, Monde* m
 }
 
 
-void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuvoisinRouge, ListePerso* JeuvoisinBleu, Monde* monde) {
+void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuVoisin, ListePerso* JeuVoisinAdverse, Monde* monde) {
 
     int nb = 0;
     int MIN = 1, MAX = 50;
@@ -264,10 +264,7 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
                     killattaquant(attaquant,monde);
                 }
                 else {
-                    if(defenseur->couleur == 0)
-                        destructionChateau(attaquant,defenseur,monde,JeuvoisinRouge,JeuvoisinBleu);
-                    else
-                        destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu,JeuvoisinRouge);
+                   destructionChateau(attaquant,defenseur, monde,JeuVoisinAdverse, JeuVoisin);
                 }
                 break;
 
@@ -278,10 +275,7 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
                     killattaquant(attaquant,monde);
                 }
                 else {
-                    if(defenseur->couleur == 0)
-                        destructionChateau(attaquant,defenseur, monde,JeuvoisinRouge,JeuvoisinBleu);
-                    else
-                        destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu,JeuvoisinRouge);
+                    destructionChateau(attaquant,defenseur, monde,JeuVoisinAdverse, JeuVoisin);
                 }
                 break;
 
@@ -292,10 +286,7 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
                     killattaquant(attaquant,monde);
                 }
                 else {
-                  if(defenseur->couleur == 0){
-                      destructionChateau(attaquant,defenseur,monde,JeuvoisinRouge,JeuvoisinBleu);}
-                  else{ destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu,JeuvoisinRouge);}
-
+                  destructionChateau(attaquant,defenseur, monde,JeuVoisinAdverse, JeuVoisin);
                 }
         }
 }
