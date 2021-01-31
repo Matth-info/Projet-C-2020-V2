@@ -9,8 +9,6 @@
 #include "FonctionsCombat.h"
 
 void combat(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuvoisinRouge, ListePerso* Jeuvoisinbleu, Monde* monde) {
-
-
     if(attaquant->typePerso == defenseur->typePerso) {
         CombatMemePerso(attaquant,defenseur,monde);
     }
@@ -103,8 +101,8 @@ void kill(Personnage* perdant, Monde* monde){ // fonction qui annonce la mort d'
             perdant->PersoPrecedentVoisin->PersoSuivantVoisin = NULL;
         }
         else {
-        perdant->PersoSuivantVoisin->PersoPrecedentVoisin = NULL;
-        monde->plateau[perdant->px][perdant->py].perso = monde->plateau[perdant->px][perdant->py].perso->PersoSuivantVoisin;
+          perdant->PersoSuivantVoisin->PersoPrecedentVoisin = NULL;
+          monde->plateau[perdant->px][perdant->py].perso = monde->plateau[perdant->px][perdant->py].perso->PersoSuivantVoisin;
         }
     }
     free(perdant);
@@ -262,10 +260,10 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
                     kill(attaquant,monde);
                 }
                 else {
-                if(defenseur->couleur == 0)
-                    destructionChateau(attaquant,defenseur,monde,JeuvoisinRouge,JeuvoisinBleu);
-                else
-                    destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu,JeuvoisinRouge);
+                  if(defenseur->couleur == 0){
+                      destructionChateau(attaquant,defenseur,monde,JeuvoisinRouge,JeuvoisinBleu);}
+                  else{ destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu,JeuvoisinRouge);}
+
                 }
         }
 }
