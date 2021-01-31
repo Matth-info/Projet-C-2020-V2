@@ -299,9 +299,9 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
       }
     } else {
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].chateau->couleur) {
+        depart(perso,monde);
         combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);//combat d'un agent contre un chateau
         if(monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL) { // l'attaquant détruit le chateau
-          depart(perso,monde);
           arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
           perso->px += dx;
           perso->py += dy;
