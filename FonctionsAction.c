@@ -151,7 +151,9 @@ void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant
 
       // a ce niveau il n'y a plus que le chateau dans la liste
       if(JeuVoisinPerdant->nbPerso > 1) {
-        if (JeuVoisinPerdant->tete==ChateauPerdant){ // premier chateau dans la liste voisin;
+        printf("jejej");
+        if (JeuVoisinPerdant->tete==ChateauPerdant){
+          printf("ihihhih"); // premier chateau dans la liste voisin;
           ChateauPerdant->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
           JeuVoisinPerdant->tete=ChateauPerdant->PersoSuivantVoisin;
           ChateauPerdant->PersoSuivantVoisin = NULL;
@@ -159,6 +161,7 @@ void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant
 
         }
         if (JeuVoisinPerdant->fin==ChateauPerdant){ // dernier chateau dans la liste voisin
+          printf("hello");
           ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=NULL;
           JeuVoisinPerdant->fin=ChateauPerdant->PersoPrecedentVoisin;
           ChateauPerdant->PersoSuivantVoisin = NULL;
@@ -166,6 +169,7 @@ void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant
         }
 
         if ((ChateauPerdant->PersoSuivantVoisin!=NULL) && (ChateauPerdant->PersoPrecedentVoisin!=NULL)){ // si le chateau enlevé n'est ni au début ni à la fin de la liste des chateau voisin
+            printf("jdjd");
             monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
             ChateauPerdant->PersoSuivantVoisin->PersoPrecedent=ChateauPerdant->PersoPrecedentVoisin;
             ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=ChateauPerdant->PersoSuivantVoisin;
@@ -283,9 +287,9 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
       }
     } else {
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].chateau->couleur) {
+        depart(perso,monde);
         combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);//combat d'un agent contre un chateau
         if(monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL) { // l'attaquant détruit le chateau
-          depart(perso,monde);
           arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
           perso->px += dx;
           perso->py += dy;
