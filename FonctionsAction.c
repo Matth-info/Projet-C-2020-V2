@@ -79,7 +79,7 @@ void trahisonManant(Personnage* manant, Personnage* Attaquant, Personnage* Perda
           combat(manant, monde->plateau[manant->px][manant->py].chateau,JeuRougeVoisin, JeuBleuVoisin, monde); // combat contre le chateau en dernier
         }
         if((monde->plateau[manant->px][manant->py].perso == NULL) && (monde->plateau[manant->px][manant->py].chateau == NULL)) { // si les personnages attaqués sont tué/ chateau détruit
-          arrive(manant, JeuRougeVoisin, JeuBleuVoisin, monde, manant->px, manant->py);// à modifier
+          arrive(manant, monde, manant->px, manant->py);
         }
       }
     }
@@ -271,7 +271,7 @@ void nouvelleDestination(Personnage* perso, ListePerso* JeuRougeVoisin, ListePer
   }
 }
 
-void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, direction_t direction) {
+void moovedir(Personnage* perso,ListePerso* JeuVoisin, ListePerso* JeuVoisinAdverse, Monde * monde, direction_t direction) {
   int dx = mouvements[direction].dx;
   int dy = mouvements[direction].dy; // modication transforme le OU en ET dans la ligne d'après
   if ((monde->plateau[perso->px + dx][perso->py + dy].perso!=NULL) || (monde->plateau[perso->px + dx][perso->py + dy].chateau!=NULL)) {
@@ -281,41 +281,41 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
         depart(perso, monde); // le personnage attaquant sort de sa case (il n'arrivera sur l'autre case que si celle ci est vide, après avoir effectué des combats)
         while((monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) && (monde->plateau[perso->px + dx][perso->py + dy].perso != Persotemp)) { // la deuxieme condition permet de tester la défaite de l'attaquat
           Persotemp = monde->plateau[perso->px + dx][perso->py + dy].perso;
-          combat(perso, monde->plateau[perso->px + dx][perso->py + dy].perso,JeuRougeVoisin, JeuBleuVoisin, monde);
+          combat(perso, monde->plateau[perso->px + dx][perso->py + dy].perso,JeuVoisin, JeuVoisinAdverse, monde);
         }
         if((monde->plateau[perso->px + dx][perso->py + dy].chateau != NULL) && (monde->plateau[perso->px + dx][perso->py + dy].perso == NULL)) {
-          combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde); // combat contre le chateau en dernier
+          combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuVoisin, JeuVoisinAdverse, monde); // combat contre le chateau en dernier
         }
         if((monde->plateau[perso->px + dx][perso->py + dy].perso == NULL) && (monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL)) { // si les personnages attaqués sont tué/ chateau détruit
-          arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
+          arrive(perso, monde, perso->px + dx, perso->py + dy);
           perso->px+=dx;
           perso->py+=dy;
         }
       } else {
         depart(perso,monde);
-        arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
+        arrive(perso, monde, perso->px + dx, perso->py + dy);
         perso->px+=dx;
         perso->py+=dy;
       }
     } else {
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].chateau->couleur) {
         depart(perso,monde);
-        combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);//combat d'un agent contre un chateau
+        combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuVoisin, JeuVoisinAdverse, monde);//combat d'un agent contre un chateau
         if(monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL) { // l'attaquant détruit le chateau
-          arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
+          arrive(perso, monde, perso->px + dx, perso->py + dy);
           perso->px += dx;
           perso->py += dy;
         }
       }else {
           depart(perso, monde);
-          arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
+          arrive(perso, monde, perso->px + dx, perso->py + dy);
           perso->px+=dx;
           perso->py+=dy;
         }
       }
   } else { // cas où la case de destination n'est ni occupée par un chateau ni occupée par un agent
     depart(perso, monde);
-    arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
+    arrive(perso, monde, perso->px + dx, perso->py + dy);
     perso->px += dx;
     perso->py += dy;
   }
@@ -338,7 +338,7 @@ void depart(Personnage* perso, Monde * monde) {
     }
 }
 
-void arrive(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, int px, int py) {
+void arrive(Personnage* perso, Monde * monde, int px, int py) {
   if(monde->plateau[px][py].perso == NULL ) {
     monde->plateau[px][py].perso=perso;
     perso->PersoPrecedentVoisin = NULL;
@@ -400,7 +400,7 @@ void arrive(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
   }
 }
 
-void deplacementPerso(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde){
+void deplacementPerso(Personnage* perso,ListePerso* JeuVoisin, ListePerso* JeuVoisinAdverse, Monde * monde){
 // Cette fonction ne fait que constater la différence entre la case de la position actuelle et la case destination.
 // attention px et dx represente le numéro de ligne et py et dy le numero de colonne
  // dans cette partie le personnage va se deplacer en empruntant le plus court chemin
@@ -412,42 +412,42 @@ void deplacementPerso(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* 
 
       if ((deltaX > 0) && (deltaY> 0)){
         printf("deplacement vers le sud est\n");
-        moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, SudEst);
+        moovedir(perso,JeuVoisin,JeuVoisinAdverse,monde, SudEst);
       }
 
       if((deltaX > 0) && (deltaY < 0)){
         printf("deplacement vers le sud ouest\n");
-        moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, SudOuest);
+        moovedir(perso,JeuVoisin,JeuVoisinAdverse,monde, SudOuest);
       }
 
       if ((deltaX < 0) && (deltaY > 0)){
         printf("deplacement vers le nord est\n");
-        moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, NordEst);
+        moovedir(perso,JeuVoisin,JeuVoisinAdverse,monde, NordEst);
       }
 
       if ((deltaX < 0) && (deltaY < 0)){
        printf("deplacement vers le nord ouest\n");
-       moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, NordOuest);
+       moovedir(perso,JeuVoisin,JeuVoisinAdverse,monde, NordOuest);
       }
 
       if ((deltaY==0) && (deltaX<0)) {
         printf("deplacement nord\n");
-        moovedir(perso, JeuRougeVoisin, JeuBleuVoisin, monde, Nord);
+        moovedir(perso, JeuVoisin,JeuVoisinAdverse, monde, Nord);
       }
 
       if ((deltaY==0) && (deltaX>0)) {
         printf("deplacement sud\n");
-        moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, Sud);
+        moovedir(perso,JeuVoisin,JeuVoisinAdverse, monde, Sud);
       }
 
       if ((deltaX==0) && (deltaY>0)) {
         printf("deplacement vers l'Est\n");
-        moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, Est);
+        moovedir(perso,JeuVoisin,JeuVoisinAdverse,monde, Est);
       }
 
       if ((deltaX==0) && (deltaY<0)) {
         printf("deplacement vers l'Ouest\n");
-        moovedir(perso,JeuRougeVoisin,JeuBleuVoisin,monde, Ouest);
+        moovedir(perso,JeuVoisin,JeuVoisinAdverse,monde, Ouest);
       }
 
       if ((deltaX==0) && (deltaY==0) && (perso != NULL)){
