@@ -30,7 +30,7 @@ int MaxNbPerso(Monde* monde){ // fonction ayant pour but de trouver le nombre de
       max=nbPerso[i];
     }
   }
-  //printf("max : %d\n", max); 
+  printf("max : %d\n", max);
   return max;
 }
 
