@@ -19,9 +19,9 @@ ListePerso * initJeu(void){ // creation d'une liste doublement chainee
 
 
 void CreerChateau(ListePerso* JeuVoisinChateau, Monde * monde, couleur_t couleur,int px, int py){ // fonction pour remplir un espace alloué pour un chateau// Tete d'une ListePerso
-  Personnage* Castle =malloc(sizeof(Personnage));
+  Personnage* Castle = malloc(sizeof(Personnage));
   if ((Castle==NULL) || (monde->plateau[px][py].chateau!=NULL)){
-    printf("impossible de créer le chateau");
+    printf("impossible de creer le chateau\n");
   }else{
     Castle->couleur = couleur;
     Castle->typePerso=Chateau;
@@ -126,7 +126,7 @@ void CreerSeigneur(Personnage* chateau, Monde* monde,  couleur_t couleur, int px
           Persotemp->PersoSuivantVoisin = seigneur;
         }
       }
-      *tresor=*tresor-20;
+    *tresor=*tresor-20;
   }
 }
 
@@ -134,7 +134,7 @@ void CreerSeigneur(Personnage* chateau, Monde* monde,  couleur_t couleur, int px
 void CreerGuerrier(Personnage* chateau,Monde* monde, couleur_t couleur, int px, int py, int * tresor) {
   Personnage* guerrier = malloc(sizeof(Personnage));
   if ((guerrier == NULL) || (chateau->typePerso != Chateau) || (*tresor - 5 < 0)){
-    printf("creation du Guerrier impossible");
+    printf("creation du Guerrier impossible\n");
   }
   else{
   guerrier->couleur = couleur;
@@ -189,7 +189,7 @@ void CreerGuerrier(Personnage* chateau,Monde* monde, couleur_t couleur, int px, 
 void CreerManant(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, int py, int* tresor) {
   Personnage* manant = malloc(sizeof(Personnage));
   if ((manant == NULL) || (chateau->typePerso!=Chateau) || (*tresor-1 < 0) ){
-    printf("creation du manant impossible");
+    printf("creation du manant impossible\n");
   }
   else
   {
@@ -235,7 +235,7 @@ void CreerManant(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, 
 
 Case** CreerPlateau(int nbcolonne, int nbligne){// fonction creation d'un plateau de jeu commpose de nbcolonne * nbligne case
   if (nbcolonne<4 || nbligne<4){
-    printf("dimension du plateau trop petite, veuillez rentrer de nouvelle dimension du plateau de jeu");
+    printf("dimension du plateau trop petite, veuillez rentrer de nouvelle dimension du plateau de jeu\n");
     return NULL; // si le plateau ne peut pas se creer, on renvoie un pointeur NULL;
   } else {
       Case** plateau= malloc(nbligne*sizeof(Case)); // creation du plateau de jeu
