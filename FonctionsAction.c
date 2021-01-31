@@ -154,12 +154,14 @@ void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant
         if (JeuVoisinPerdant->tete==ChateauPerdant){ // premier chateau dans la liste voisin;
           ChateauPerdant->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
           JeuVoisinPerdant->tete=ChateauPerdant->PersoSuivantVoisin;
+          ChateauPerdant->PersoSuivantVoisin = NULL;
           monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
 
         }
         if (JeuVoisinPerdant->fin==ChateauPerdant){ // dernier chateau dans la liste voisin
           ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=NULL;
           JeuVoisinPerdant->fin=ChateauPerdant->PersoPrecedentVoisin;
+          ChateauPerdant->PersoSuivantVoisin = NULL;
           monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
         }
 
