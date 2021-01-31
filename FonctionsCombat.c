@@ -235,9 +235,9 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
                 }
                 else {
                     if(defenseur->couleur == 0)
-                        destructionChateau(attaquant,defenseur,monde,JeuvoisinRouge);
+                        destructionChateau(attaquant,defenseur,monde,JeuvoisinRouge,JeuvoisinBleu);
                     else
-                        destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu);
+                        destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu,JeuvoisinRouge);
                 }
                 break;
 
@@ -249,9 +249,9 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
                 }
                 else {
                     if(defenseur->couleur == 0)
-                        destructionChateau(attaquant,defenseur, monde,JeuvoisinRouge);
+                        destructionChateau(attaquant,defenseur, monde,JeuvoisinRouge,JeuvoisinBleu);
                     else
-                        destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu);
+                        destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu,JeuvoisinRouge);
                 }
                 break;
 
@@ -263,9 +263,9 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
                 }
                 else {
                 if(defenseur->couleur == 0)
-                    destructionChateau(attaquant,defenseur,monde,JeuvoisinRouge);
+                    destructionChateau(attaquant,defenseur,monde,JeuvoisinRouge,JeuvoisinBleu);
                 else
-                    destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu);
+                    destructionChateau(attaquant,defenseur, monde, JeuvoisinBleu,JeuvoisinRouge);
                 }
         }
 }
