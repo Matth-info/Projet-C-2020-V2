@@ -237,7 +237,6 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
     if(monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) {
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].perso->couleur) {
         Personnage* Persotemp = NULL;
-        depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
         while((monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) && (monde->plateau[perso->px + dx][perso->py + dy].perso != Persotemp)) {
           combat(perso, monde->plateau[perso->px + dx][perso->py + dy].perso,JeuRougeVoisin, JeuBleuVoisin, monde);
           Persotemp = monde->plateau[perso->px + dx][perso->py + dy].perso;
@@ -246,6 +245,7 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
           combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);
         }
         if((monde->plateau[perso->px + dx][perso->py + dy].perso == NULL) && (monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL)) { // si le personnage attaqué est tué
+          depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
           arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
           perso->px+=dx;
           perso->py+=dy;
@@ -284,7 +284,7 @@ void depart(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
     if(monde->plateau[perso->px][perso->py].perso->PersoSuivantVoisin == NULL) {
       monde->plateau[perso->px][perso->py].perso=NULL;
     }
-    else { // l'agent attaquant est en tête de liste vosin
+    else { // l'agent attaquant est en tête de liste voisin
       if (monde->plateau[perso->px][perso->py].perso == perso) {
         perso->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
         monde->plateau[perso->px][perso->py].perso = perso->PersoSuivantVoisin;
@@ -292,8 +292,10 @@ void depart(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
       }
       else { // l'agent attquant n'est pas en tête de liste voisin
         if(perso->PersoSuivantVoisin == NULL) {// l'agent est en dernière position dans la liste voisin
+          printf("keekeke");
           perso->PersoPrecedentVoisin->PersoSuivantVoisin = NULL;
           perso->PersoPrecedentVoisin = NULL;
+          perso->PersoSuivantVoisin = NULL;
         }
         else{ // l'agent n'est ni en première ni en dernière position
           perso->PersoPrecedentVoisin->PersoSuivantVoisin = perso->PersoSuivantVoisin;
