@@ -1,7 +1,8 @@
 #ifndef FONCTIONSCOMBATS_H
 #define FONCTIONSCOMBATS_H
 
-void kill(Personnage* perdant, Monde* monde);
+void killdefenseur(Personnage* perdant, Monde* monde);
+void killattaquant(Personnage* perdant, Monde* monde);
 void CombatMemePerso(Personnage* attaquant, Personnage* defenseur, Monde* monde);
 void CombatSeigneurGuerrier(Personnage* attaquant, Personnage* defenseur, Monde* monde);
 void CombatSeigneurManant(Personnage* attaquant, Personnage* defenseur, Monde* monde);
