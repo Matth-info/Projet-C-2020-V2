@@ -44,6 +44,7 @@ int main(int argc, char **argv)
 
   int cmpt_tour=0;
   while ((monde->CampBleu!=NULL) && (monde->CampRouge!=NULL)){
+      AffichageTresor(&tresorR,&tresorB);
 
       if ((ProchainAJouer==0) || (argc==1)){ //tour commencant par le joueur Rouge (cas de chargement et nouvelle partie)
           if (DemandeSauvegarde(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,0)==0){
@@ -59,7 +60,7 @@ int main(int argc, char **argv)
           TourDeJeu(monde,JeuBleuVoisin,JeuRougeVoisin,&tresorB);
 
           printf("%d tours \n",++cmpt_tour);
-      } // sortie du while (fin de partie);
+      }
       else{
           if (DemandeSauvegarde(monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB,1)==0){
               return 0;
@@ -74,7 +75,7 @@ int main(int argc, char **argv)
           TourDeJeu(monde,JeuRougeVoisin, JeuBleuVoisin, &tresorR);
 
           printf("%d tours\n",++cmpt_tour);
-      } // sortie du while (fin de partie);
+      }
     }
     Score(argc,argv,monde,JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB);
   return 0;
