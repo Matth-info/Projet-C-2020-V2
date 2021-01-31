@@ -283,163 +283,163 @@ int Chargementpartie(int argc, char** argv, Monde* monde,ListePerso * JeuRougeVo
     FILE* fichier=fopen(argv[1],"r");
     if (fichier==NULL){
       return 2;
-    }else{
-      //generation du monde avec les deux listes JeuVoisin Bleue et Rouge
-      int tresor1;
-      int tresor2;
+    }else {
 
-      int tresorRsave;
-      int tresorBsave;
-      char lignePerso[T_MAX]="";
-      char Tresor1[T_MAX]="";
-      char Tresor2[T_MAX]="";
-      int i;
+      if (strcmp(argv[1],"ScoreParties.got")!=0){ // on vérifie que le premier nom de fichier à l'emplacement de la sauvegarde n'est pas ScoreParties.got
+          int tresor1;
+          int tresor2;
 
-      fgets(lignePerso,T_MAX,fichier);
-      if(lignePerso[0]=='R'){
-        ProchainAJouer=0; // le prochain à jouer est le joueur Rouge;
-        i=2;
-        while(lignePerso[i]!='\0'){
-          Tresor1[i-2]=lignePerso[i];
-          i++;
-        }Tresor1[i-2]='\0';
-        tresor1=atoi(Tresor1);
-        tresorRsave=tresor1;
+          int tresorRsave;
+          int tresorBsave;
+          char lignePerso[T_MAX]="";
+          char Tresor1[T_MAX]="";
+          char Tresor2[T_MAX]="";
+          int i;
 
-        fgets(lignePerso,T_MAX,fichier); // on passe à la deuxième ligne;
-        i=2;
-        while(lignePerso[i]!='\0'){
-          Tresor2[i-2]=lignePerso[i];
-          i++;
-        }Tresor2[i-2]='\0';
-        tresor2=atoi(Tresor2);
-        tresorBsave=tresor2;
-      } else {
+          fgets(lignePerso,T_MAX,fichier);
+          if(lignePerso[0]=='R'){
+            ProchainAJouer=0; // le prochain à jouer est le joueur Rouge;
+            i=2;
+            while(lignePerso[i]!='\0'){
+              Tresor1[i-2]=lignePerso[i];
+              i++;
+            }Tresor1[i-2]='\0';
+            tresor1=atoi(Tresor1);
+            tresorRsave=tresor1;
 
-        i=2;
-        ProchainAJouer=1;
-        while(lignePerso[i]!='\0'){
-          Tresor1[i-2]=lignePerso[i];
-          i++;
-        }Tresor1[i-2]='\0';
-        tresor1=atoi(Tresor1);
-        tresorBsave=tresor1;
+            fgets(lignePerso,T_MAX,fichier); // on passe à la deuxième ligne;
+            i=2;
+            while(lignePerso[i]!='\0'){
+              Tresor2[i-2]=lignePerso[i];
+              i++;
+            }Tresor2[i-2]='\0';
+            tresor2=atoi(Tresor2);
+            tresorBsave=tresor2;
+          } else {
 
-        fgets(lignePerso,T_MAX,fichier); // on passe à la deuxième ligne;
-        i=2;
-        while(lignePerso[i]!='\0'){
-          Tresor2[i-2]=lignePerso[i];
-          i++;
-        } Tresor2[i-2]='\0';
-        tresor2=atoi(Tresor2);
-        tresorRsave=tresor2;
-      }
-      // fin de la récupération et du traitement des deux premières lignes
+            i=2;
+            ProchainAJouer=1;
+            while(lignePerso[i]!='\0'){
+              Tresor1[i-2]=lignePerso[i];
+              i++;
+            }Tresor1[i-2]='\0';
+            tresor1=atoi(Tresor1);
+            tresorBsave=tresor1;
 
-      Personnage* chateauRougeTemp=NULL;
-      Personnage* chateauBleuTemp=NULL;
-
-      while (fgets(lignePerso,T_MAX,fichier)!=NULL){
-          // printf("%s",lignePerso); // verification de la lecture de l'ensemble des lignes du fichier sauvegarde; YES
-
-          char strpx[2]={lignePerso[4],'\0'};
-          char strpy[2]={lignePerso[6],'\0'};
-          int px=atoi(strpx); // récupération des positions du personnage
-          int py=atoi(strpy);
-
-          if(lignePerso[0]=='R'){ //perso rouge
-            char strdx[2]={lignePerso[8],'\0'};
-            char strdy[2]={lignePerso[10],'\0'};
-            switch(lignePerso[2]){
-              case 'c': CreerChateau(JeuRougeVoisin,monde,Rouge,px,py);
-                        if (JeuRougeVoisin->nbPerso==1){
-                          chateauRougeTemp=JeuRougeVoisin->tete;
-                        }else{
-                          chateauRougeTemp=chateauRougeTemp->PersoSuivantVoisin;
-                        }
-
-                        switch(lignePerso[8]){
-                          case 's': chateauRougeTemp->typeProd=seigneur;
-                                    break;
-                          case 'g': chateauRougeTemp->typeProd=guerrier;
-                                    break;
-                          case 'm': chateauRougeTemp->typeProd=manant;
-                                    break;
-                          case 'r': chateauRougeTemp->typeProd=Rien;
-                                    break;
-                        }
-                        char strtempProd[2]={lignePerso[10],'\0'};
-                        chateauRougeTemp->tempsProd=atoi(strtempProd);
-                        break;
-
-              case 's': if(lignePerso[8]=='-'){
-                            CreerSeigneurChargement(chateauRougeTemp,monde,Rouge,px,py,-1,-1,tresorR);
-                        }
-                        else{ CreerSeigneurChargement(chateauRougeTemp,monde,Rouge,px,py,atoi(strdx),atoi(strdy),tresorR);
-                        }
-                        *tresorR=50;
-                        break;
-              case 'g': CreerGuerrierChargement(chateauRougeTemp,monde,Rouge,px,py,atoi(strdx),atoi(strdy),tresorR);
-                        *tresorR=50;
-                        break;
-              case 'm': if(lignePerso[8]=='-'){
-                              CreerManantChargement(chateauRougeTemp,monde,Rouge,px,py,-1,-1,tresorR);
-                        } else {CreerManantChargement(chateauRougeTemp,monde,Rouge,px,py,atoi(strdx),atoi(strdy),tresorR);}
-                        *tresorR=50;
-                        break;
-            }
-
-          } else { // perso bleu;
-            char strdx[2]={lignePerso[8],'\0'};
-            char strdy[2]={lignePerso[10],'\0'};
-            switch(lignePerso[2]){
-              case 'c': CreerChateau(JeuBleuVoisin,monde,Bleu,px,py);
-                        if (JeuBleuVoisin->nbPerso==1){
-                          chateauBleuTemp=JeuBleuVoisin->tete;
-                        }else{
-                          chateauBleuTemp=chateauBleuTemp->PersoSuivantVoisin;
-                        }
-
-                        switch(lignePerso[8]){
-                          case 's': chateauBleuTemp->typeProd=seigneur;
-                                    break;
-                          case 'g': chateauBleuTemp->typeProd=guerrier;
-                                    break;
-                          case 'm': chateauBleuTemp->typeProd=manant;
-                                    break;
-                          case 'r': chateauBleuTemp->typeProd=Rien;
-                                    break;
-                        }
-                        char strtempProd[2]={lignePerso[10],'\0'};
-                        chateauBleuTemp->tempsProd=atoi(strtempProd);
-                        break;
-
-              case 's': if(lignePerso[8]=='-'){
-                            CreerSeigneurChargement(chateauBleuTemp,monde,Bleu,px,py,-1,-1,tresorB);// le seigneur est immobile
-                        }
-                        else{ CreerSeigneurChargement(chateauBleuTemp,monde,Bleu,px,py,atoi(strdx),atoi(strdy),tresorB);
-                        }
-                        *tresorB=50;
-                        break;
-              case 'g': CreerGuerrierChargement(chateauBleuTemp,monde,Bleu,px,py,atoi(strdx),atoi(strdy),tresorB);
-                        *tresorB=50;
-                        break;
-              case 'm': if(lignePerso[8]=='-'){
-                        CreerManantChargement(chateauBleuTemp,monde,Bleu,px,py,-1,-1,tresorB);}//le manant est immobile
-                        else {CreerManantChargement(chateauBleuTemp,monde,Bleu,px,py,atoi(strdx),atoi(strdy),tresorB);}
-                        *tresorB=50;
-                        break;
-            }
+            fgets(lignePerso,T_MAX,fichier); // on passe à la deuxième ligne;
+            i=2;
+            while(lignePerso[i]!='\0'){
+              Tresor2[i-2]=lignePerso[i];
+              i++;
+            } Tresor2[i-2]='\0';
+            tresor2=atoi(Tresor2);
+            tresorRsave=tresor2;
           }
-      } // fin du while
-      *tresorR=tresorRsave;
-      *tresorB=tresorBsave;
-    }
+          // fin de la récupération et du traitement des deux premières lignes
+
+          Personnage* chateauRougeTemp=NULL;
+          Personnage* chateauBleuTemp=NULL;
+
+          while (fgets(lignePerso,T_MAX,fichier)!=NULL){
+              // printf("%s",lignePerso); // verification de la lecture de l'ensemble des lignes du fichier sauvegarde; YES
+
+              char strpx[2]={lignePerso[4],'\0'};
+              char strpy[2]={lignePerso[6],'\0'};
+              int px=atoi(strpx); // récupération des positions du personnage
+              int py=atoi(strpy);
+
+              if(lignePerso[0]=='R'){ //perso rouge
+                char strdx[2]={lignePerso[8],'\0'};
+                char strdy[2]={lignePerso[10],'\0'};
+                switch(lignePerso[2]){
+                  case 'c': CreerChateau(JeuRougeVoisin,monde,Rouge,px,py);
+                            if (JeuRougeVoisin->nbPerso==1){
+                              chateauRougeTemp=JeuRougeVoisin->tete;
+                            }else{
+                              chateauRougeTemp=chateauRougeTemp->PersoSuivantVoisin;
+                            }
+
+                            switch(lignePerso[8]){
+                              case 's': chateauRougeTemp->typeProd=seigneur;
+                                        break;
+                              case 'g': chateauRougeTemp->typeProd=guerrier;
+                                        break;
+                              case 'm': chateauRougeTemp->typeProd=manant;
+                                        break;
+                              case 'r': chateauRougeTemp->typeProd=Rien;
+                                        break;
+                            }
+                            char strtempProd[2]={lignePerso[10],'\0'};
+                            chateauRougeTemp->tempsProd=atoi(strtempProd);
+                            break;
+
+                  case 's': if(lignePerso[8]=='-'){
+                                CreerSeigneurChargement(chateauRougeTemp,monde,Rouge,px,py,-1,-1,tresorR);
+                            }
+                            else{ CreerSeigneurChargement(chateauRougeTemp,monde,Rouge,px,py,atoi(strdx),atoi(strdy),tresorR);
+                            }
+                            *tresorR=50;
+                            break;
+                  case 'g': CreerGuerrierChargement(chateauRougeTemp,monde,Rouge,px,py,atoi(strdx),atoi(strdy),tresorR);
+                            *tresorR=50;
+                            break;
+                  case 'm': if(lignePerso[8]=='-'){
+                                  CreerManantChargement(chateauRougeTemp,monde,Rouge,px,py,-1,-1,tresorR);
+                            } else {CreerManantChargement(chateauRougeTemp,monde,Rouge,px,py,atoi(strdx),atoi(strdy),tresorR);}
+                            *tresorR=50;
+                            break;
+                }
+
+              } else { // perso bleu;
+                char strdx[2]={lignePerso[8],'\0'};
+                char strdy[2]={lignePerso[10],'\0'};
+                switch(lignePerso[2]){
+                  case 'c': CreerChateau(JeuBleuVoisin,monde,Bleu,px,py);
+                            if (JeuBleuVoisin->nbPerso==1){
+                              chateauBleuTemp=JeuBleuVoisin->tete;
+                            }else{
+                              chateauBleuTemp=chateauBleuTemp->PersoSuivantVoisin;
+                            }
+
+                            switch(lignePerso[8]){
+                              case 's': chateauBleuTemp->typeProd=seigneur;
+                                        break;
+                              case 'g': chateauBleuTemp->typeProd=guerrier;
+                                        break;
+                              case 'm': chateauBleuTemp->typeProd=manant;
+                                        break;
+                              case 'r': chateauBleuTemp->typeProd=Rien;
+                                        break;
+                            }
+                            char strtempProd[2]={lignePerso[10],'\0'};
+                            chateauBleuTemp->tempsProd=atoi(strtempProd);
+                            break;
+
+                  case 's': if(lignePerso[8]=='-'){
+                                CreerSeigneurChargement(chateauBleuTemp,monde,Bleu,px,py,-1,-1,tresorB);// le seigneur est immobile
+                            }
+                            else{ CreerSeigneurChargement(chateauBleuTemp,monde,Bleu,px,py,atoi(strdx),atoi(strdy),tresorB);
+                            }
+                            *tresorB=50;
+                            break;
+                  case 'g': CreerGuerrierChargement(chateauBleuTemp,monde,Bleu,px,py,atoi(strdx),atoi(strdy),tresorB);
+                            *tresorB=50;
+                            break;
+                  case 'm': if(lignePerso[8]=='-'){
+                            CreerManantChargement(chateauBleuTemp,monde,Bleu,px,py,-1,-1,tresorB);}//le manant est immobile
+                            else {CreerManantChargement(chateauBleuTemp,monde,Bleu,px,py,atoi(strdx),atoi(strdy),tresorB);}
+                            *tresorB=50;
+                            break;
+                }
+              }
+          } // fin du while
+          *tresorR=tresorRsave;
+          *tresorB=tresorBsave;
+        } else{printf("pas de fichier sauvegarde, nouvelle partie\n"); return 2;}
+  }
   fclose(fichier);
   return ProchainAJouer;
-  }
-  else{ return 2;// cas ou il n'y a pas de fichier en entrée}
-  }
+  } else{ return 2; }// cas ou il n'y a pas de fichier en entrée;
 }
 
 int DemandeSauvegarde(Monde* monde, ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin,int * tresorR, int* tresorB,int ProchainAJouer){
@@ -481,7 +481,7 @@ void traitementFscore(int argc, char** argv, char *NvVainqueur,int nvscore){
   CoupleNS nvCoupleNS;
   strcpy(nvCoupleNS.nomVainqueur,NvVainqueur);
   nvCoupleNS.score=nvscore;
-  CoupleNS* tab =malloc(11*sizeof(CoupleNS)); // tableau de 10 couples de valeurs initialisé à 0
+  CoupleNS* tab =malloc(11*sizeof(CoupleNS)); // tableau de 11 couples de valeurs que l'on initialise (nv,0)
   char nv[3]="nv";
   for (int i=0; i<11; i++){
     tab[i].score=0;
@@ -493,9 +493,17 @@ void traitementFscore(int argc, char** argv, char *NvVainqueur,int nvscore){
   char scoreT[T_MAX]="";
   int score;
 
+  char nomFichierScore[T_MAX]="";
+  if (strcmp(argv[1],"ScoreParties.got")==0){
+    strcpy(nomFichierScore,argv[1]);
+  }
+  if (strcmp(argv[2],"ScoreParties.got")==0){
+    strcpy(nomFichierScore,argv[2]);
+  }
+
   if (argv[2]!=NULL){
     FILE* fscore=NULL;
-    fscore=fopen(argv[2],"r+");
+    fscore=fopen(nomFichierScore,"r+");
     if (fscore==NULL){
       printf("erreur lors de l'ouverture du fichier Score\n");
     }
@@ -587,7 +595,7 @@ void Score(int argc, char** argv,Monde* monde,ListePerso* JeuRougeVoisin, ListeP
   }
   printf("nombre de point de victoire du gagnant : %d\n",pointdevictoire);
   char nomVainqueur[T_MAX]="";
-  if (argv[2]!=NULL){ // attention les scores doivent etre triés par ordres decroissant, manipulation d'une structure dictionnaire
+  if ((strcmp(argv[2],"ScoreParties.got")==0) || (strcmp(argv[1],"ScoreParties.got")==0)) { // attention les scores doivent etre triés par ordres decroissant, manipulation d'une structure dictionnaire
     printf("recuperation d'un fichier ScoreParties.got\n");
     printf("rentrez le nom du Vainqueur: ");
     scanf("%s",nomVainqueur);
