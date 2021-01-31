@@ -29,7 +29,7 @@ void lancementdePartie(ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Mo
 
 // fonctions productions des manants
 
-void trahisonManant(Personnage* manant, Personnage* Attaquant, Personnage* Perdant){ // attaquant et perdant représente les chateaux affiliés aux manants
+void trahisonManant(Personnage* manant, Personnage* Attaquant, Personnage* Perdant,ListePerso* JeuRougeVoisin,ListePerso* JeuBleuVoisin, Monde* monde){ // attaquant et perdant represente les chateaux affiliés aux manants
   if (manant->typePerso!=Manant){
     printf("le personnage n'est pas un manant");
   }else{
@@ -64,7 +64,24 @@ void trahisonManant(Personnage* manant, Personnage* Attaquant, Personnage* Perda
       manant->PersoPrecedent=dernierperso;
       manant->PersoSuivant=NULL;
     }
-  }
+
+    if ((monde->plateau[manant->px][manant->py].perso!=manant) || (monde->plateau[manant->px][manant->py].chateau!=NULL)){
+      if (manant->couleur!=manant->PersoPrecedentVoisin->couleur){ // cas où le manant traitre se retrouve dans le camp ennemi
+        Personnage * Persotemp=NULL;
+        depart(manant,monde);
+        while((monde->plateau[manant->px][manant->py].perso != NULL) && (monde->plateau[manant->px][manant->py].perso != Persotemp)) { // la deuxieme condition permet de tester la défaite de l'attaquat
+          Persotemp = monde->plateau[manant->px][manant->py].perso;
+          combat(manant, monde->plateau[manant->px][manant->py].perso,JeuRougeVoisin, JeuBleuVoisin, monde);
+        }
+        if((monde->plateau[manant->px][manant->py].chateau != NULL) && (monde->plateau[manant->px][manant->py].perso == NULL)){
+          combat(manant, monde->plateau[manant->px][manant->py].chateau,JeuRougeVoisin, JeuBleuVoisin, monde); // combat contre le chateau en dernier
+        }
+        if((monde->plateau[manant->px][manant->py].perso == NULL) && (monde->plateau[manant->px][manant->py].chateau == NULL)) { // si les personnages attaqués sont tué/ chateau détruit
+          arrive(manant, JeuRougeVoisin, JeuBleuVoisin, monde, manant->px, manant->py);// à modifier
+        }
+      }
+    }
+   }
 }
 // la fonction suicide se produit après la fonction de trahison des manant de la liste
 void suicide(Personnage* Harakiri, Monde* monde){
@@ -105,7 +122,7 @@ void suicide(Personnage* Harakiri, Monde* monde){
 }
 
 // cette fonction detruit et libere la liste de Jeu lié au chateau qui vient d'être détruit
-void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant, Monde* monde, ListePerso* JeuVoisinPerdant){
+void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant, Monde* monde, ListePerso* JeuVoisinPerdant,ListePerso* JeuVoisinGagnant){
     //la destruction du chateau soit la tete de la liste Perdant va provoquer le suicide des Seigneurs et des guerriers
     // et la trahison de tout les manants;
     if(ChateauPerdant->couleur==Rouge){
@@ -119,7 +136,10 @@ void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant
 
       while (dernierperso->typePerso==Manant){
           dernierperso=dernierperso->PersoPrecedent;
-          trahisonManant(dernierperso->PersoSuivant,ChateauAttaquant,ChateauPerdant);
+          if(JeuVoisinPerdant->tete->couleur==Rouge){
+            trahisonManant(dernierperso->PersoSuivant,ChateauAttaquant,ChateauPerdant,JeuVoisinPerdant,JeuVoisinGagnant,monde);
+          }else{trahisonManant(dernierperso->PersoSuivant,ChateauAttaquant,ChateauPerdant,JeuVoisinGagnant,JeuVoisinPerdant,monde);}
+
         }
         // comme les manants sont obligatoirement à la fin de la liste de Jeu, on les lit et ils trahissent consécutivement;
         // à ce niveau il n' y a plus de manant dans la liste des perdants;
@@ -261,8 +281,8 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
       if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].chateau->couleur) {
         combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);//combat d'un agent contre un chateau
         if(monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL) { // l'attaquant détruit le chateau
-          monde->plateau[perso->px + dx][perso->py + dy].perso=perso; //ATTENTION ici le perso prend la place du chateau
-          monde->plateau[perso->px][perso->py].perso=NULL;
+          depart(perso,monde);
+          arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
           perso->px += dx;
           perso->py += dy;
         }
@@ -282,30 +302,6 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
 }
 
 void depart(Personnage* perso, Monde * monde) {
-  /*  if(monde->plateau[perso->px][perso->py].perso->PersoSuivantVoisin == NULL) {
-      monde->plateau[perso->px][perso->py].perso=NULL;
-    }
-    else { // l'agent attaquant est en tête de liste voisin
-      if (monde->plateau[perso->px][perso->py].perso == perso) {
-        perso->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
-        monde->plateau[perso->px][perso->py].perso = perso->PersoSuivantVoisin;
-        perso->PersoSuivantVoisin = NULL;
-      }
-      else { // l'agent attquant n'est pas en tête de liste voisin
-        if(perso->PersoSuivantVoisin == NULL) {// l'agent est en dernière position dans la liste voisin
-          printf("keekeke");
-          perso->PersoPrecedentVoisin->PersoSuivantVoisin = NULL;
-          perso->PersoPrecedentVoisin = NULL;
-          perso->PersoSuivantVoisin = NULL;
-        }
-        else{ // l'agent n'est ni en première ni en dernière position
-          perso->PersoPrecedentVoisin->PersoSuivantVoisin = perso->PersoSuivantVoisin;
-          perso->PersoSuivantVoisin->PersoPrecedentVoisin = perso->PersoPrecedentVoisin;
-          perso->PersoSuivantVoisin = NULL;
-          perso->PersoPrecedentVoisin = NULL;
-        }
-      }
-    }*/
     if (perso->PersoSuivantVoisin==NULL){
       if(monde->plateau[perso->px][perso->py].perso==perso){ //cas où il est seul sur la case
           monde->plateau[perso->px][perso->py].perso=NULL;
