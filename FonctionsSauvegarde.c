@@ -560,12 +560,13 @@ void Score(int argc, char** argv,Monde* monde,ListePerso* JeuRougeVoisin, ListeP
 
   if (monde->CampRouge==NULL){
     printf("\nVictoire du joueur Bleu, Felicitation !\n");
+    printf("%d pieces d'or\n",*tresorB);
     victorieux=1;
   }else{
     printf("\nVictoire du joueur Rouge, Felicitation !\n");
+    printf("%d pieces d'or\n",*tresorR);
     victorieux=0;
   }
-
 
   if (victorieux==0){
     Vainqueur=JeuRougeVoisin;
@@ -603,7 +604,7 @@ void Score(int argc, char** argv,Monde* monde,ListePerso* JeuRougeVoisin, ListeP
     traitementFscore(argc,argv, nomVainqueur,pointdevictoire);
 
   }else{
-     printf("creation d'un fichier ScoreParties.got \n");
+     printf("creation d'un fichier ScoreParties.got\n");
      FILE* fnewscore=NULL;
      fnewscore=fopen("ScoreParties.got","w");
      if (fnewscore==NULL){
