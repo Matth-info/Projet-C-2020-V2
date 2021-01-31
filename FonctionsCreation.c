@@ -38,7 +38,8 @@ void CreerChateau(ListePerso* JeuVoisinChateau, Monde * monde, couleur_t couleur
       JeuVoisinChateau->tete=Castle;
       JeuVoisinChateau->fin=Castle;
       JeuVoisinChateau->nbPerso++;
-      JeuVoisinChateau->tete->PersoSuivantVoisin = NULL;
+      Castle->PersoSuivantVoisin = NULL;
+      Castle->PersoPrecedentVoisin = NULL;
       switch(couleur){
         case 0: monde->CampRouge=Castle;
                 break;
