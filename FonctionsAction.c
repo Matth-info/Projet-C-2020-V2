@@ -154,14 +154,16 @@ void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant
         if (JeuVoisinPerdant->tete==ChateauPerdant){ // premier chateau dans la liste voisin;
           ChateauPerdant->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
           JeuVoisinPerdant->tete=ChateauPerdant->PersoSuivantVoisin;
+          monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
 
         }
         if (JeuVoisinPerdant->fin==ChateauPerdant){ // dernier chateau dans la liste voisin
           ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=NULL;
           JeuVoisinPerdant->fin=ChateauPerdant->PersoPrecedentVoisin;
+          monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
         }
 
-        if ((ChateauPerdant->PersoSuivant!=NULL) && (ChateauPerdant->PersoPrecedentVoisin!=NULL)){ // si le chateau enlevé n'est ni au début ni à la fin de la liste des chateau voisin
+        if ((ChateauPerdant->PersoSuivantVoisin!=NULL) && (ChateauPerdant->PersoPrecedentVoisin!=NULL)){ // si le chateau enlevé n'est ni au début ni à la fin de la liste des chateau voisin
             monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
             ChateauPerdant->PersoSuivantVoisin->PersoPrecedent=ChateauPerdant->PersoPrecedentVoisin;
             ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=ChateauPerdant->PersoSuivantVoisin;
@@ -176,7 +178,7 @@ void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant
 
         if(ChateauPerdant->couleur==Rouge){
             monde->CampRouge=NULL;
-          }else {monde->CampBleu=NULL;}
+        }else {monde->CampBleu=NULL;}
       }
 
       if (JeuVoisinPerdant->nbPerso==0){
