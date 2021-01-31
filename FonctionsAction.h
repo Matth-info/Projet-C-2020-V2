@@ -18,5 +18,5 @@ void Transformation(Personnage* Seigneur,ListePerso*JeuVoisin, Monde* monde, int
 void TourDeJeu(Monde* monde,ListePerso* JeuVoisin, ListePerso* JeuVoisinAdverse, int*tresor);
 void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, direction_t direction);
 void depart(Personnage* perso,Monde* monde);
-void arrive(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, int px, int py);
+void arrive(Personnage* perso, Monde * monde, int px, int py);
 #endif
