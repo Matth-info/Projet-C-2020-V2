@@ -94,13 +94,18 @@ void kill(Personnage* perdant, Monde* monde){ // fonction qui annonce la mort d'
       perdant->PersoPrecedent->PersoSuivant=perdant->PersoSuivant;
       perdant->PersoSuivant->PersoPrecedent=perdant->PersoPrecedent;
     }
-    
-    if(perdant->PersoSuivantVoisin == NULL) {
+
+    if((perdant == monde->plateau[perdant->px][perdant->py].perso) && (perdant->PersoSuivantVoisin == NULL)) {
         monde->plateau[perdant->px][perdant->py].perso = NULL;
     }
     else {
+        if(perdant->PersoSuivantVoisin == NULL) {
+            perdant->PersoPrecedentVoisin->PersoSuivantVoisin = NULL;
+        }
+        else {
         perdant->PersoSuivantVoisin->PersoPrecedentVoisin = NULL;
         monde->plateau[perdant->px][perdant->py].perso = monde->plateau[perdant->px][perdant->py].perso->PersoSuivantVoisin;
+        }
     }
     free(perdant);
 }
