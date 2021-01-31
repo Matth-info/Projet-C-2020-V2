@@ -63,7 +63,7 @@ void combat(Personnage* attaquant, Personnage* defenseur, ListePerso* JeuvoisinR
 
 
 
-void kill(Personnage* perdant, Monde* monde){ // fonction qui annonce la mort d'un agent et rétablit la liste doublement chainée du château
+void killdefenseur(Personnage* perdant, Monde* monde){ // fonction qui annonce la mort d'un agent et rétablit la liste doublement chainée du château
 
     switch(perdant->typePerso){
         case 1: if(perdant->couleur == 0)
@@ -93,7 +93,7 @@ void kill(Personnage* perdant, Monde* monde){ // fonction qui annonce la mort d'
       perdant->PersoSuivant->PersoPrecedent=perdant->PersoPrecedent;
     }
 
-    if((perdant == monde->plateau[perdant->px][perdant->py].perso) && (perdant->PersoSuivantVoisin == NULL)) {
+    if((monde->plateau[perdant->px][perdant->py].perso == perdant) && (perdant->PersoSuivantVoisin == NULL)){
         monde->plateau[perdant->px][perdant->py].perso = NULL;
     }
     else {
@@ -105,6 +105,38 @@ void kill(Personnage* perdant, Monde* monde){ // fonction qui annonce la mort d'
           monde->plateau[perdant->px][perdant->py].perso = monde->plateau[perdant->px][perdant->py].perso->PersoSuivantVoisin;
         }
     }
+    free(perdant);
+}
+
+void killattaquant(Personnage* perdant, Monde* monde) {
+    switch(perdant->typePerso){
+        case 1: if(perdant->couleur == 0)
+                    printf("Le Seigneur rouge en case (%d,%d) est mort\n",perdant->px, perdant->py);
+                else
+                    printf("Le Seigneur bleu en case (%d,%d) est mort\n",perdant->px, perdant->py);
+                break;
+        case 2: if(perdant->couleur == 0)
+                    printf("Le Guerrier rouge en case (%d,%d) est mort\n",perdant->px, perdant->py);
+                else
+                    printf("Le Guerrier bleu en case (%d,%d) est mort\n",perdant->px, perdant->py);
+                break;
+        case 3: if(perdant->couleur == 0)
+                    printf("Le Manant rouge en case (%d,%d) est mort\n",perdant->px, perdant->py);
+                else
+                    printf("Le Manant bleu en case (%d,%d) est mort\n",perdant->px, perdant->py);
+                break;
+        default: printf("erreur sur le type de personnage (fonction kill)");
+                break;
+    }
+
+    if (perdant->PersoSuivant==NULL) { // si le personnage décédé est dernier dans la liste double du chateau
+        perdant->PersoPrecedent->PersoSuivant=NULL;
+    }
+    else {
+      perdant->PersoPrecedent->PersoSuivant=perdant->PersoSuivant;
+      perdant->PersoSuivant->PersoPrecedent=perdant->PersoPrecedent;
+    }
+
     free(perdant);
 }
 
@@ -123,10 +155,10 @@ void CombatMemePerso(Personnage* attaquant, Personnage* defenseur, Monde* monde)
 
     nb = (rand()%(MAX+1-MIN))+MIN;
     if(nb <= 50) {
-        kill(defenseur,monde);
+        killdefenseur(defenseur,monde);
     }
     else {
-        kill(attaquant,monde);
+        killattaquant(attaquant,monde);
     }
 }
 
@@ -137,10 +169,10 @@ void CombatSeigneurGuerrier(Personnage* attaquant, Personnage* defenseur, Monde*
 
     nb = (rand()%(MAX+1-MIN))+MIN;
     if(nb >= 5) {
-        kill(defenseur,monde);
+        killdefenseur(defenseur,monde);
     }
     else {
-        kill(attaquant,monde);
+        killattaquant(attaquant,monde);
     }
 }
 
@@ -151,10 +183,10 @@ void CombatSeigneurManant(Personnage* attaquant, Personnage* defenseur, Monde* m
 
     nb = (rand()%(MAX+1-MIN))+MIN;
     if(nb >= 2) {
-        kill(defenseur,monde);
+        killdefenseur(defenseur,monde);
     }
     else {
-        kill(attaquant,monde);
+        killattaquant(attaquant,monde);
     }
 }
 
@@ -165,10 +197,10 @@ void CombatGuerrierSeigneur(Personnage* attaquant, Personnage* defenseur, Monde*
 
     nb = (rand()%(MAX+1-MIN))+MIN;
     if(nb <= 6) {
-        kill(defenseur,monde);
+        killdefenseur(defenseur,monde);
     }
     else {
-        kill(attaquant,monde);
+        killattaquant(attaquant,monde);
     }
 }
 
@@ -179,10 +211,10 @@ void CombatGuerrierManant(Personnage* attaquant, Personnage* defenseur, Monde* m
 
     nb = (rand()%(MAX+1-MIN))+MIN;
     if(nb >= 2) {
-        kill(defenseur,monde);
+        killdefenseur(defenseur,monde);
     }
     else {
-        kill(attaquant,monde);
+        killattaquant(attaquant,monde);
     }
 }
 
@@ -193,10 +225,10 @@ void CombatManantSeigneur(Personnage* attaquant, Personnage* defenseur, Monde* m
 
     nb = (rand()%(MAX+1-MIN))+MIN;
     if(nb <= 1) {
-        kill(defenseur,monde);
+        killdefenseur(defenseur,monde);
     }
     else {
-        kill(attaquant,monde);
+        killattaquant(attaquant,monde);
     }
 }
 
@@ -207,10 +239,10 @@ void CombatManantGuerrier(Personnage* attaquant, Personnage* defenseur, Monde* m
 
     nb = (rand()%(MAX+1-MIN))+MIN;
     if(nb <= 1) {
-        kill(defenseur,monde);
+        killdefenseur(defenseur,monde);
     }
     else {
-        kill(attaquant,monde);
+        killattaquant(attaquant,monde);
     }
 }
 
@@ -229,7 +261,7 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
         case 1: nb = (rand()%(MAX+1-MIN))+MIN;
                 if(nb >= 21) {
                     printf("Le Chateau en (%d,%d) a reussi a survivre a l'assaut et tue le seigneur\n", defenseur->px,defenseur->py);
-                    kill(attaquant,monde);
+                    killattaquant(attaquant,monde);
                 }
                 else {
                     if(defenseur->couleur == 0)
@@ -243,7 +275,7 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
                 nb = (rand()%(MAX+1-MIN))+MIN;
                 if(nb >= 35) { // si le chateau parvient à se défendre et à tuer son attaquant
                     printf("Le Chateau en (%d,%d) a reussi a survivre a l'assaut et tue le guerrier\n", defenseur->px,defenseur->py);
-                    kill(attaquant,monde);
+                    killattaquant(attaquant,monde);
                 }
                 else {
                     if(defenseur->couleur == 0)
@@ -257,7 +289,7 @@ void CombatChateau(Personnage* attaquant, Personnage* defenseur, ListePerso* Jeu
                 nb = (rand()%(MAX+1-MIN))+MIN;
                 if(nb >= 2) {
                     printf("Le Chateau en (%d,%d) a reussi a survivre a l'assaut et tue le manant\n", defenseur->px,defenseur->py);
-                    kill(attaquant,monde);
+                    killattaquant(attaquant,monde);
                 }
                 else {
                   if(defenseur->couleur == 0){
