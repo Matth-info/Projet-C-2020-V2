@@ -183,13 +183,14 @@ void productionManant(Personnage* manant, int* tresor){
   }
 }
 
-void immobilisation(Personnage* perso){
-  if ((perso->typePerso==Manant) || (perso->typePerso==Seigneur)){
+void immobilisation(Personnage* perso, Monde* monde){
+  if ((perso->typePerso==Manant) || ((perso->typePerso==Seigneur)&&(monde->plateau[perso->px][perso->py].chateau==NULL))) {
+    // la condition n'autorise que les manants et les seigneurs sur une case ne comportant pas déjà un chateau de s'immobiliser
     perso->dx=-1;
     perso->dy=-1;
     // le personnage est immobilisé; Manant ou seigneur
   } else{
-    printf ("ce type de personnage ne peut pas etre immobilise\n");
+    printf ("ce type de personnage ne peut pas etre immobilise ou n'a pas la possibilite de s'immobiliser\n");
     }
 }
 
@@ -235,23 +236,23 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
   int dy = mouvements[direction].dy; // modication transforme le OU en ET dans la ligne d'après
   if ((monde->plateau[perso->px + dx][perso->py + dy].perso!=NULL) || (monde->plateau[perso->px + dx][perso->py + dy].chateau!=NULL)) {
     if(monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) {
-      if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].perso->couleur) {
+      if(perso->couleur != monde->plateau[perso->px + dx][perso->py + dy].perso->couleur) { // si oui alors situation de combat
         Personnage* Persotemp = NULL;
-        while((monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) && (monde->plateau[perso->px + dx][perso->py + dy].perso != Persotemp)) {
-          combat(perso, monde->plateau[perso->px + dx][perso->py + dy].perso,JeuRougeVoisin, JeuBleuVoisin, monde);
+        depart(perso, monde); // le personnage attaquant sort de sa case (il n'arrivera sur l'autre case que si celle ci est vide, après avoir effectué des combats)
+        while((monde->plateau[perso->px + dx][perso->py + dy].perso != NULL) && (monde->plateau[perso->px + dx][perso->py + dy].perso != Persotemp)) { // la deuxieme condition permet de tester la défaite de l'attaquat
           Persotemp = monde->plateau[perso->px + dx][perso->py + dy].perso;
+          combat(perso, monde->plateau[perso->px + dx][perso->py + dy].perso,JeuRougeVoisin, JeuBleuVoisin, monde);
         }
         if((monde->plateau[perso->px + dx][perso->py + dy].chateau != NULL) && (monde->plateau[perso->px + dx][perso->py + dy].perso == NULL)) {
-          combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde);
+          combat(perso, monde->plateau[perso->px + dx][perso->py + dy].chateau,JeuRougeVoisin, JeuBleuVoisin, monde); // combat contre le chateau en dernier
         }
-        if((monde->plateau[perso->px + dx][perso->py + dy].perso == NULL) && (monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL)) { // si le personnage attaqué est tué
-          depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
+        if((monde->plateau[perso->px + dx][perso->py + dy].perso == NULL) && (monde->plateau[perso->px + dx][perso->py + dy].chateau == NULL)) { // si les personnages attaqués sont tué/ chateau détruit
           arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
           perso->px+=dx;
           perso->py+=dy;
         }
       } else {
-        depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
+        depart(perso,monde);
         arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
         perso->px+=dx;
         perso->py+=dy;
@@ -266,22 +267,22 @@ void moovedir(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuV
           perso->py += dy;
         }
       }else {
-          depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
+          depart(perso, monde);
           arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
           perso->px+=dx;
           perso->py+=dy;
         }
       }
   } else { // cas où la case de destination n'est ni occupée par un chateau ni occupée par un agent
-    depart(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px, perso->py);
+    depart(perso, monde);
     arrive(perso, JeuRougeVoisin, JeuBleuVoisin, monde, perso->px + dx, perso->py + dy);
     perso->px += dx;
     perso->py += dy;
   }
 }
 
-void depart(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, int px, int py) {
-    if(monde->plateau[perso->px][perso->py].perso->PersoSuivantVoisin == NULL) {
+void depart(Personnage* perso, Monde * monde) {
+  /*  if(monde->plateau[perso->px][perso->py].perso->PersoSuivantVoisin == NULL) {
       monde->plateau[perso->px][perso->py].perso=NULL;
     }
     else { // l'agent attaquant est en tête de liste voisin
@@ -303,6 +304,20 @@ void depart(Personnage* perso,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoi
           perso->PersoSuivantVoisin = NULL;
           perso->PersoPrecedentVoisin = NULL;
         }
+      }
+    }*/
+    if (perso->PersoSuivantVoisin==NULL){
+      if(monde->plateau[perso->px][perso->py].perso==perso){ //cas où il est seul sur la case
+          monde->plateau[perso->px][perso->py].perso=NULL;
+      }else{
+          perso->PersoPrecedentVoisin->PersoSuivantVoisin=NULL;}
+    }else{
+      if (monde->plateau[perso->px][perso->py].perso==perso){
+          perso->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
+          monde->plateau[perso->px][perso->py].perso=perso->PersoSuivantVoisin;
+      }else{
+          perso->PersoSuivantVoisin->PersoPrecedentVoisin= perso->PersoPrecedentVoisin;
+          perso->PersoPrecedentVoisin->PersoSuivantVoisin= perso->PersoSuivantVoisin;
       }
     }
 }
@@ -495,7 +510,7 @@ void TourManant(Personnage* manant,ListePerso* JeuRougeVoisin, ListePerso* JeuBl
       printf("souhaitez-vous immobilise le manant sur la case (%d,%d) \n oui ou non ?\n", manant->px, manant->py);
       scanf("%s",str);
       if(strcmp(str,str1)==0){
-        immobilisation(manant);
+        immobilisation(manant,monde);
       }else{
         if ((manant->px!=manant->dx) || (manant->py!=manant->dy)){
             printf("votre manant est en deplacement\n");
@@ -575,7 +590,7 @@ void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, ListePerso* JeuVois
             printf("souhaitez-vous immobiliser le seigneur de la case (%d,%d) \n oui ou non : \n",seigneur->px,seigneur->py);
             scanf("%s", str);
             if (strcmp(str1,str)==0) {
-              immobilisation(seigneur);
+              immobilisation(seigneur,monde);
               Transformation(seigneur,JeuVoisin, monde, tresor);
             } else { printf("votre seigneur en case (%d,%d) n'a pas joue !\n ", seigneur->px, seigneur->py);}
           }
@@ -615,7 +630,7 @@ void Transformation(Personnage* Seigneur,ListePerso *JeuVoisin, Monde* monde, in
   if(Seigneur->dx !=-1 || Seigneur->dy!=-1)
     printf("Le seigneur n'est pas immobile, il ne peut pas se transformer");
   else {
-    printf("Souhaitez vous transformer votre seigneur en (%d,%d) en chateau pour 30 piece d'or? \n oui ou non?",Seigneur->px,Seigneur->py );
+    printf("Souhaitez vous transformer votre seigneur en (%d,%d) en chateau pour 30 piece d'or? \n oui ou non? ",Seigneur->px,Seigneur->py );
     char str[4];
     char str1[4]="oui";
     scanf("%s",str);
@@ -626,10 +641,14 @@ void Transformation(Personnage* Seigneur,ListePerso *JeuVoisin, Monde* monde, in
         int x = Seigneur->px;
         int y = Seigneur->py;
         couleur_t couleur_seigneur= Seigneur->couleur;
-        suicide(Seigneur, monde);
-        CreerChateau(JeuVoisin, monde,couleur_seigneur, x, y);
-        printf("Le Seigneur s'est transforme en chateau en (%d,%d)",x,y);
-        *tresor-=30;
+        if(monde->plateau[Seigneur->px][Seigneur->py].chateau!=NULL){
+          printf("deux chateaux ne peuvent etre sur la meme case !\nCreation d'un nouveau chateau impossible !");
+        }else{
+          suicide(Seigneur, monde);
+          CreerChateau(JeuVoisin, monde,couleur_seigneur, x, y);
+          printf("Le Seigneur s'est transforme en chateau en (%d,%d)",x,y);
+          *tresor-=30;
+        }
       }
     }
   }
