@@ -283,7 +283,7 @@ void ChateauProduction(Personnage* chateau, Monde* monde, int* tresor) {
       switch(i) {
         case 1: CreerSeigneur(chateau, monde, chateau->couleur, T[0], T[1], tresor);
           if(savetresor == *tresor){
-            printf("avec un tresor de %d pieces d'or, vous n'avez pas assez pour creer un Seigneur", *tresor);
+            printf("avec un tresor de %d pieces d'or, vous n'avez pas assez pour creer un Seigneur\n", *tresor);
             ChateauProduction(chateau, monde, tresor);
           }else{
               chateau->typeProd = Seigneur;
@@ -292,8 +292,8 @@ void ChateauProduction(Personnage* chateau, Monde* monde, int* tresor) {
           break;
         case 2: CreerGuerrier(chateau, monde, chateau->couleur, T[0], T[1], tresor);
           if(savetresor == *tresor) {
-              ChateauProduction(chateau, monde, tresor);
               printf("avec un tresor de %d pieces d'or, vous n'avez pas assez pour créer un Guerrier", *tresor);
+              ChateauProduction(chateau, monde, tresor);
           } else{
               chateau->typeProd = Guerrier;
               chateau->tempsProd = 4;
