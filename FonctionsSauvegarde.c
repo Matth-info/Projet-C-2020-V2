@@ -271,9 +271,7 @@ void sauvergardeJeu(Monde* monde,ListePerso* JeuRougeVoisin, ListePerso* JeuBleu
 }
 
 int Chargementpartie(int argc, char** argv, Monde* monde,ListePerso * JeuRougeVoisin, ListePerso * JeuBleuVoisin, int* tresorR, int* tresorB){
-  // les fichiers à compiler sont FonctionsCreation.c FonctionsAffichage.c,
   // FonctionsAction.c FonctionsCombat.c FonctionsSauvegarde.c main.c
-  // si argc==2 alors on a la présence d'un fichier de sauvegarde .got;
   // la fonction récupère les trésors bleu et rouge (initialisé à 50 dans le main(), puis les modifie en fonction des 2 premières lignes du fichier Sauvegarde)
   // (Problème resolu) noter que la récupération du premier tresor en tête de fichier sauvegarde fonctionne bien mais pas celle du deuxieme trésor (ex ci dessous)
   // 10 pieces d'or dans le coffre Rouge
