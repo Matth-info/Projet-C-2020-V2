@@ -8,6 +8,8 @@
 #include"FonctionsSauvegarde.h"
 #define T_MAX 256
 
+
+
 int main(int argc, char **argv)
 {
   // creation du plateau de Jeu de depart
@@ -20,7 +22,7 @@ int main(int argc, char **argv)
   int tresorB = 50;
   int ProchainAJouer;
 
-  if(argv[1]!=NULL){
+  if ((argv[1]!=NULL)&& (strcmp(argv[1],"ScoreParties.got")!=0)) {
       printf("chargement de la partie du fichier %s\n",argv[1]);
       ProchainAJouer=Chargementpartie(argc,argv,monde, JeuRougeVoisin,JeuBleuVoisin,&tresorR,&tresorB);
       if (ProchainAJouer==0){
