@@ -235,7 +235,7 @@ void immobilisation(Personnage* perso, Monde* monde){
 }
 
 
-void nouvelleDestination(Personnage* perso, ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde* monde, int newdx, int newdy){
+void nouvelleDestination(Personnage* perso, Monde* monde, int newdx, int newdy){
   if (perso->dx==-1  && perso->dy==-1){
     printf("votre personnage est immobilise, il ne peut pas se deplacer\n");
   }
@@ -248,7 +248,7 @@ void nouvelleDestination(Personnage* perso, ListePerso* JeuRougeVoisin, ListePer
           scanf("%d",&newdx1);
           printf("nouvelle colonne dy : ");
           scanf("%d",&newdy1);
-          nouvelleDestination(perso,JeuRougeVoisin,JeuBleuVoisin, monde, newdx1, newdy1);
+          nouvelleDestination(perso, monde, newdx1, newdy1);
       }
       else{
         if ( (newdy>=8) || (newdy<0) ||(newdx>=8) || (newdx<0) ) { // cas ou la case n'est pas vide
@@ -259,7 +259,7 @@ void nouvelleDestination(Personnage* perso, ListePerso* JeuRougeVoisin, ListePer
           scanf("%d",&newdx1);
           printf("nouvelle colonne dy : ");
           scanf("%d",&newdy1);
-          nouvelleDestination(perso,JeuRougeVoisin,JeuBleuVoisin, monde, newdx1, newdy1);
+          nouvelleDestination(perso, monde, newdx1, newdy1);
           }
 
           else{
@@ -518,7 +518,7 @@ int* TrouverCaseLibre(Monde* monde, Personnage* chateau,int* tresor){
     }
 }
 
-void TourManant(Personnage* manant,ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde * monde, int * tresor) {
+void TourManant(Personnage* manant,ListePerso* JeuVoisin, ListePerso* JeuVoisinAdverse, Monde * monde, int * tresor) {
 
     if((manant->dx!=-1) && (manant->dy!=-1)){
       char str[4];
@@ -530,7 +530,7 @@ void TourManant(Personnage* manant,ListePerso* JeuRougeVoisin, ListePerso* JeuBl
       }else{
         if ((manant->px!=manant->dx) || (manant->py!=manant->dy)){
             printf("votre manant est en deplacement\n");
-            deplacementPerso(manant, JeuRougeVoisin, JeuBleuVoisin, monde);
+            deplacementPerso(manant, JeuVoisin, JeuVoisinAdverse, monde);
         } else{
           int newdx, newdy;
           printf("entrer les coordonnees de la nouvelle destination du manant (%d,%d)\n", manant->px, manant->py);
@@ -538,8 +538,8 @@ void TourManant(Personnage* manant,ListePerso* JeuRougeVoisin, ListePerso* JeuBl
           scanf("%d",&newdx);
           printf("nouvelle colonne dy : ");
           scanf("%d",&newdy);
-          nouvelleDestination(manant,JeuRougeVoisin, JeuBleuVoisin, monde, newdx, newdy);
-          deplacementPerso(manant, JeuRougeVoisin, JeuBleuVoisin,monde);
+          nouvelleDestination(manant, monde, newdx, newdy);
+          deplacementPerso(manant, JeuVoisin, JeuVoisinAdverse,monde);
           }
         }
     }else {
@@ -548,10 +548,10 @@ void TourManant(Personnage* manant,ListePerso* JeuRougeVoisin, ListePerso* JeuBl
     }
 }
 
-void TourGuerrier(Personnage * guerrier, ListePerso* JeuRougeVoisin, ListePerso* JeuBleuVoisin, Monde *monde) {
+void TourGuerrier(Personnage * guerrier, ListePerso* JeuVoisin, ListePerso* JeuVoisinAdverse, Monde *monde) {
   if ((guerrier->px!=guerrier->dx) || (guerrier->py!=guerrier->dy)){
       printf("votre guerrier est en cours en deplacement\n");
-      deplacementPerso(guerrier, JeuRougeVoisin, JeuBleuVoisin,monde);
+      deplacementPerso(guerrier, JeuVoisin, JeuVoisinAdverse,monde);
   } else {
       printf("souhaitez-vous deplacer le guerrier de la case (%d,%d) \n oui ou non\n : ",guerrier->px,guerrier->py);
       char str[4];
@@ -563,8 +563,8 @@ void TourGuerrier(Personnage * guerrier, ListePerso* JeuRougeVoisin, ListePerso*
         scanf("%d",&newdx);
         printf("nouvelle colonne dy : ");
         scanf("%d",&newdy);
-        nouvelleDestination(guerrier, JeuRougeVoisin, JeuBleuVoisin, monde,newdx,newdy);
-        deplacementPerso(guerrier, JeuRougeVoisin, JeuBleuVoisin,monde);
+        nouvelleDestination(guerrier, monde,newdx,newdy);
+        deplacementPerso(guerrier, JeuVoisin, JeuVoisinAdverse,monde);
       }
       else{
         printf("souhaitez-vous que votre guerrier se fasse hara-kiri \n oui ou non : \n");
@@ -592,7 +592,7 @@ void TourSeigneur(Personnage *seigneur,ListePerso*JeuVoisin, ListePerso* JeuVois
         scanf("%d",&newdx);
         printf("nouvelle colonne dy : ");
         scanf("%d",&newdy);
-        nouvelleDestination(seigneur,JeuVoisin, JeuVoisinAdverse,monde,newdx,newdy);
+        nouvelleDestination(seigneur,monde,newdx,newdy);
         deplacementPerso(seigneur,JeuVoisin, JeuVoisinAdverse,monde);
 
       } else{
