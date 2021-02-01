@@ -528,7 +528,7 @@ void traitementFscore(int argc, char** argv, char *NvVainqueur,int nvscore){
     // a ce niveau, on a recupere l'integralité des au plus 10 scores dans le tableau tab;
     // procedons a un tri sur les cles pour être sûr que le prochain score soit bien trié.
 
-    triInsertionDecroissant(tab,11); // m est le nombre de score dans le fichier de score, m+1 après l'ajout de ce score si m<10;
+    triInsertionDecroissant(tab,11);
     // a ce niveau, le tab de couple NS est trié par ordre décroissant
 
     InsertionNvScore(tab,11,nvCoupleNS);
