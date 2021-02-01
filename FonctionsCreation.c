@@ -7,14 +7,14 @@
 
 
 ListePerso * initJeu(void){ // creation d'une liste doublement chainee
-    ListePerso* Jeu=malloc(sizeof(ListePerso));
-    if (Jeu==NULL){
-      return NULL;
-    }
-    Jeu->tete=NULL;
-    Jeu->fin=NULL;
-    Jeu->nbPerso=0;
-    return Jeu;
+  ListePerso* Jeu=malloc(sizeof(ListePerso));
+  if (Jeu==NULL){
+    return NULL;
+  }
+  Jeu->tete=NULL;
+  Jeu->fin=NULL;
+  Jeu->nbPerso=0;
+  return Jeu;
 }
 
 
@@ -45,7 +45,7 @@ void CreerChateau(ListePerso* JeuVoisinChateau, Monde * monde, couleur_t couleur
                 break;
         case 1: monde->CampBleu=Castle;
                 break;
-        }
+      }
     }
     else{
       Castle->PersoPrecedentVoisin=JeuVoisinChateau->fin;
@@ -56,8 +56,7 @@ void CreerChateau(ListePerso* JeuVoisinChateau, Monde * monde, couleur_t couleur
       JeuVoisinChateau->nbPerso++;
     }
     monde->plateau[px][py].chateau=Castle; // ici on accede au plateau de jeu, à la case px, py et on relie le membre chateau au Castle
-    }
-
+  }
 }
 
 void CreerSeigneur(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, int py, int* tresor){ // un seigneur est rataché à un chateau forcément
@@ -187,6 +186,7 @@ void CreerGuerrier(Personnage* chateau,Monde* monde, couleur_t couleur, int px, 
   *tresor=*tresor-5;
   }
 }
+
 void CreerManant(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, int py, int* tresor) {
   Personnage* manant = malloc(sizeof(Personnage));
   if ((manant == NULL) || (chateau->typePerso!=Chateau) || (*tresor-1 < 0) ){
@@ -213,23 +213,22 @@ void CreerManant(Personnage* chateau, Monde* monde,  couleur_t couleur, int px, 
 
 
   // placement du manant dans la liste voisin de la case
-    if (monde->plateau[px][py].perso==NULL){
-      manant->PersoPrecedentVoisin=NULL;
-      manant->PersoSuivantVoisin=NULL;
-      monde->plateau[px][py].perso=manant;
-    }else{ //  il y a déjà des agents sur la case
+  if (monde->plateau[px][py].perso==NULL){
+    manant->PersoPrecedentVoisin=NULL;
+    manant->PersoSuivantVoisin=NULL;
+    monde->plateau[px][py].perso=manant;
+  }else{ //  il y a déjà des agents sur la case
 
-      Personnage* finVoisin = monde->plateau[px][py].perso;
-      while (finVoisin->PersoSuivantVoisin != NULL){ //recherche de l'emplacement du dernier agent dans la liste du chateau afin d'y insérer le manant
-            finVoisin = finVoisin->PersoSuivantVoisin;
-        }
-        manant->PersoPrecedentVoisin=finVoisin;
-        manant->PersoSuivantVoisin=NULL;
-        finVoisin->PersoSuivantVoisin=manant;
+    Personnage* finVoisin = monde->plateau[px][py].perso;
+    while (finVoisin->PersoSuivantVoisin != NULL){ //recherche de l'emplacement du dernier agent dans la liste du chateau afin d'y insérer le manant
+      finVoisin = finVoisin->PersoSuivantVoisin;
     }
+    manant->PersoPrecedentVoisin=finVoisin;
+    manant->PersoSuivantVoisin=NULL;
+    finVoisin->PersoSuivantVoisin=manant;
+  }
   *tresor=*tresor-1;
   }
-
 }
 
 
