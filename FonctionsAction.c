@@ -150,26 +150,6 @@ void destructionChateau(Personnage* ChateauAttaquant, Personnage* ChateauPerdant
           dernierperso=dernierperso->PersoPrecedent;
           suicide(dernierperso->PersoSuivant,monde);
       }
-
-      // a ce niveau il n'y a plus que le chateau dans la liste
-      /*if(JeuVoisinPerdant->nbPerso > 1) {
-        if (JeuVoisinPerdant->tete==ChateauPerdant){ // premier chateau dans la liste voisin;
-          ChateauPerdant->PersoSuivantVoisin->PersoPrecedentVoisin=NULL;
-          JeuVoisinPerdant->tete=ChateauPerdant->PersoSuivantVoisin;
-          monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
-
-        }
-        if (JeuVoisinPerdant->fin==ChateauPerdant){ // dernier chateau dans la liste voisin
-          ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=NULL;
-          JeuVoisinPerdant->fin=ChateauPerdant->PersoPrecedentVoisin;
-          monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
-        }
-
-        if ((ChateauPerdant->PersoSuivantVoisin!=NULL) && (ChateauPerdant->PersoPrecedentVoisin!=NULL)){ // si le chateau enlevé n'est ni au début ni à la fin de la liste des chateau voisin
-            ChateauPerdant->PersoSuivantVoisin->PersoPrecedent=ChateauPerdant->PersoPrecedentVoisin;
-            ChateauPerdant->PersoPrecedentVoisin->PersoSuivantVoisin=ChateauPerdant->PersoSuivantVoisin;
-            monde->plateau[ChateauPerdant->px][ChateauPerdant->py].chateau=NULL;
-        }*/
         if(JeuVoisinPerdant->nbPerso > 1) {
           if(JeuVoisinPerdant->tete==ChateauPerdant){
               printf("chateau en tete de liste Voisin a detruire\n");
