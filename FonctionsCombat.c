@@ -164,12 +164,12 @@ void CombatMemePerso(Personnage* attaquant, Personnage* defenseur, Monde* monde)
 }
 
 void CombatSeigneurGuerrier(Personnage* attaquant, Personnage* defenseur, Monde* monde) { 
-    // combat opposant un seigneur en attaque et un guerrier en defense 
+    // combat opposant un seigneur en attaque et un guerrier en défense 
     int nb = 0;
     const int MIN = 1, MAX = 25;
     srand(time(NULL));
 
-    nb = (rand()%(MAX+1-MIN))+MIN;
+    nb = (rand()%(MAX+1-MIN))+MIN; 
     if(nb >= 5) {
         killdefenseur(defenseur,monde);
     }
