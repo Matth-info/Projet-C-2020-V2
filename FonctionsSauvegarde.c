@@ -594,7 +594,7 @@ void Score(int argc, char** argv,Monde* monde,ListePerso* JeuRougeVoisin, ListeP
   }
   printf("nombre de point de victoire du gagnant : %d\n",pointdevictoire);
   char nomVainqueur[T_MAX]="";
-  if ((strcmp(argv[2],"ScoreParties.got")==0) || (strcmp(argv[1],"ScoreParties.got")==0)) { // attention les scores doivent etre triés par ordres decroissant, manipulation d'une structure dictionnaire
+  if (((argv[2] != NULL) && (strcmp(argv[2],"ScoreParties.got")==0)) || ((argv[1] !=NULL) && (strcmp(argv[1],"ScoreParties.got")==0))) { // attention les scores doivent etre triés par ordres decroissant, manipulation d'une structure dictionnaire
     printf("recuperation d'un fichier ScoreParties.got\n");
     printf("rentrez le nom du Vainqueur: ");
     scanf("%s",nomVainqueur);
